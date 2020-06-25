@@ -1,0 +1,20 @@
+<Module>
+    <Name value="Dashboard"/>
+    <Id value="Dashboard"/>
+    <Version value="v1.0.0"/>
+    <SingleplayerModule value="true"/>
+    <MultiplayerModule value="false"/>
+    <Official value="false"/>
+    <DependedModules/>
+    <SubModules>
+        <SubModule>
+            <Name value="Dashboard"/>
+            <DLLName value="Ed.Bannerlord.Dashboard.dll"/>
+            <SubModuleClassType value="Ed.Bannerlord.Dashboard.Init"/>
+            <Tags>
+                <Tag key="DedicatedServerType" value="none" />
+                <Tag key="IsNoRenderModeElement" value="false" />
+            </Tags>
+        </SubModule>
+    </SubModules>
+</Module>

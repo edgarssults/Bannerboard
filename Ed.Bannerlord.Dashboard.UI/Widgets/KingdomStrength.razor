@@ -1,0 +1,26 @@
+﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
+
+<h3>KingdomStrength</h3>
+
+<pre>@stats</pre>
+
+@code {
+    private string stats;
+
+    /// <summary>
+    /// Updates the widget.
+    /// </summary>
+    /// <param name="model">Model received from the server.</param>
+    public void Update(object model)
+    {
+        if (!(model is KingdomStrengthModel))
+        {
+            return;
+        }
+
+        var widgetModel = model as KingdomStrengthModel;
+        stats = string.Join(Environment.NewLine, widgetModel.Kingdoms.Select(k => $"{k.Key} - {k.Value}"));
+
+        StateHasChanged();
+    }
+}
