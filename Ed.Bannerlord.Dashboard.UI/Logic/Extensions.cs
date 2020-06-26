@@ -5,6 +5,10 @@ namespace Ed.Bannerlord.Dashboard.UI.Logic
 {
     public static class Extensions
     {
+        /// <summary>
+        /// Deserializes an object from a byte array.
+        /// </summary>
+        /// <param name="arrBytes">The byte array.</param>
         public static object ToObject(this byte[] arrBytes)
         {
             using (var memStream = new MemoryStream())

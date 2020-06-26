@@ -3,6 +3,8 @@ using SuperSocket.WebSocket;
 using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
+using TaleWorlds.Core;
+using TaleWorlds.Library;
 
 namespace Ed.Bannerlord.Dashboard.Logic.Widgets
 {
@@ -64,7 +66,15 @@ namespace Ed.Bannerlord.Dashboard.Logic.Widgets
         {
             var model = new KingdomStrengthModel
             {
-                Kingdoms = Campaign.Current.Kingdoms.ToDictionary(k => k.Name.ToString(), v => v.TotalStrength),
+                Kingdoms = Campaign.Current.Kingdoms
+                    .Select(k => new KingdomStrengthItem
+                    {
+                        Name = k.Name.ToString(),
+                        Strength = k.TotalStrength,
+                        PrimaryColor = Color.FromUint(k.Color).ToString(),
+                        SecondaryColor = Color.FromUint(k.Color2).ToString(),
+                    })
+                    .ToList(),
             };
             session.Send(new ArraySegment<byte>(model.ToByteArray()));
         }

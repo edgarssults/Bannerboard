@@ -6,7 +6,7 @@
 @using Ed.Bannerlord.Dashboard.UI.Logic
 @implements IDisposable
 
-<h3>State: @webSocket.State</h3>
+<h3>Connection: @webSocket.State</h3>
 
 @if (webSocket.State == WebSocketState.Open)
 {
@@ -61,7 +61,7 @@
             var receivedObject = buffer.Array.ToObject();
 
             // Send model to widget components
-            kingdomStrength.Update(receivedObject);
+            await kingdomStrength.Update(receivedObject);
         } while (!disposalTokenSource.IsCancellationRequested);
     }
 

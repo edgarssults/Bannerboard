@@ -1,26 +1,49 @@
 ﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
 
-<h3>KingdomStrength</h3>
-
-<pre>@stats</pre>
+<BarChart @ref="barChart" TItem="float"/>
 
 @code {
-    private string stats;
+    private BarChart<float> barChart;
 
     /// <summary>
     /// Updates the widget.
     /// </summary>
     /// <param name="model">Model received from the server.</param>
-    public void Update(object model)
+    public async Task Update(object model)
     {
         if (!(model is KingdomStrengthModel))
         {
             return;
         }
 
+        // TODO: Don't redraw, use streaming updates
         var widgetModel = model as KingdomStrengthModel;
-        stats = string.Join(Environment.NewLine, widgetModel.Kingdoms.Select(k => $"{k.Key} - {k.Value}"));
-
-        StateHasChanged();
+        await HandleRedraw(widgetModel);
     }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    if (firstRender)
+    //    {
+    //        await HandleRedraw();
+    //    }
+    //}
+
+    private async Task HandleRedraw(KingdomStrengthModel model)
+    {
+        await barChart.Clear();
+        await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model), GetBarChartDataset(model));
+    }
+
+    private List<string> GetLabels(KingdomStrengthModel model) =>
+        model.Kingdoms.Select(m => m.Name).ToList();
+
+    private BarChartDataset<float> GetBarChartDataset(KingdomStrengthModel model) =>
+        new BarChartDataset<float>
+        {
+            Label = "Kingdom Strength",
+            Data = model.Kingdoms.Select(m => m.Strength).ToList(),
+            BackgroundColor = model.Kingdoms.Select(m => m.PrimaryColor).ToList(),
+            BorderColor = model.Kingdoms.Select(m => m.SecondaryColor).ToList(),
+        };
 }
