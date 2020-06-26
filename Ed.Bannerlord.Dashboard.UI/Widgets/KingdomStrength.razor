@@ -1,9 +1,17 @@
 ﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
 
-<BarChart @ref="barChart" TItem="float"/>
+<BarChart @ref="barChart" TItem="float" Options="options"/>
 
 @code {
+    private bool initialized;
     private BarChart<float> barChart;
+    private BarChartOptions options = new BarChartOptions
+    {
+        Animation = new Animation
+        {
+            Duration = 0,
+        },
+    };
 
     /// <summary>
     /// Updates the widget.
@@ -16,18 +24,9 @@
             return;
         }
 
-        // TODO: Don't redraw, use streaming updates
         var widgetModel = model as KingdomStrengthModel;
         await HandleRedraw(widgetModel);
     }
-
-    //protected override async Task OnAfterRenderAsync(bool firstRender)
-    //{
-    //    if (firstRender)
-    //    {
-    //        await HandleRedraw();
-    //    }
-    //}
 
     private async Task HandleRedraw(KingdomStrengthModel model)
     {
