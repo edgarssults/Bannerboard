@@ -10,7 +10,8 @@
 
 @if (webSocket.State == WebSocketState.Open)
 {
-    <KingdomStrength @ref="kingdomStrength" />
+    <KingdomStrength @ref="kingdomStrength"/>
+    <KingdomNobles @ref="kingdomNobles"/>
 }
 
 @code {
@@ -18,6 +19,7 @@
     private ClientWebSocket webSocket = new ClientWebSocket();
 
     private KingdomStrength kingdomStrength;
+    private KingdomNobles kingdomNobles;
 
     /// <summary>
     /// Component initialization logic.
@@ -62,6 +64,7 @@
 
             // Send model to widget components
             await kingdomStrength.Update(receivedObject);
+            await kingdomNobles.Update(receivedObject);
         } while (!disposalTokenSource.IsCancellationRequested);
     }
 

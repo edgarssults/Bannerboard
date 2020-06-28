@@ -1,10 +1,10 @@
 ﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
 
-<BarChart @ref="barChart" TItem="float" Options="options"/>
+<BarChart @ref="barChart" TItem="int" Options="options" />
 
 @code {
     private bool initialized;
-    private BarChart<float> barChart;
+    private BarChart<int> barChart;
     private BarChartOptions options = new BarChartOptions
     {
         Animation = new Animation
@@ -19,29 +19,29 @@
     /// <param name="model">Model received from the server.</param>
     public async Task Update(object model)
     {
-        if (!(model is KingdomStrengthModel))
+        if (!(model is KingdomNoblesModel))
         {
             return;
         }
 
-        var widgetModel = model as KingdomStrengthModel;
+        var widgetModel = model as KingdomNoblesModel;
         await HandleRedraw(widgetModel);
     }
 
-    private async Task HandleRedraw(KingdomStrengthModel model)
+    private async Task HandleRedraw(KingdomNoblesModel model)
     {
         await barChart.Clear();
         await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model), GetBarChartDataset(model));
     }
 
-    private List<string> GetLabels(KingdomStrengthModel model) =>
+    private List<string> GetLabels(KingdomNoblesModel model) =>
         model.Kingdoms.Select(m => m.Name).ToList();
 
-    private BarChartDataset<float> GetBarChartDataset(KingdomStrengthModel model) =>
-        new BarChartDataset<float>
+    private BarChartDataset<int> GetBarChartDataset(KingdomNoblesModel model) =>
+        new BarChartDataset<int>
         {
-            Label = "Strength",
-            Data = model.Kingdoms.Select(m => m.Strength).ToList(),
+            Label = "Nobles",
+            Data = model.Kingdoms.Select(m => m.Nobles).ToList(),
             BackgroundColor = model.Kingdoms.Select(m => m.PrimaryColor).ToList(),
             BorderColor = model.Kingdoms.Select(m => m.SecondaryColor).ToList(),
         };
