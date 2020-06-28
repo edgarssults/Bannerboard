@@ -1,23 +1,16 @@
 ﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
+@inherits WidgetBase
 
-<BarChart @ref="barChart" TItem="float" Options="options"/>
+<BarChart @ref="barChart" TItem="float" Options="BaseBarChartOptions" />
 
 @code {
-    private bool initialized;
     private BarChart<float> barChart;
-    private BarChartOptions options = new BarChartOptions
-    {
-        Animation = new Animation
-        {
-            Duration = 0,
-        },
-    };
 
     /// <summary>
     /// Updates the widget.
     /// </summary>
     /// <param name="model">Model received from the server.</param>
-    public async Task Update(object model)
+    public override async Task Update(object model)
     {
         if (!(model is KingdomStrengthModel))
         {
@@ -31,13 +24,13 @@
     private async Task HandleRedraw(KingdomStrengthModel model)
     {
         await barChart.Clear();
-        await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model), GetBarChartDataset(model));
+        await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model), GetDataset(model));
     }
 
     private List<string> GetLabels(KingdomStrengthModel model) =>
         model.Kingdoms.Select(m => m.Name).ToList();
 
-    private BarChartDataset<float> GetBarChartDataset(KingdomStrengthModel model) =>
+    private BarChartDataset<float> GetDataset(KingdomStrengthModel model) =>
         new BarChartDataset<float>
         {
             Label = "Strength",

@@ -10,14 +10,15 @@
 
 @if (webSocket.State == WebSocketState.Open)
 {
-    <KingdomStrength @ref="kingdomStrength"/>
-    <KingdomNobles @ref="kingdomNobles"/>
+    <KingdomStrength @ref="kingdomStrength" />
+    <KingdomNobles @ref="kingdomNobles" />
 }
 
 @code {
     private CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
     private ClientWebSocket webSocket = new ClientWebSocket();
 
+    // TODO: Dynamically render and update the widgets from a list when Blazor supports it
     private KingdomStrength kingdomStrength;
     private KingdomNobles kingdomNobles;
 
@@ -62,7 +63,7 @@
             // Deserialize model
             var receivedObject = buffer.Array.ToObject();
 
-            // Send model to widget components
+            // Send model to widgets
             await kingdomStrength.Update(receivedObject);
             await kingdomNobles.Update(receivedObject);
         } while (!disposalTokenSource.IsCancellationRequested);

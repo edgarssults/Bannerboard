@@ -1,0 +1,19 @@
+﻿@code {
+    protected BarChartOptions BaseBarChartOptions = new BarChartOptions
+    {
+        Animation = new Animation
+        {
+            Duration = 0,
+        },
+    };
+
+    /// <summary>
+    /// Updates the widget.
+    /// </summary>
+    /// <param name="model">Model received from the server.</param>
+    public virtual Task Update(object model)
+    {
+        // Should be overridden
+        return Task.CompletedTask;
+    }
+}
