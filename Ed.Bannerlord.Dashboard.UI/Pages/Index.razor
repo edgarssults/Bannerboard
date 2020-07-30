@@ -6,12 +6,22 @@
 @using Ed.Bannerlord.Dashboard.UI.Logic
 @implements IDisposable
 
-<h3>Connection: @webSocket.State</h3>
-
 @if (webSocket.State == WebSocketState.Open)
 {
-    <KingdomStrength @ref="kingdomStrength" />
-    <KingdomNobles @ref="kingdomNobles" />
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <KingdomStrength @ref="kingdomStrength" />
+            </div>
+            <div class="col">
+                <KingdomNobles @ref="kingdomNobles" />
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <h3>Connection: @webSocket.State</h3>
 }
 
 @code {
@@ -27,6 +37,7 @@
     /// </summary>
     protected override async Task OnInitializedAsync()
     {
+        // TODO: Inform which widgets and versions the dashboard supports
         await webSocket.ConnectAsync(new Uri("ws://localhost:2020"), disposalTokenSource.Token); // TODO: Change the port or use an URL?
         _ = ReceiveLoop();
     }

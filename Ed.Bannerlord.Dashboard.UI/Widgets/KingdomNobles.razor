@@ -1,7 +1,14 @@
 ﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
 @inherits WidgetBase
 
-<BarChart @ref="barChart" TItem="int" Options="BaseBarChartOptions" />
+<div class="card">
+    <div class="card-header">
+        Nobles
+    </div>
+    <div class="card-body">
+        <BarChart @ref="barChart" TItem="int" Options="BaseBarChartOptions" />
+    </div>
+</div>
 
 @code {
     private BarChart<int> barChart;
@@ -33,7 +40,6 @@
     private BarChartDataset<int> GetDataset(KingdomNoblesModel model) =>
         new BarChartDataset<int>
         {
-            Label = "Nobles",
             Data = model.Kingdoms.Select(m => m.Nobles).ToList(),
             BackgroundColor = model.Kingdoms.Select(m => m.PrimaryColor).ToList(),
             BorderColor = model.Kingdoms.Select(m => m.SecondaryColor).ToList(),

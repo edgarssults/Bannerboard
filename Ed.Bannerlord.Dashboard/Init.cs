@@ -91,6 +91,7 @@ namespace Ed.Bannerlord.Dashboard
             InformationManager.DisplayMessage(new InformationMessage("Dashboard client connected."));
 
             // Initialize all widgets
+            // TODO: Check which widgets and versions the dashboard supports, only update about those
             _widgets.ForEach(w =>
             {
                 try
