@@ -7,6 +7,9 @@
     <OutDir>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Dashboard\bin\Win64_Shipping_Client\</OutDir>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="SuperSocket.Engine" Version="1.6.6.1" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\Ed.Bannerlord.Dashboard.Logic\Ed.Bannerlord.Dashboard.Logic.csproj" />
     <ProjectReference Include="..\Ed.Bannerlord.Dashboard.Models\Ed.Bannerlord.Dashboard.Models.csproj" />
   </ItemGroup>
