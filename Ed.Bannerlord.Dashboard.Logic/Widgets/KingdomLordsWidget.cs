@@ -8,15 +8,15 @@ using TaleWorlds.Library;
 namespace Ed.Bannerlord.Dashboard.Logic.Widgets
 {
     /// <summary>
-    /// A widget for displaying kingdom noble charts on the dashboard.
+    /// A widget for displaying kingdom lord charts on the dashboard.
     /// </summary>
-    public class KingdomNoblesWidget : WidgetBase
+    public class KingdomLordsWidget : WidgetBase
     {
         /// <summary>
-        /// A widget for displaying kingdom noble charts on the dashboard.
+        /// A widget for displaying kingdom lord charts on the dashboard.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
-        public KingdomNoblesWidget(WebSocketServer server) : base(server)
+        public KingdomLordsWidget(WebSocketServer server) : base(server)
         {
         }
 
@@ -25,7 +25,7 @@ namespace Ed.Bannerlord.Dashboard.Logic.Widgets
         /// </summary>
         public override void RegisterEvents()
         {
-            // Update all sessions about kingdom noble count every "hour"
+            // Update all sessions about kingdom lord count every "hour"
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(() =>
             {
                 foreach (var session in Server.GetAllSessions())
@@ -51,13 +51,13 @@ namespace Ed.Bannerlord.Dashboard.Logic.Widgets
         /// <param name="session">The session to send the update to.</param>
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new KingdomNoblesModel
+            var model = new KingdomLordsModel
             {
                 Kingdoms = Campaign.Current.Kingdoms
-                    .Select(k => new KingdomNoblesItem
+                    .Select(k => new KingdomLordsItem
                     {
                         Name = k.Name.ToString(),
-                        Nobles = k.Nobles.Count(),
+                        Lords = k.Lords.Count(),
                         PrimaryColor = Color.FromUint(k.Color).ToString(),
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })

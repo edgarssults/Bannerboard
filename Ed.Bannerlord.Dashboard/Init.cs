@@ -26,7 +26,7 @@ namespace Ed.Bannerlord.Dashboard
 
                 // Define dashboard widgets
                 _widgets.Add(new KingdomStrengthWidget(_server));
-                _widgets.Add(new KingdomNoblesWidget(_server));
+                _widgets.Add(new KingdomLordsWidget(_server));
 
                 // Register widget behaviors in the game
                 var campaignStarter = gameStarter as CampaignGameStarter;

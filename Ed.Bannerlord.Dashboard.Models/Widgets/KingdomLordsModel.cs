@@ -4,22 +4,22 @@ using System.Collections.Generic;
 namespace Ed.Bannerlord.Dashboard.Models.Widgets
 {
     /// <summary>
-    /// Model for Kingdom Nobles widget data.
+    /// Model for Kingdom Lords widget data.
     /// </summary>
     [Serializable]
-    public class KingdomNoblesModel
+    public class KingdomLordsModel
     {
         /// <summary>
         /// List of kingdoms.
         /// </summary>
-        public List<KingdomNoblesItem> Kingdoms { get; set; }
+        public List<KingdomLordsItem> Kingdoms { get; set; }
     }
 
     /// <summary>
     /// Single kingdom data.
     /// </summary>
     [Serializable]
-    public class KingdomNoblesItem
+    public class KingdomLordsItem
     {
         /// <summary>
         /// Kingdom name.
@@ -27,9 +27,9 @@ namespace Ed.Bannerlord.Dashboard.Models.Widgets
         public string Name { get; set; }
 
         /// <summary>
-        /// Kingdom noble count.
+        /// Kingdom lord count.
         /// </summary>
-        public int Nobles { get; set; }
+        public int Lords { get; set; }
 
         /// <summary>
         /// Primary kingdom color as a hex string (including #).

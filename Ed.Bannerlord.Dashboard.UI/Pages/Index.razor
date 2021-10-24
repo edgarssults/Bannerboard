@@ -10,11 +10,11 @@
 {
     <div class="container-fluid">
         <div class="row">
-            <div class="col">
+            <div class="col-sm col-xs-12 mt-4">
                 <KingdomStrength @ref="kingdomStrength" />
             </div>
-            <div class="col">
-                <KingdomNobles @ref="kingdomNobles" />
+            <div class="col-sm col-xs-12 mt-4">
+                <KingdomLords @ref="kingdomLords" />
             </div>
         </div>
     </div>
@@ -30,7 +30,7 @@ else
 
     // TODO: Dynamically render and update the widgets from a list when Blazor supports it
     private KingdomStrength kingdomStrength;
-    private KingdomNobles kingdomNobles;
+    private KingdomLords kingdomLords;
 
     /// <summary>
     /// Component initialization logic.
@@ -76,7 +76,7 @@ else
 
             // Send model to widgets
             await kingdomStrength.Update(receivedObject);
-            await kingdomNobles.Update(receivedObject);
+            await kingdomLords.Update(receivedObject);
         } while (!disposalTokenSource.IsCancellationRequested);
     }
 

@@ -1,9 +1,8 @@
-﻿@using Ed.Bannerlord.Dashboard.Models.Widgets
-@inherits WidgetBase
+﻿@inherits WidgetBase
 
 <div class="card">
     <div class="card-header">
-        Nobles
+        Lords
     </div>
     <div class="card-body">
         <BarChart @ref="barChart" TItem="int" Options="BaseBarChartOptions" />
@@ -19,28 +18,28 @@
     /// <param name="model">Model received from the server.</param>
     public override async Task Update(object model)
     {
-        if (!(model is KingdomNoblesModel))
+        if (!(model is KingdomLordsModel))
         {
             return;
         }
 
-        var widgetModel = model as KingdomNoblesModel;
+        var widgetModel = model as KingdomLordsModel;
         await HandleRedraw(widgetModel);
     }
 
-    private async Task HandleRedraw(KingdomNoblesModel model)
+    private async Task HandleRedraw(KingdomLordsModel model)
     {
         await barChart.Clear();
         await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model), GetDataset(model));
     }
 
-    private List<string> GetLabels(KingdomNoblesModel model) =>
+    private List<string> GetLabels(KingdomLordsModel model) =>
         model.Kingdoms.Select(m => m.Name).ToList();
 
-    private BarChartDataset<int> GetDataset(KingdomNoblesModel model) =>
+    private BarChartDataset<int> GetDataset(KingdomLordsModel model) =>
         new BarChartDataset<int>
         {
-            Data = model.Kingdoms.Select(m => m.Nobles).ToList(),
+            Data = model.Kingdoms.Select(m => m.Lords).ToList(),
             BackgroundColor = model.Kingdoms.Select(m => m.PrimaryColor).ToList(),
             BorderColor = model.Kingdoms.Select(m => m.SecondaryColor).ToList(),
         };
