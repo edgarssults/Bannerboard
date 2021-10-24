@@ -15,7 +15,7 @@ Currently the dashboard has two widgets for kingdom strength and kingdom lord co
 
 # Links
 
-Download the mod: TODO
+Download the mod from Nexus: https://www.nexusmods.com/mountandblade2bannerlord/mods/3386
 
 Connect to your game: https://bannerboard.azurewebsites.net/
 
