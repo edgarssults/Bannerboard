@@ -1,4 +1,4 @@
-﻿using Ed.Bannerlord.Dashboard.Logic.Widgets;
+﻿using Ed.Bannerboard.Logic.Widgets;
 using SuperSocket.SocketBase;
 using SuperSocket.WebSocket;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
 using TaleWorlds.MountAndBlade;
 
-namespace Ed.Bannerlord.Dashboard
+namespace Ed.Bannerboard
 {
     public class Init : MBSubModuleBase
     {
@@ -54,7 +54,7 @@ namespace Ed.Bannerlord.Dashboard
         {
             if (!_server.Setup(2020)) // TODO: Change the port or use an URL?
             {
-                InformationManager.DisplayMessage(new InformationMessage("Dashboard server set-up failed."));
+                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server set-up failed."));
                 return;
             }
 
@@ -63,11 +63,11 @@ namespace Ed.Bannerlord.Dashboard
 
             if (!_server.Start())
             {
-                InformationManager.DisplayMessage(new InformationMessage("Dashboard server start-up failed."));
+                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server start-up failed."));
                 return;
             }
 
-            InformationManager.DisplayMessage(new InformationMessage("Dashboard server started."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server started."));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Ed.Bannerlord.Dashboard
 
             _server.Stop();
             _server = null;
-            InformationManager.DisplayMessage(new InformationMessage("Dashboard server stopped."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server stopped."));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Ed.Bannerlord.Dashboard
         /// <param name="session">The created session.</param>
         private void NewSessionConnected(WebSocketSession session)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Dashboard client connected."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client connected."));
 
             // Initialize all widgets
             // TODO: Check which widgets and versions the dashboard supports, only update about those
@@ -112,7 +112,7 @@ namespace Ed.Bannerlord.Dashboard
         /// <param name="reason">Closure reason.</param>
         private void SessionClosed(WebSocketSession session, CloseReason reason)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Dashboard client disconnected."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client disconnected."));
         }
     }
 }

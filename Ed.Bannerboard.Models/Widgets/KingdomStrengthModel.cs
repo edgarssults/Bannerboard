@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Ed.Bannerlord.Dashboard.Models.Widgets
+namespace Ed.Bannerboard.Models.Widgets
 {
     /// <summary>
     /// Model for Kingdom Strength widget data.

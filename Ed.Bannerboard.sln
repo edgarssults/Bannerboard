@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30204.135
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerlord.Dashboard", "Ed.Bannerlord.Dashboard\Ed.Bannerlord.Dashboard.csproj", "{11623B43-EBDF-4A49-B6AB-557F5983CEA4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard", "Ed.Bannerboard\Ed.Bannerboard.csproj", "{11623B43-EBDF-4A49-B6AB-557F5983CEA4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerlord.Dashboard.UI", "Ed.Bannerlord.Dashboard.UI\Ed.Bannerlord.Dashboard.UI.csproj", "{00F940A6-B7EF-4A07-A997-21462F4C9A38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.UI", "Ed.Bannerboard.UI\Ed.Bannerboard.UI.csproj", "{00F940A6-B7EF-4A07-A997-21462F4C9A38}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerlord.Dashboard.Models", "Ed.Bannerlord.Dashboard.Models\Ed.Bannerlord.Dashboard.Models.csproj", "{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.Models", "Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj", "{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerlord.Dashboard.Logic", "Ed.Bannerlord.Dashboard.Logic\Ed.Bannerlord.Dashboard.Logic.csproj", "{C774070B-A2DF-4E04-9146-1371F706C409}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.Logic", "Ed.Bannerboard.Logic\Ed.Bannerboard.Logic.csproj", "{C774070B-A2DF-4E04-9146-1371F706C409}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

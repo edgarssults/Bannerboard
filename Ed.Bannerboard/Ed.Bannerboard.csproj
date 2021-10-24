@@ -4,14 +4,15 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <OutDir>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Dashboard\bin\Win64_Shipping_Client\</OutDir>
+    <!-- TODO: Update -->
+    <OutDir>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerboard\bin\Win64_Shipping_Client\</OutDir>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="SuperSocket.Engine" Version="1.6.6.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ed.Bannerlord.Dashboard.Logic\Ed.Bannerlord.Dashboard.Logic.csproj" />
-    <ProjectReference Include="..\Ed.Bannerlord.Dashboard.Models\Ed.Bannerlord.Dashboard.Models.csproj" />
+    <ProjectReference Include="..\Ed.Bannerboard.Logic\Ed.Bannerboard.Logic.csproj" />
+    <ProjectReference Include="..\Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="TaleWorlds.BattlEye.Client">

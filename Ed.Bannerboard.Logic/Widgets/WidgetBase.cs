@@ -1,17 +1,17 @@
 ﻿using SuperSocket.WebSocket;
 using TaleWorlds.CampaignSystem;
 
-namespace Ed.Bannerlord.Dashboard.Logic.Widgets
+namespace Ed.Bannerboard.Logic.Widgets
 {
     /// <summary>
-    /// Base logic for all Bannerlord Dashboard widgets.
+    /// Base logic for all Bannerboard widgets.
     /// </summary>
     public abstract class WidgetBase : CampaignBehaviorBase
     {
         protected readonly WebSocketServer Server;
 
         /// <summary>
-        /// Base logic for all Bannerlord Dashboard widgets.
+        /// Base logic for all Bannerboard widgets.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
         public WidgetBase(WebSocketServer server)

@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Ed.Bannerlord.Dashboard.Models\Ed.Bannerlord.Dashboard.Models.csproj" />
+    <ProjectReference Include="..\Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj" />
   </ItemGroup>
 
 </Project>

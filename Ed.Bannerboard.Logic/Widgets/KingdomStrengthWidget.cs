@@ -1,22 +1,22 @@
-﻿using Ed.Bannerlord.Dashboard.Models.Widgets;
+﻿using Ed.Bannerboard.Models.Widgets;
 using SuperSocket.WebSocket;
 using System;
 using System.Linq;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 
-namespace Ed.Bannerlord.Dashboard.Logic.Widgets
+namespace Ed.Bannerboard.Logic.Widgets
 {
     /// <summary>
-    /// A widget for displaying kingdom lord charts on the dashboard.
+    /// A widget for displaying kingdom strength charts on the dashboard.
     /// </summary>
-    public class KingdomLordsWidget : WidgetBase
+    public class KingdomStrengthWidget : WidgetBase
     {
         /// <summary>
-        /// A widget for displaying kingdom lord charts on the dashboard.
+        /// A widget for displaying kingdom strength charts on the dashboard.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
-        public KingdomLordsWidget(WebSocketServer server) : base(server)
+        public KingdomStrengthWidget(WebSocketServer server) : base(server)
         {
         }
 
@@ -25,7 +25,7 @@ namespace Ed.Bannerlord.Dashboard.Logic.Widgets
         /// </summary>
         public override void RegisterEvents()
         {
-            // Update all sessions about kingdom lord count every "hour"
+            // Update all sessions about kingdom strength every "hour"
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(() =>
             {
                 foreach (var session in Server.GetAllSessions())
@@ -51,13 +51,13 @@ namespace Ed.Bannerlord.Dashboard.Logic.Widgets
         /// <param name="session">The session to send the update to.</param>
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new KingdomLordsModel
+            var model = new KingdomStrengthModel
             {
                 Kingdoms = Campaign.Current.Kingdoms
-                    .Select(k => new KingdomLordsItem
+                    .Select(k => new KingdomStrengthItem
                     {
                         Name = k.Name.ToString(),
-                        Lords = k.Lords.Count(),
+                        Strength = k.TotalStrength,
                         PrimaryColor = Color.FromUint(k.Color).ToString(),
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })

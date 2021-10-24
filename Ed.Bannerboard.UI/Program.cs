@@ -7,7 +7,7 @@ using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace Ed.Bannerlord.Dashboard.UI
+namespace Ed.Bannerboard.UI
 {
     public class Program
     {

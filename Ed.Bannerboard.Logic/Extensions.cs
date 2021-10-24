@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
-namespace Ed.Bannerlord.Dashboard.Logic
+namespace Ed.Bannerboard.Logic
 {
     public static class Extensions
     {
