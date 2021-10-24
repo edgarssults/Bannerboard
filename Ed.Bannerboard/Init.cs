@@ -54,7 +54,7 @@ namespace Ed.Bannerboard
         {
             if (!_server.Setup(2020)) // TODO: Change the port or use an URL?
             {
-                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server set-up failed."));
+                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server set-up failed!"));
                 return;
             }
 
@@ -63,11 +63,11 @@ namespace Ed.Bannerboard
 
             if (!_server.Start())
             {
-                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server start-up failed."));
+                InformationManager.DisplayMessage(new InformationMessage("Bannerboard server start-up failed!"));
                 return;
             }
 
-            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server started."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server started"));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Ed.Bannerboard
 
             _server.Stop();
             _server = null;
-            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server stopped."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard server stopped"));
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Ed.Bannerboard
         /// <param name="session">The created session.</param>
         private void NewSessionConnected(WebSocketSession session)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client connected."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client connected"));
 
             // Initialize all widgets
             // TODO: Check which widgets and versions the dashboard supports, only update about those
@@ -100,7 +100,7 @@ namespace Ed.Bannerboard
                 }
                 catch
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Error while initializing {w.GetType().FullName}."));
+                    InformationManager.DisplayMessage(new InformationMessage($"Error while initializing {w.GetType().FullName}!"));
                 }
             });
         }
@@ -112,7 +112,7 @@ namespace Ed.Bannerboard
         /// <param name="reason">Closure reason.</param>
         private void SessionClosed(WebSocketSession session, CloseReason reason)
         {
-            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client disconnected."));
+            InformationManager.DisplayMessage(new InformationMessage("Bannerboard client disconnected"));
         }
     }
 }

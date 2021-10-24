@@ -11,6 +11,7 @@ namespace Ed.Bannerboard.Logic
         /// <param name="obj">The object to serialize.</param>
         public static byte[] ToByteArray(this object obj)
         {
+            // TODO: Replace with different serializer
             var bf = new BinaryFormatter();
             using (var ms = new MemoryStream())
             {
