@@ -18,3 +18,7 @@ Currently the dashboard has two widgets for kingdom strength and kingdom lord co
 Download the mod: TODO
 
 Connect to your game: https://bannerlorddashboard.azurewebsites.net/
+
+# Credits
+
+Chart icon made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
