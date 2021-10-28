@@ -1,0 +1,40 @@
+﻿@inherits WidgetBase
+
+<div class="card">
+    <div class="card-header">
+        Wars
+    </div>
+    <div class="card-body">
+        @if (warModel == null)
+        {
+            <span>Loading...</span>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var kingdom in warModel.Kingdoms.Where(k => k.Wars.Any()))
+                {
+                    <li class="list-group-item">
+                        <span>@kingdom.Name: </span>
+                        <span>@string.Join(", ", kingdom.Wars)</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+@code {
+    private KingdomWarsModel warModel;
+
+    public override bool CanUpdate(object model)
+    {
+        return model is KingdomWarsModel;
+    }
+
+    public override async Task Update(object model)
+    {
+        warModel = model as KingdomWarsModel;
+        base.StateHasChanged();
+    }
+}

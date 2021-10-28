@@ -12,19 +12,14 @@
 @code {
     private BarChart<float> barChart;
 
-    /// <summary>
-    /// Updates the widget.
-    /// </summary>
-    /// <param name="model">Model received from the server.</param>
+    public override bool CanUpdate(object model)
+    {
+        return model is KingdomStrengthModel;
+    }
+
     public override async Task Update(object model)
     {
-        if (!(model is KingdomStrengthModel))
-        {
-            return;
-        }
-
-        var widgetModel = model as KingdomStrengthModel;
-        await HandleRedraw(widgetModel);
+        await HandleRedraw(model as KingdomStrengthModel);
     }
 
     private async Task HandleRedraw(KingdomStrengthModel model)

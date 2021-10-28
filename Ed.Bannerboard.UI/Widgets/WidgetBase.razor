@@ -23,4 +23,13 @@
         // Should be overridden
         return Task.CompletedTask;
     }
+
+    /// <summary>
+    /// Determines whether the model can be used by the widget for an update.
+    /// </summary>
+    /// <param name="model">Model received from the server.</param>
+    public virtual bool CanUpdate(object model)
+    {
+        return false;
+    }
 }
