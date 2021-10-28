@@ -1,0 +1,41 @@
+﻿@inherits WidgetBase
+
+<div class="card">
+    <div class="card-header">
+        Stats
+    </div>
+    <div class="card-body">
+        @if (statsModel != null)
+        {
+            <table class="table table-sm table-wars">
+                <tbody>
+                    <tr>
+                        <td>Messages received</td>
+                        <td>@statsModel.ReceivedMessageCount</td>
+                    </tr>
+                    <tr>
+                        <td>Last message size</td>
+                        <td>@statsModel.LastMessageBytes B</td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+
+@code {
+    private StatsModel statsModel;
+
+    public override bool CanUpdate(object model)
+    {
+        return model is StatsModel;
+    }
+
+    public override Task Update(object model)
+    {
+        statsModel = model as StatsModel;
+        base.StateHasChanged();
+
+        return Task.CompletedTask;
+    }
+}
