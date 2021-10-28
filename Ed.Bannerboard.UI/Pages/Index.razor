@@ -1,10 +1,18 @@
 ﻿@page "/"
+
 @using System.Net.WebSockets
-@using System.Text
 @using System.Threading
 @using System.IO
 @using System.Runtime.Serialization.Formatters.Binary;
+
 @implements IDisposable
+
+@if (webSocket.State == WebSocketState.Connecting)
+{
+    <div class="container-fluid mt-4">
+        <p>Connnecting to your Bannerlord campaign...</p>
+    </div>
+}
 
 @if (webSocket.State == WebSocketState.Open)
 {
@@ -27,15 +35,22 @@
         </div>
     </div>
 }
-else
+
+@if (webSocket.State == WebSocketState.Aborted
+   || webSocket.State == WebSocketState.Closed
+   || webSocket.State == WebSocketState.CloseReceived
+   || webSocket.State == WebSocketState.CloseSent)
 {
-    <h3>Connection: @stateMessage</h3>
+    <div class="container-fluid mt-4">
+        <p>Could not establish a connection to the server. Refresh the page once you've loaded a campaign.</p>
+        <p>Download this Mount & Blade II: Bannerlord mod from <a href="https://www.nexusmods.com/mountandblade2bannerlord/mods/3386">https://www.nexusmods.com/mountandblade2bannerlord/mods/3386</a>.</p>
+        <p>See the source code at <a href="https://github.com/edgarssults/Bannerboard">https://github.com/edgarssults/Bannerboard</a>.</p>
+    </div>
 }
 
 @code {
     private CancellationTokenSource disposalTokenSource = new CancellationTokenSource();
     private ClientWebSocket webSocket = new ClientWebSocket();
-    private string stateMessage;
 
     // TODO: Dynamically render and update the widgets from a list when Blazor supports it
     private KingdomStrength kingdomStrength;
@@ -43,30 +58,21 @@ else
     private KingdomWars kingdomWars;
     private Stats stats;
 
-    /// <summary>
-    /// Component initialization logic.
-    /// </summary>
     protected override async Task OnInitializedAsync()
     {
-        stateMessage = webSocket.State.ToString();
-
         // TODO: Inform which widgets and versions the dashboard supports
+        // TODO: Support multiple client connections per server
         try
         {
             await webSocket.ConnectAsync(new Uri("ws://localhost:2020"), disposalTokenSource.Token); // TODO: Change the port or use an URL?
-            stateMessage = webSocket.State.ToString();
             _ = ReceiveLoop();
         }
         catch
         {
-            // TODO: Retry timer
-            stateMessage = "Failed. Have you loaded a game?";
+            // TODO: Retry failed connections
         }
     }
 
-    /// <summary>
-    /// WebSocket message reception loop.
-    /// </summary>
     async Task ReceiveLoop()
     {
         var buffer = new ArraySegment<byte>(new byte[2048]);
@@ -88,7 +94,8 @@ else
 
                 if (result.MessageType == WebSocketMessageType.Close)
                 {
-                    // TODO: Show in UI that server has stopped
+                    webSocket.Abort();
+                    base.StateHasChanged();
                     break;
                 }
 
@@ -127,9 +134,6 @@ else
         } while (!disposalTokenSource.IsCancellationRequested);
     }
 
-    /// <summary>
-    /// Disposal logic.
-    /// </summary>
     public void Dispose()
     {
         disposalTokenSource.Cancel();
