@@ -2,7 +2,7 @@
     /// <summary>
     /// Default bar chart options.
     /// </summary>
-    protected BarChartOptions BaseBarChartOptions = new BarChartOptions
+    protected object BaseBarChartOptions = new
     {
         Animation = new Animation
         {
@@ -11,6 +11,20 @@
         Legend = new Legend
         {
             Display = false,
+        },
+        Scales = new
+        {
+            YAxes = new[]
+            {
+                new
+                {
+                    Ticks = new
+                    {
+                        BeginAtZero = true,
+                        Min = 0
+                    }
+                }
+            }
         }
     };
 
