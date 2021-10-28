@@ -10,8 +10,8 @@ namespace Ed.Bannerboard
 {
     public class Init : MBSubModuleBase
     {
-        private WebSocketServer _server = new WebSocketServer();
-        private List<WidgetBase> _widgets = new List<WidgetBase>();
+        private WebSocketServer _server;
+        private List<WidgetBase> _widgets;
 
         /// <summary>
         /// Handles game starting.
@@ -25,6 +25,7 @@ namespace Ed.Bannerboard
                 StartServer();
 
                 // Define dashboard widgets
+                _widgets = new List<WidgetBase>();
                 _widgets.Add(new KingdomStrengthWidget(_server));
                 _widgets.Add(new KingdomLordsWidget(_server));
                 _widgets.Add(new KingdomWarsWidget(_server));
@@ -44,6 +45,8 @@ namespace Ed.Bannerboard
             if (game.GameType is Campaign && _server != null)
             {
                 StopServer();
+
+                // Clear all loaded widgets
                 _widgets = null;
             }
         }
@@ -53,6 +56,8 @@ namespace Ed.Bannerboard
         /// </summary>
         private void StartServer()
         {
+            _server = new WebSocketServer();
+
             if (!_server.Setup(2020)) // TODO: Change the port or use an URL?
             {
                 InformationManager.DisplayMessage(new InformationMessage("Bannerboard server set-up failed!"));
@@ -80,6 +85,7 @@ namespace Ed.Bannerboard
 
             _server.Stop();
             _server = null;
+
             InformationManager.DisplayMessage(new InformationMessage("Bannerboard server stopped"));
         }
 
