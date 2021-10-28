@@ -81,8 +81,6 @@ namespace Ed.Bannerboard
         /// </summary>
         private void StopServer()
         {
-            // TODO: Better disconnection update in UI
-
             _server.Stop();
             _server = null;
 
