@@ -181,3 +181,11 @@ app {
         display: block;
     }
 }
+
+img.img-war {
+    width: 1rem;
+}
+
+table.table-wars {
+    margin-bottom: 0;
+}

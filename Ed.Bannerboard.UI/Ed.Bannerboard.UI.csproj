@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\img\" />
+  </ItemGroup>
+
 </Project>

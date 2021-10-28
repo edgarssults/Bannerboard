@@ -11,15 +11,18 @@
         }
         else
         {
-            <ul class="list-group">
-                @foreach (var kingdom in warModel.Kingdoms.Where(k => k.Wars.Any()))
-                {
-                    <li class="list-group-item">
-                        <span>@kingdom.Name: </span>
-                        <span>@string.Join(", ", kingdom.Wars)</span>
-                    </li>
-                }
-            </ul>
+            <table class="table table-sm table-wars">
+                <tbody>
+                    @foreach (var kingdom in warModel.Kingdoms.Where(k => k.Wars.Any()))
+                    {
+                        <tr style="background-color: @kingdom.PrimaryColor;">
+                            <td class="text-center">@kingdom.Name</td>
+                            <td><img src="img/swords.png" alt="Kingdom is at war with" class="img-war" /></td>
+                            <td>@string.Join(", ", kingdom.Wars)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
         }
     </div>
 </div>
@@ -32,9 +35,11 @@
         return model is KingdomWarsModel;
     }
 
-    public override async Task Update(object model)
+    public override Task Update(object model)
     {
         warModel = model as KingdomWarsModel;
         base.StateHasChanged();
+
+        return Task.CompletedTask;
     }
 }
