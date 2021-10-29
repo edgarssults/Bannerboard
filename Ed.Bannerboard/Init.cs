@@ -111,7 +111,7 @@ namespace Ed.Bannerboard
         }
 
         /// <summary>
-        /// handles session closure event.
+        /// Handles session closure event.
         /// </summary>
         /// <param name="session">The closed session.</param>
         /// <param name="reason">Closure reason.</param>

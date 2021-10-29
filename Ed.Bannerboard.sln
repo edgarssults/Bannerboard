@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.UI", "Ed.Ban
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.Models", "Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj", "{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.Logic", "Ed.Bannerboard.Logic\Ed.Bannerboard.Logic.csproj", "{C774070B-A2DF-4E04-9146-1371F706C409}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{12A606EC-9AEB-4483-9667-1E0ECA975219}"
 	ProjectSection(SolutionItems) = preProject
 		README.md = README.md
@@ -35,10 +33,6 @@ Global
 		{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{931FCBB0-0A1E-4282-B7E9-A52DF6253C3A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C774070B-A2DF-4E04-9146-1371F706C409}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C774070B-A2DF-4E04-9146-1371F706C409}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C774070B-A2DF-4E04-9146-1371F706C409}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C774070B-A2DF-4E04-9146-1371F706C409}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
