@@ -5,12 +5,20 @@
         Strength
     </div>
     <div class="card-body">
-        <BarChart @ref="barChart" TItem="float" OptionsObject="BaseBarChartOptions" />
+        @if (isInitialized)
+        {
+            <BarChart @ref="barChart" TItem="float" OptionsObject="BaseBarChartOptions" />
+        }
+        else
+        {
+            <p>No data.</p>
+        }
     </div>
 </div>
 
 @code {
     private BarChart<float> barChart;
+    private bool isInitialized = false;
 
     public override bool CanUpdate(object model)
     {
@@ -20,6 +28,7 @@
     public override async Task Update(object model)
     {
         await HandleRedraw(model as KingdomStrengthModel);
+        isInitialized = true;
     }
 
     private async Task HandleRedraw(KingdomStrengthModel model)

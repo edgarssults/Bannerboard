@@ -96,7 +96,7 @@ namespace Ed.Bannerboard
             InformationManager.DisplayMessage(new InformationMessage("Bannerboard client connected"));
 
             // Initialize all widgets
-            // TODO: Check which widgets and versions the dashboard supports, only update about those
+            // TODO: Check which widgets and versions the dashboard supports, only update about those (handshake)
             _widgets.ForEach(w =>
             {
                 try

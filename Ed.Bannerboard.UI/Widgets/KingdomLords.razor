@@ -5,12 +5,20 @@
         Lords
     </div>
     <div class="card-body">
-        <BarChart @ref="barChart" TItem="int" OptionsObject="BaseBarChartOptions" />
+        @if (isInitialized)
+        {
+            <BarChart @ref="barChart" TItem="int" OptionsObject="BaseBarChartOptions" />
+        }
+        else
+        {
+            <p>No data.</p>
+        }
     </div>
 </div>
 
 @code {
     private BarChart<int> barChart;
+    private bool isInitialized = false;
 
     public override bool CanUpdate(object model)
     {
@@ -20,6 +28,7 @@
     public override async Task Update(object model)
     {
         await HandleRedraw(model as KingdomLordsModel);
+        isInitialized = true;
     }
 
     private async Task HandleRedraw(KingdomLordsModel model)
