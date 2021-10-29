@@ -22,23 +22,24 @@
         }
         else
         {
-            <p>No data.</p>
+            <span>No data or incompatible mod version.</span>
         }
     </div>
 </div>
 
 @code {
+    private readonly Version _minimumSupportedVersion = new Version("0.2.0");
     private KingdomWarsModel warModel;
 
-    public override bool CanUpdate(object model)
+    public override bool CanUpdate(object model, Version version)
     {
-        return model is KingdomWarsModel;
+        return IsCompatible(version, _minimumSupportedVersion) && model is KingdomWarsModel;
     }
 
     public override Task Update(object model)
     {
         warModel = model as KingdomWarsModel;
-        base.StateHasChanged();
+        StateHasChanged();
 
         return Task.CompletedTask;
     }

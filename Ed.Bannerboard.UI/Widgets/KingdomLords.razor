@@ -5,30 +5,36 @@
         Lords
     </div>
     <div class="card-body">
-        @if (isInitialized)
-        {
+        <div class="@(!isInitialized ? "d-none" : "")">
             <BarChart @ref="barChart" TItem="int" OptionsObject="BaseBarChartOptions" />
-        }
-        else
+        </div>
+
+        @if (!isInitialized)
         {
-            <p>No data.</p>
+            <span>No data or incompatible mod version.</span>
         }
     </div>
 </div>
 
 @code {
+    private readonly Version _minimumSupportedVersion = new Version("0.2.0");
     private BarChart<int> barChart;
     private bool isInitialized = false;
 
-    public override bool CanUpdate(object model)
+    public override bool CanUpdate(object model, Version version)
     {
-        return model is KingdomLordsModel;
+        return IsCompatible(version, _minimumSupportedVersion) && model is KingdomLordsModel;
     }
 
     public override async Task Update(object model)
     {
+        if (!isInitialized)
+        {
+            isInitialized = true;
+            StateHasChanged();
+        }
+
         await HandleRedraw(model as KingdomLordsModel);
-        isInitialized = true;
     }
 
     private async Task HandleRedraw(KingdomLordsModel model)

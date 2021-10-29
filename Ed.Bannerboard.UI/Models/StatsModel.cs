@@ -1,4 +1,6 @@
-﻿namespace Ed.Bannerboard.UI.Models
+﻿using System;
+
+namespace Ed.Bannerboard.UI.Models
 {
     public class StatsModel
     {
@@ -11,5 +13,10 @@
         /// Size in bytes of the last received message.
         /// </summary>
         public long LastMessageBytes { get; set; }
+
+        /// <summary>
+        /// Connected client mod version.
+        /// </summary>
+        public Version Version { get; set; }
     }
 }
