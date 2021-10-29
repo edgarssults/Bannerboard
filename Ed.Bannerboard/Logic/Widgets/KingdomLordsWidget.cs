@@ -16,7 +16,9 @@ namespace Ed.Bannerboard.Logic.Widgets
         /// A widget for displaying kingdom lord charts on the dashboard.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
-        public KingdomLordsWidget(WebSocketServer server) : base(server)
+        /// <param name="version">Mod version.</param>
+        public KingdomLordsWidget(WebSocketServer server, Version version)
+            : base(server, version)
         {
         }
 
@@ -62,6 +64,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })
                     .ToList(),
+                Version = Version,
             };
             session.Send(new ArraySegment<byte>(model.ToByteArray()));
         }

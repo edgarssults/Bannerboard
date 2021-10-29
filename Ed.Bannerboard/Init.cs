@@ -1,6 +1,9 @@
-﻿using Ed.Bannerboard.Logic.Widgets;
+﻿using Ed.Bannerboard.Logic;
+using Ed.Bannerboard.Logic.Widgets;
+using Ed.Bannerboard.Models;
 using SuperSocket.SocketBase;
 using SuperSocket.WebSocket;
+using System;
 using System.Collections.Generic;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Core;
@@ -10,6 +13,9 @@ namespace Ed.Bannerboard
 {
     public class Init : MBSubModuleBase
     {
+        // This version should be in sync with the version in SubModule.xml
+        private readonly Version _version = new Version("0.2.0");
+
         private WebSocketServer _server;
         private List<WidgetBase> _widgets;
 
@@ -26,9 +32,9 @@ namespace Ed.Bannerboard
 
                 // Define dashboard widgets
                 _widgets = new List<WidgetBase>();
-                _widgets.Add(new KingdomStrengthWidget(_server));
-                _widgets.Add(new KingdomLordsWidget(_server));
-                _widgets.Add(new KingdomWarsWidget(_server));
+                _widgets.Add(new KingdomStrengthWidget(_server, _version));
+                _widgets.Add(new KingdomLordsWidget(_server, _version));
+                _widgets.Add(new KingdomWarsWidget(_server, _version));
 
                 // Register widget behaviors in the game
                 var campaignStarter = gameStarter as CampaignGameStarter;
@@ -95,8 +101,14 @@ namespace Ed.Bannerboard
         {
             InformationManager.DisplayMessage(new InformationMessage("Bannerboard client connected"));
 
+            // Send handshake
+            var model = new HandshakeModel
+            {
+                Version = _version,
+            };
+            session.Send(new ArraySegment<byte>(model.ToByteArray()));
+
             // Initialize all widgets
-            // TODO: Check which widgets and versions the dashboard supports, only update about those (handshake)
             _widgets.ForEach(w =>
             {
                 try

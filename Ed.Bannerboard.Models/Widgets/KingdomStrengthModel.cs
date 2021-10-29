@@ -13,6 +13,11 @@ namespace Ed.Bannerboard.Models.Widgets
         /// List of kingdoms.
         /// </summary>
         public List<KingdomStrengthItem> Kingdoms { get; set; }
+
+        /// <summary>
+        /// Model version.
+        /// </summary>
+        public Version Version { get; set; }
     }
 
     /// <summary>

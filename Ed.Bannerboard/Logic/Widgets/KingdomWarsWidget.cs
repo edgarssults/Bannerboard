@@ -7,12 +7,24 @@ using TaleWorlds.Library;
 
 namespace Ed.Bannerboard.Logic.Widgets
 {
+    /// <summary>
+    /// A widget for displaying a list of wars each kingdom is in on the dashboard.
+    /// </summary>
     public class KingdomWarsWidget : WidgetBase
     {
-        public KingdomWarsWidget(WebSocketServer server) : base(server)
+        /// <summary>
+        /// A widget for displaying a list of wars each kingdom is in on the dashboard.
+        /// </summary>
+        /// <param name="server">WebSocket server to send data to.</param>
+        /// <param name="version">Mod version.</param>
+        public KingdomWarsWidget(WebSocketServer server, Version version)
+            : base(server, version)
         {
         }
 
+        /// <summary>
+        /// Registers widget events.
+        /// </summary>
         public override void RegisterEvents()
         {
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(() =>
@@ -24,11 +36,19 @@ namespace Ed.Bannerboard.Logic.Widgets
             }));
         }
 
+        /// <summary>
+        /// Initializes a widget.
+        /// </summary>
+        /// <param name="session">The session to initialize the widget for.</param>
         public override void Init(WebSocketSession session)
         {
             SendUpdate(session);
         }
 
+        /// <summary>
+        /// Sends a dashboard update to a WebSocket session.
+        /// </summary>
+        /// <param name="session">The session to send the update to.</param>
         private void SendUpdate(WebSocketSession session)
         {
             var model = new KingdomWarsModel
@@ -45,6 +65,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })
                     .ToList(),
+                Version = Version,
             };
             session.Send(new ArraySegment<byte>(model.ToByteArray()));
         }

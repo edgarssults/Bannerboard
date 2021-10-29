@@ -1,4 +1,5 @@
 ﻿using SuperSocket.WebSocket;
+using System;
 using TaleWorlds.CampaignSystem;
 
 namespace Ed.Bannerboard.Logic.Widgets
@@ -8,16 +9,26 @@ namespace Ed.Bannerboard.Logic.Widgets
     /// </summary>
     public abstract class WidgetBase : CampaignBehaviorBase
     {
-        protected readonly WebSocketServer Server;
-
         /// <summary>
         /// Base logic for all Bannerboard widgets.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
-        public WidgetBase(WebSocketServer server)
+        /// <param name="version">Mod version.</param>
+        public WidgetBase(WebSocketServer server, Version version)
         {
             Server = server;
+            Version = version;
         }
+
+        /// <summary>
+        /// WebSocket server to send data to.
+        /// </summary>
+        protected WebSocketServer Server { get; set; }
+
+        /// <summary>
+        /// Widget version.
+        /// </summary>
+        protected Version Version { get; set; }
 
         /// <summary>
         /// Initializes a widget.
