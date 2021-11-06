@@ -17,7 +17,7 @@
                             {
                                 <div class="form-check dropdown-item">
                                     <input class="form-check-input" type="checkbox" id="strength-widget-@kingdom.Name" checked="@visibleKingdoms.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
-                                    <label class="form-check-label" for="strength-widget-@kingdom.Name">@kingdom.Name</label>
+                                    <label class="form-check-label d-block" for="strength-widget-@kingdom.Name">@kingdom.Name</label>
                                 </div>
                             }
                         </form>
