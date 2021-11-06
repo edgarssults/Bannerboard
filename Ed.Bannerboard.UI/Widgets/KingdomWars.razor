@@ -38,12 +38,21 @@
         {
             <table class="table table-sm table-wars">
                 <tbody>
-                    @foreach (var kingdom in warsModel.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name) && k.Wars.Any(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions)))
+                    @foreach (var kingdom in warsModel.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name)))
                     {
                         <tr style="background-color: @kingdom.PrimaryColor;">
                             <td class="text-center">@kingdom.Name</td>
                             <td><img src="img/swords.png" alt="Kingdom is at war with" class="img-war" /></td>
-                            <td>@string.Join(", ", kingdom.Wars.Where(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions).Select(w => w.Name))</td>
+                            <td>
+                                @if (kingdom.Wars.Any(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions))
+                                {
+                                    <span>@string.Join(", ", kingdom.Wars.Where(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions).Select(w => w.Name))</span>
+                                }
+                                else
+                                {
+                                    <span>-</span>
+                                }
+                            </td>
                         </tr>
                     }
                 </tbody>
