@@ -59,7 +59,12 @@ namespace Ed.Bannerboard.Logic.Widgets
                         Name = k.Name.ToString(),
                         Wars = Campaign.Current.Factions
                             .Where(f => k.IsAtWarWith(f) && (f.IsKingdomFaction || f.IsMinorFaction))
-                            .Select(f => f.Name.ToString())
+                            .Select(f => new KingdomWarsFactionItem
+                            {
+                                Name = f.Name.ToString(),
+                                IsKingdomFaction = f.IsKingdomFaction,
+                                IsMinorFaction = f.IsMinorFaction
+                            })
                             .ToList(),
                         PrimaryColor = Color.FromUint(k.Color).ToString(),
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),

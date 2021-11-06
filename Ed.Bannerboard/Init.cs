@@ -14,7 +14,7 @@ namespace Ed.Bannerboard
     public class Init : MBSubModuleBase
     {
         // This version should be in sync with the version in SubModule.xml
-        private readonly Version _version = new Version("0.2.0");
+        private readonly Version _version = new Version("0.2.1");
 
         private WebSocketServer _server;
         private List<WidgetBase> _widgets;

@@ -24,10 +24,10 @@ namespace Ed.Bannerboard.UI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            // TODO: Support multiple client connections per server
             try
             {
-                await _webSocket.ConnectAsync(new Uri("ws://localhost:2020"), _disposalTokenSource.Token); // TODO: Change the port or use an URL?
+                // TODO: Change the port or use an URL?
+                await _webSocket.ConnectAsync(new Uri("ws://localhost:2020"), _disposalTokenSource.Token);
                 _ = ReceiveLoop();
             }
             catch

@@ -2,19 +2,34 @@
 
 <div class="card">
     <div class="card-header">
-        Wars
+        <div class="d-flex">
+            <div class="align-self-center">Wars</div>
+            <div class="dropdown ml-auto">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false" title="Filters">
+                    <i class="fas fa-filter"></i>
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                    <div class="form-check dropdown-item">
+                        <input class="form-check-input" type="checkbox" @bind="showMinorFactions" id="defaultCheck1">
+                        <label class="form-check-label" for="defaultCheck1">
+                            Show minor factions
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="card-body">
         @if (warModel != null)
         {
             <table class="table table-sm table-wars">
                 <tbody>
-                    @foreach (var kingdom in warModel.Kingdoms.Where(k => k.Wars.Any()))
+                    @foreach (var kingdom in warModel.Kingdoms.Where(k => k.Wars.Any(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions)))
                     {
                         <tr style="background-color: @kingdom.PrimaryColor;">
                             <td class="text-center">@kingdom.Name</td>
                             <td><img src="img/swords.png" alt="Kingdom is at war with" class="img-war" /></td>
-                            <td>@string.Join(", ", kingdom.Wars)</td>
+                            <td>@string.Join(", ", kingdom.Wars.Where(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions).Select(w => w.Name))</td>
                         </tr>
                     }
                 </tbody>
@@ -28,8 +43,9 @@
 </div>
 
 @code {
-    private readonly Version _minimumSupportedVersion = new Version("0.2.0");
+    private readonly Version _minimumSupportedVersion = new Version("0.2.1");
     private KingdomWarsModel warModel;
+    private bool showMinorFactions = false;
 
     public override bool CanUpdate(object model, Version version)
     {
