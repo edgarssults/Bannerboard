@@ -74,7 +74,7 @@ namespace Ed.Bannerboard.UI.Pages
 
                 if (receivedObject is HandshakeModel handshake)
                 {
-                    statsModel.Version = handshake.Version;
+                    statsModel.ModVersion = handshake.Version;
                 }
 
                 await stats.Update(statsModel);
@@ -82,19 +82,19 @@ namespace Ed.Bannerboard.UI.Pages
                 // Send model to widgets
                 // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
 
-                if (kingdomStrength.CanUpdate(receivedObject, statsModel.Version))
+                if (kingdomStrength.CanUpdate(receivedObject, statsModel.ModVersion))
                 {
                     await kingdomStrength.Update(receivedObject);
                     continue;
                 }
 
-                if (kingdomLords.CanUpdate(receivedObject, statsModel.Version))
+                if (kingdomLords.CanUpdate(receivedObject, statsModel.ModVersion))
                 {
                     await kingdomLords.Update(receivedObject);
                     continue;
                 }
 
-                if (kingdomWars.CanUpdate(receivedObject, statsModel.Version))
+                if (kingdomWars.CanUpdate(receivedObject, statsModel.ModVersion))
                 {
                     await kingdomWars.Update(receivedObject);
                     continue;
