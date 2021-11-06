@@ -22,6 +22,6 @@ namespace Ed.Bannerboard.UI.Models
         /// <summary>
         /// Dashboard UI version.
         /// </summary>
-        public Version DashboardVersion { get; set; } = new Version("0.2.1");
+        public Version DashboardVersion { get; set; }
     }
 }

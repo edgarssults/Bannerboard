@@ -8,6 +8,7 @@ using System.Net.WebSockets;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Configuration;
 
 namespace Ed.Bannerboard.UI.Pages
 {
@@ -21,9 +22,17 @@ namespace Ed.Bannerboard.UI.Pages
         private KingdomLords kingdomLords;
         private KingdomWars kingdomWars;
         private Stats stats;
+        private StatsModel statsModel;
+        private DashboardSettings settings;
 
         protected override async Task OnInitializedAsync()
         {
+            settings = _configuration.GetSection("DashboardSettings").Get<DashboardSettings>();
+            statsModel = new StatsModel
+            {
+                DashboardVersion = new Version(settings.Version)
+            };
+
             try
             {
                 // TODO: Change the port or use an URL?
@@ -40,7 +49,6 @@ namespace Ed.Bannerboard.UI.Pages
         {
             var buffer = new ArraySegment<byte>(new byte[2048]);
             object receivedObject;
-            var statsModel = new StatsModel();
 
             do
             {
