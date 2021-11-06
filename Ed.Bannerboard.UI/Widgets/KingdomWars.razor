@@ -4,19 +4,22 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Wars</div>
-            <div class="dropdown ml-auto">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false" title="Filters">
-                    <i class="fas fa-filter"></i>
-                </button>
-                <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                    <div class="form-check dropdown-item">
-                        <input class="form-check-input" type="checkbox" @bind="showMinorFactions" id="defaultCheck1">
-                        <label class="form-check-label" for="defaultCheck1">
-                            Show minor factions
-                        </label>
+            @if (warModel != null)
+            {
+                <div class="dropdown ml-auto">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-expanded="false" title="Filters">
+                        <i class="fas fa-filter"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                        <div class="form-check dropdown-item">
+                            <input class="form-check-input" type="checkbox" @bind="showMinorFactions" id="defaultCheck1">
+                            <label class="form-check-label" for="defaultCheck1">
+                                Show minor factions
+                            </label>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
     <div class="card-body">
