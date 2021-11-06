@@ -17,6 +17,11 @@ namespace Ed.Bannerboard.UI.Models
         /// <summary>
         /// Connected client mod version.
         /// </summary>
-        public Version Version { get; set; }
+        public Version ModVersion { get; set; }
+
+        /// <summary>
+        /// Dashboard UI version.
+        /// </summary>
+        public Version DashboardVersion { get; set; } = new Version("0.2.1");
     }
 }

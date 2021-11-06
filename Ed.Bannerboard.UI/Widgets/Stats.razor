@@ -11,7 +11,11 @@
                 <tbody>
                     <tr>
                         <td>Mod version</td>
-                        <td>@(statsModel.Version == null ? "0.1.0" : statsModel.Version)</td>
+                        <td>@(statsModel.ModVersion == null ? "0.1.0" : statsModel.ModVersion)</td>
+                    </tr>
+                    <tr>
+                        <td>Dashboard version</td>
+                        <td>@statsModel.DashboardVersion</td>
                     </tr>
                     <tr>
                         <td>Messages received</td>
@@ -32,7 +36,7 @@
 </div>
 
 @code {
-    private readonly Version _minimumSupportedVersion = new Version("0.2.0");
+    private readonly Version _minimumSupportedVersion = new Version("0.1.0");
     private StatsModel statsModel;
 
     public override bool CanUpdate(object model, Version version)
