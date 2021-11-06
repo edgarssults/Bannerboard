@@ -5,7 +5,7 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Strength</div>
-            @if (isInitialized)
+            @if (strengthModel != null)
             {
                 <div class="dropdown ml-auto">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="filterMenu" data-toggle="dropdown" data-display="static" aria-expanded="false" title="Filters">
@@ -27,11 +27,11 @@
         </div>
     </div>
     <div class="card-body">
-        <div class="@(!isInitialized ? "d-none" : "")">
+        <div class="@(strengthModel == null ? "d-none" : "")">
             <BarChart @ref="barChart" TItem="float" OptionsObject="BaseBarChartOptions" />
         </div>
 
-        @if (!isInitialized)
+        @if (strengthModel == null)
         {
             <span>No data or incompatible mod version.</span>
         }
@@ -43,7 +43,6 @@
     private BarChart<float> barChart;
     private KingdomStrengthModel strengthModel;
     private List<string> visibleKingdoms;
-    private bool isInitialized = false;
 
     public override bool CanUpdate(object model, Version version)
     {
@@ -53,18 +52,12 @@
     public override async Task Update(object model)
     {
         strengthModel = model as KingdomStrengthModel;
-        if (!isInitialized)
+        if (visibleKingdoms == null)
         {
-            if (visibleKingdoms == null)
-            {
-                visibleKingdoms = strengthModel.Kingdoms.Select(k => k.Name).ToList();
-            }
-
-            // Using a bool instead of null checks because otherwise the state doesn't change as expected
-            isInitialized = true;
-            StateHasChanged();
+            visibleKingdoms = strengthModel.Kingdoms.Select(k => k.Name).ToList();
         }
 
+        StateHasChanged();
         await HandleRedraw(strengthModel);
     }
 
