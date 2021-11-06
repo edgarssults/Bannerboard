@@ -1,3 +1,4 @@
+using Blazored.LocalStorage;
 using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
@@ -23,7 +24,8 @@ namespace Ed.Bannerboard.UI
                     options.ChangeTextOnKeyPress = true;
                 })
                 .AddBootstrapProviders()
-                .AddFontAwesomeIcons();
+                .AddFontAwesomeIcons()
+                .AddBlazoredLocalStorage();
 
             var host = builder.Build();
 
