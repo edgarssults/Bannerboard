@@ -12,12 +12,11 @@
                         <i class="fas fa-filter"></i>
                     </button>
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterMenu">
-                        <!-- Form so that menu doesn't close when an option is clicked -->
-                    <form>
+                        <form>
                             @foreach (var kingdom in lordsModel.Kingdoms)
                             {
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" id="lords-widget-@kingdom.Name" checked="@visibleKingdoms.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom, e)">
+                                    <input class="form-check-input" type="checkbox" id="lords-widget-@kingdom.Name" checked="@visibleKingdoms.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
                                     <label class="form-check-label" for="lords-widget-@kingdom.Name">@kingdom.Name</label>
                                 </div>
                             }
@@ -82,7 +81,7 @@
         await barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
     }
 
-    private async Task KingdomFilterClickedAsync(KingdomLordsItem kingdom, ChangeEventArgs e)
+    private async Task KingdomFilterClickedAsync(KingdomLordsItem kingdom)
     {
         if (visibleKingdoms.Contains(kingdom.Name))
         {
