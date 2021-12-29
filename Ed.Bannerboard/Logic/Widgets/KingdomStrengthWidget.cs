@@ -66,7 +66,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                     .ToList(),
                 Version = Version,
             };
-            session.Send(new ArraySegment<byte>(model.ToByteArray()));
+            session.Send(new ArraySegment<byte>(model.ToJsonByteArray()));
         }
     }
 }

@@ -7,12 +7,17 @@ namespace Ed.Bannerboard.Models.Widgets
     /// Model for Kingdom Wars widget data.
     /// </summary>
     [Serializable]
-    public class KingdomWarsModel
+    public class KingdomWarsModel : IMessageModel
     {
         /// <summary>
         /// List of kingdoms.
         /// </summary>
         public List<KingdomWarsItem> Kingdoms { get; set; }
+
+        /// <summary>
+        /// Model type.
+        /// </summary>
+        public string Type => nameof(KingdomWarsModel);
 
         /// <summary>
         /// Model version.

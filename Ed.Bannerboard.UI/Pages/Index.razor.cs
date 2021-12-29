@@ -1,21 +1,25 @@
 ﻿using Ed.Bannerboard.Models;
+using Ed.Bannerboard.Models.Widgets;
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Net.WebSockets;
-using System.Runtime.Serialization.Formatters.Binary;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Configuration;
 
 namespace Ed.Bannerboard.UI.Pages
 {
     public partial class Index : ComponentBase
     {
-        private readonly CancellationTokenSource _disposalTokenSource = new CancellationTokenSource();
-        private readonly ClientWebSocket _webSocket = new ClientWebSocket();
+        private readonly CancellationTokenSource _disposalTokenSource = new();
+        private readonly ClientWebSocket _webSocket = new();
 
         // TODO: Dynamically render and update the widgets from a list when Blazor supports it
         private KingdomStrength kingdomStrength;
@@ -48,19 +52,23 @@ namespace Ed.Bannerboard.UI.Pages
         private async Task ReceiveLoop()
         {
             var buffer = new ArraySegment<byte>(new byte[2048]);
-            object receivedObject;
 
             do
             {
-                WebSocketReceiveResult result;
+                var receivedText = string.Empty;
+
                 using (var stream = new MemoryStream())
                 {
+                    WebSocketReceiveResult result;
+
                     do
                     {
                         // Wait for a message from the server
                         // Read it into the stream via the buffer when one is received
+                        Debug.WriteLine("Receiving...");
                         result = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
                         stream.Write(buffer.Array, buffer.Offset, result.Count);
+                        Debug.WriteLine("Received");
                     } while (!result.EndOfMessage);
 
                     if (result.MessageType == WebSocketMessageType.Close)
@@ -70,19 +78,27 @@ namespace Ed.Bannerboard.UI.Pages
                         break;
                     }
 
-                    // Deserialize the stream into an object
-                    // Only expecting messages with binary data
-                    stream.Seek(0, SeekOrigin.Begin);
-                    var formatter = new BinaryFormatter();
-                    receivedObject = formatter.Deserialize(stream);
-
                     statsModel.LastMessageBytes = stream.Length;
                     statsModel.ReceivedMessageCount++;
+
+                    // Read the stream as a string
+                    // Expecting JSON messages only
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (var reader = new StreamReader(stream))
+                    {
+                        receivedText = await reader.ReadToEndAsync();
+                        Debug.WriteLine("Message: " + receivedText);
+                    }
                 }
 
-                if (receivedObject is HandshakeModel handshake)
+                Debug.WriteLine("Matching...");
+                if (Regex.IsMatch(receivedText, "\"Type\":.*\"HandshakeModel\""))
                 {
-                    statsModel.ModVersion = handshake.Version;
+                    Debug.WriteLine("Matched HandshakeModel");
+                    var model = JsonConvert.DeserializeObject<HandshakeModel>(receivedText, new VersionConverter());
+                    Debug.WriteLine("Deserialized HandshakeModel");
+                    statsModel.ModVersion = model.Version;
+                    Debug.WriteLine("Set version");
                 }
 
                 await stats.Update(statsModel);
@@ -90,22 +106,37 @@ namespace Ed.Bannerboard.UI.Pages
                 // Send model to widgets
                 // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
 
-                if (kingdomStrength.CanUpdate(receivedObject, statsModel.ModVersion))
+                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomStrengthModel\""))
                 {
-                    await kingdomStrength.Update(receivedObject);
-                    continue;
+                    Debug.WriteLine("Matched KingdomStrengthModel");
+                    var model = JsonConvert.DeserializeObject<KingdomStrengthModel>(receivedText, new VersionConverter());
+                    if (kingdomStrength.CanUpdate(model, statsModel.ModVersion))
+                    {
+                        await kingdomStrength.Update(model);
+                        continue;
+                    }
                 }
 
-                if (kingdomLords.CanUpdate(receivedObject, statsModel.ModVersion))
+                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomLordsModel\""))
                 {
-                    await kingdomLords.Update(receivedObject);
-                    continue;
+                    Debug.WriteLine("Matched KingdomLordsModel");
+                    var model = JsonConvert.DeserializeObject<KingdomLordsModel>(receivedText, new VersionConverter());
+                    if (kingdomLords.CanUpdate(model, statsModel.ModVersion))
+                    {
+                        await kingdomLords.Update(model);
+                        continue;
+                    }
                 }
 
-                if (kingdomWars.CanUpdate(receivedObject, statsModel.ModVersion))
+                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomWarsModel\""))
                 {
-                    await kingdomWars.Update(receivedObject);
-                    continue;
+                    Debug.WriteLine("Matched KingdomWarsModel");
+                    var model = JsonConvert.DeserializeObject<KingdomWarsModel>(receivedText, new VersionConverter());
+                    if (kingdomWars.CanUpdate(model, statsModel.ModVersion))
+                    {
+                        await kingdomWars.Update(model);
+                        continue;
+                    }
                 }
             } while (!_disposalTokenSource.IsCancellationRequested);
         }

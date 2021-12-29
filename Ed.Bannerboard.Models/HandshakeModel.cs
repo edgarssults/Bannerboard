@@ -6,8 +6,13 @@ namespace Ed.Bannerboard.Models
     /// A model for sending information about the mod to the dashboard.
     /// </summary>
     [Serializable]
-    public class HandshakeModel
+    public class HandshakeModel : IMessageModel
     {
+        /// <summary>
+        /// Model type.
+        /// </summary>
+        public string Type => nameof(HandshakeModel);
+
         /// <summary>
         /// Mod version.
         /// </summary>

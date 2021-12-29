@@ -31,10 +31,12 @@ namespace Ed.Bannerboard
                 StartServer();
 
                 // Define dashboard widgets
-                _widgets = new List<WidgetBase>();
-                _widgets.Add(new KingdomStrengthWidget(_server, _version));
-                _widgets.Add(new KingdomLordsWidget(_server, _version));
-                _widgets.Add(new KingdomWarsWidget(_server, _version));
+                _widgets = new List<WidgetBase>
+                {
+                    new KingdomStrengthWidget(_server, _version),
+                    new KingdomLordsWidget(_server, _version),
+                    new KingdomWarsWidget(_server, _version)
+                };
 
                 // Register widget behaviors in the game
                 var campaignStarter = gameStarter as CampaignGameStarter;
@@ -106,7 +108,8 @@ namespace Ed.Bannerboard
             {
                 Version = _version,
             };
-            session.Send(new ArraySegment<byte>(model.ToByteArray()));
+            // TODO: Better extension for sending
+            session.Send(new ArraySegment<byte>(model.ToJsonByteArray()));
 
             // Initialize all widgets
             _widgets.ForEach(w =>
