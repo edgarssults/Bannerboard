@@ -14,6 +14,7 @@ namespace Ed.Bannerboard.UI.Widgets
 {
     public partial class KingdomLords
     {
+        private const string VisibleKingdomsKey = "lords-widget-visible-kingdoms";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
         private BarChart<int> barChart;
         private KingdomLordsModel lordsModel;
@@ -47,7 +48,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         protected override async Task OnInitializedAsync()
         {
-            visibleKingdoms = await LocalStorage.GetItemAsync<List<string>>("lords-widget-visible-kingdoms");
+            visibleKingdoms = await LocalStorage.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
@@ -69,7 +70,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage.SetItemAsync("lords-widget-visible-kingdoms", visibleKingdoms);
+            await LocalStorage.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
             await HandleRedraw(lordsModel);
         }
 
