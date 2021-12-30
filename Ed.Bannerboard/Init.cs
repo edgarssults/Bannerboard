@@ -108,8 +108,7 @@ namespace Ed.Bannerboard
             {
                 Version = _version,
             };
-            // TODO: Better extension for sending
-            session.Send(new ArraySegment<byte>(model.ToJsonByteArray()));
+            session.Send(model.ToJsonArraySegment());
 
             // Initialize all widgets
             _widgets.ForEach(w =>
