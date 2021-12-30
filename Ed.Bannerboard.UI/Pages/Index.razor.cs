@@ -1,5 +1,4 @@
 ﻿using Ed.Bannerboard.Models;
-using Ed.Bannerboard.Models.Widgets;
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
 using Microsoft.AspNetCore.Components;
