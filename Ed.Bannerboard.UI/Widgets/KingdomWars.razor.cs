@@ -1,9 +1,12 @@
 ﻿using Blazored.LocalStorage;
 using Ed.Bannerboard.Models.Widgets;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Widgets
@@ -18,14 +21,20 @@ namespace Ed.Bannerboard.UI.Widgets
         [Inject]
         private ILocalStorageService LocalStorage { get; set; }
 
-        public override bool CanUpdate(object model, Version version)
+        public override bool CanUpdate(string model, Version version)
         {
-            return IsCompatible(version, _minimumSupportedVersion) && model is KingdomWarsModel;
+            return Regex.IsMatch(model, $"\"Type\":.*\"{nameof(KingdomWarsModel)}\"")
+                && IsCompatible(version, _minimumSupportedVersion);
         }
 
-        public override Task Update(object model)
+        public override Task Update(string model)
         {
-            warsModel = model as KingdomWarsModel;
+            warsModel = JsonConvert.DeserializeObject<KingdomWarsModel>(model, new VersionConverter());
+            if (warsModel == null)
+            {
+                return Task.CompletedTask;
+            }
+
             if (visibleKingdoms == null)
             {
                 visibleKingdoms = warsModel.Kingdoms.Select(k => k.Name).ToList();

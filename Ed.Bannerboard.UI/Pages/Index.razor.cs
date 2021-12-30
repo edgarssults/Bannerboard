@@ -31,7 +31,7 @@ namespace Ed.Bannerboard.UI.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            settings = _configuration.GetSection("DashboardSettings").Get<DashboardSettings>();
+            settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
             {
                 DashboardVersion = new Version(settings.Version)
@@ -104,35 +104,23 @@ namespace Ed.Bannerboard.UI.Pages
         {
             // Send model to widgets
             // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
-
-            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomStrengthModel\""))
+            
+            if (kingdomStrength.CanUpdate(message, statsModel.ModVersion))
             {
-                var model = JsonConvert.DeserializeObject<KingdomStrengthModel>(message, new VersionConverter());
-                if (kingdomStrength.CanUpdate(model, statsModel.ModVersion))
-                {
-                    await kingdomStrength.Update(model);
-                    return;
-                }
+                await kingdomStrength.Update(message);
+                return;
             }
 
-            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomLordsModel\""))
+            if (kingdomLords.CanUpdate(message, statsModel.ModVersion))
             {
-                var model = JsonConvert.DeserializeObject<KingdomLordsModel>(message, new VersionConverter());
-                if (kingdomLords.CanUpdate(model, statsModel.ModVersion))
-                {
-                    await kingdomLords.Update(model);
-                    return;
-                }
+                await kingdomLords.Update(message);
+                return;
             }
 
-            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomWarsModel\""))
+            if (kingdomWars.CanUpdate(message, statsModel.ModVersion))
             {
-                var model = JsonConvert.DeserializeObject<KingdomWarsModel>(message, new VersionConverter());
-                if (kingdomWars.CanUpdate(model, statsModel.ModVersion))
-                {
-                    await kingdomWars.Update(model);
-                    return;
-                }
+                await kingdomWars.Update(message);
+                return;
             }
         }
 

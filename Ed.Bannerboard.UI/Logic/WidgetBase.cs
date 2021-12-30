@@ -39,8 +39,8 @@ namespace Ed.Bannerboard.UI.Logic
         /// <summary>
         /// Updates the widget.
         /// </summary>
-        /// <param name="model">Model received from the server.</param>
-        public virtual Task Update(object model)
+        /// <param name="model">JSON model received from the server.</param>
+        public virtual Task Update(string model)
         {
             // Should be overridden
             return Task.CompletedTask;
@@ -49,10 +49,11 @@ namespace Ed.Bannerboard.UI.Logic
         /// <summary>
         /// Determines whether the model can be used by the widget for an update.
         /// </summary>
-        /// <param name="model">Model received from the server.</param>
+        /// <param name="model">JSON model received from the server.</param>
         /// <param name="version">Mod version the model was received from.</param>
-        public virtual bool CanUpdate(object model, Version version)
+        public virtual bool CanUpdate(string model, Version version)
         {
+            // Should be overridden
             return false;
         }
 

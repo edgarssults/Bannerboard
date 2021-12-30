@@ -2,9 +2,12 @@
 using Blazorise.Charts;
 using Ed.Bannerboard.Models.Widgets;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Widgets
@@ -19,14 +22,20 @@ namespace Ed.Bannerboard.UI.Widgets
         [Inject]
         private ILocalStorageService LocalStorage { get; set; }
 
-        public override bool CanUpdate(object model, Version version)
+        public override bool CanUpdate(string model, Version version)
         {
-            return IsCompatible(version, _minimumSupportedVersion) && model is KingdomStrengthModel;
+            return Regex.IsMatch(model, $"\"Type\":.*\"{nameof(KingdomStrengthModel)}\"")
+                && IsCompatible(version, _minimumSupportedVersion);
         }
 
-        public override async Task Update(object model)
+        public override async Task Update(string model)
         {
-            strengthModel = model as KingdomStrengthModel;
+            strengthModel = JsonConvert.DeserializeObject<KingdomStrengthModel>(model, new VersionConverter());
+            if (strengthModel == null)
+            {
+                return;
+            }
+
             if (visibleKingdoms == null)
             {
                 visibleKingdoms = strengthModel.Kingdoms.Select(k => k.Name).ToList();
