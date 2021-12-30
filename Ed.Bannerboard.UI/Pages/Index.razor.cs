@@ -84,11 +84,9 @@ namespace Ed.Bannerboard.UI.Pages
                     // Read the stream as a string
                     // Expecting JSON messages only
                     stream.Seek(0, SeekOrigin.Begin);
-                    using (var reader = new StreamReader(stream))
-                    {
-                        message = await reader.ReadToEndAsync();
-                        Debug.WriteLine("Message: " + message);
-                    }
+                    using var reader = new StreamReader(stream);
+                    message = await reader.ReadToEndAsync();
+                    Debug.WriteLine("Message: " + message);
                 }
 
                 if (Regex.IsMatch(message, "\"Type\":.*\"HandshakeModel\""))
