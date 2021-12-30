@@ -51,10 +51,9 @@ namespace Ed.Bannerboard.UI.Pages
 
         private async Task ReceiveLoop()
         {
-            var buffer = new ArraySegment<byte>(new byte[2048]);
-
             do
             {
+                var buffer = new ArraySegment<byte>(new byte[2048]);
                 var message = string.Empty;
 
                 using (var stream = new MemoryStream())
