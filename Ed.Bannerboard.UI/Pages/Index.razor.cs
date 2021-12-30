@@ -55,7 +55,7 @@ namespace Ed.Bannerboard.UI.Pages
 
             do
             {
-                var receivedText = string.Empty;
+                var message = string.Empty;
 
                 using (var stream = new MemoryStream())
                 {
@@ -68,7 +68,7 @@ namespace Ed.Bannerboard.UI.Pages
                         Debug.WriteLine("Receiving...");
                         result = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
                         stream.Write(buffer.Array, buffer.Offset, result.Count);
-                        Debug.WriteLine("Received");
+                        Debug.WriteLine("Received, deserializing...");
                     } while (!result.EndOfMessage);
 
                     if (result.MessageType == WebSocketMessageType.Close)
@@ -86,59 +86,56 @@ namespace Ed.Bannerboard.UI.Pages
                     stream.Seek(0, SeekOrigin.Begin);
                     using (var reader = new StreamReader(stream))
                     {
-                        receivedText = await reader.ReadToEndAsync();
-                        Debug.WriteLine("Message: " + receivedText);
+                        message = await reader.ReadToEndAsync();
+                        Debug.WriteLine("Message: " + message);
                     }
                 }
 
-                Debug.WriteLine("Matching...");
-                if (Regex.IsMatch(receivedText, "\"Type\":.*\"HandshakeModel\""))
+                if (Regex.IsMatch(message, "\"Type\":.*\"HandshakeModel\""))
                 {
-                    Debug.WriteLine("Matched HandshakeModel");
-                    var model = JsonConvert.DeserializeObject<HandshakeModel>(receivedText, new VersionConverter());
-                    Debug.WriteLine("Deserialized HandshakeModel");
+                    var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
                     statsModel.ModVersion = model.Version;
-                    Debug.WriteLine("Set version");
                 }
 
                 await stats.Update(statsModel);
-
-                // Send model to widgets
-                // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
-
-                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomStrengthModel\""))
-                {
-                    Debug.WriteLine("Matched KingdomStrengthModel");
-                    var model = JsonConvert.DeserializeObject<KingdomStrengthModel>(receivedText, new VersionConverter());
-                    if (kingdomStrength.CanUpdate(model, statsModel.ModVersion))
-                    {
-                        await kingdomStrength.Update(model);
-                        continue;
-                    }
-                }
-
-                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomLordsModel\""))
-                {
-                    Debug.WriteLine("Matched KingdomLordsModel");
-                    var model = JsonConvert.DeserializeObject<KingdomLordsModel>(receivedText, new VersionConverter());
-                    if (kingdomLords.CanUpdate(model, statsModel.ModVersion))
-                    {
-                        await kingdomLords.Update(model);
-                        continue;
-                    }
-                }
-
-                if (Regex.IsMatch(receivedText, "\"Type\":.*\"KingdomWarsModel\""))
-                {
-                    Debug.WriteLine("Matched KingdomWarsModel");
-                    var model = JsonConvert.DeserializeObject<KingdomWarsModel>(receivedText, new VersionConverter());
-                    if (kingdomWars.CanUpdate(model, statsModel.ModVersion))
-                    {
-                        await kingdomWars.Update(model);
-                        continue;
-                    }
-                }
+                await UpdateWidgets(message);
             } while (!_disposalTokenSource.IsCancellationRequested);
+        }
+
+        private async Task UpdateWidgets(string message)
+        {
+            // Send model to widgets
+            // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
+
+            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomStrengthModel\""))
+            {
+                var model = JsonConvert.DeserializeObject<KingdomStrengthModel>(message, new VersionConverter());
+                if (kingdomStrength.CanUpdate(model, statsModel.ModVersion))
+                {
+                    await kingdomStrength.Update(model);
+                    return;
+                }
+            }
+
+            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomLordsModel\""))
+            {
+                var model = JsonConvert.DeserializeObject<KingdomLordsModel>(message, new VersionConverter());
+                if (kingdomLords.CanUpdate(model, statsModel.ModVersion))
+                {
+                    await kingdomLords.Update(model);
+                    return;
+                }
+            }
+
+            if (Regex.IsMatch(message, "\"Type\":.*\"KingdomWarsModel\""))
+            {
+                var model = JsonConvert.DeserializeObject<KingdomWarsModel>(message, new VersionConverter());
+                if (kingdomWars.CanUpdate(model, statsModel.ModVersion))
+                {
+                    await kingdomWars.Update(model);
+                    return;
+                }
+            }
         }
 
         public void Dispose()
