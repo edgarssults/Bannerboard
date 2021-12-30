@@ -34,21 +34,3 @@
         }
     </div>
 </div>
-
-@code {
-    private readonly Version _minimumSupportedVersion = new Version("0.1.0");
-    private StatsModel statsModel;
-
-    public override bool CanUpdate(object model, Version version)
-    {
-        return IsCompatible(version, _minimumSupportedVersion) && model is StatsModel;
-    }
-
-    public override Task Update(object model)
-    {
-        statsModel = model as StatsModel;
-        StateHasChanged();
-
-        return Task.CompletedTask;
-    }
-}

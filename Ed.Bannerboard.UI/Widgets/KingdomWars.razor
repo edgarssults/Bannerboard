@@ -1,5 +1,4 @@
 ﻿@inherits WidgetBase
-@inject Blazored.LocalStorage.ILocalStorageService _localStorage
 
 <div class="card">
     <div class="card-header">
@@ -64,54 +63,3 @@
         }
     </div>
 </div>
-
-@code {
-    private readonly Version _minimumSupportedVersion = new Version("0.3.0");
-    private KingdomWarsModel warsModel;
-    private bool showMinorFactions;
-    private List<string> visibleKingdoms;
-
-    public override bool CanUpdate(object model, Version version)
-    {
-        return IsCompatible(version, _minimumSupportedVersion) && model is KingdomWarsModel;
-    }
-
-    public override Task Update(object model)
-    {
-        warsModel = model as KingdomWarsModel;
-        if (visibleKingdoms == null)
-        {
-            visibleKingdoms = warsModel.Kingdoms.Select(k => k.Name).ToList();
-        }
-
-        StateHasChanged();
-        return Task.CompletedTask;
-    }
-
-    protected override async Task OnInitializedAsync()
-    {
-        showMinorFactions = await _localStorage.GetItemAsync<bool>("wars-widget-show-minor-factions");
-        visibleKingdoms = await _localStorage.GetItemAsync<List<string>>("wars-widget-visible-kingdoms");
-        await base.OnInitializedAsync();
-    }
-
-    private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
-    {
-        showMinorFactions = (bool)e.Value;
-        await _localStorage.SetItemAsync("wars-widget-show-minor-factions", showMinorFactions);
-    }
-
-    private async Task KingdomFilterClickedAsync(KingdomWarsItem kingdom)
-    {
-        if (visibleKingdoms.Contains(kingdom.Name))
-        {
-            visibleKingdoms.Remove(kingdom.Name);
-        }
-        else
-        {
-            visibleKingdoms.Add(kingdom.Name);
-        }
-
-        await _localStorage.SetItemAsync("wars-widget-visible-kingdoms", visibleKingdoms);
-    }
-}
