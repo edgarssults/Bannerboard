@@ -74,10 +74,10 @@ namespace Ed.Bannerboard.UI.Widgets
             await HandleRedraw(lordsModel);
         }
 
-        private List<string> GetLabels(List<KingdomLordsItem> kingdoms) =>
+        private static List<string> GetLabels(List<KingdomLordsItem> kingdoms) =>
             kingdoms.Select(m => m.Name).ToList();
 
-        private BarChartDataset<int> GetDataset(List<KingdomLordsItem> kingdoms) =>
+        private static BarChartDataset<int> GetDataset(List<KingdomLordsItem> kingdoms) =>
             new()
             {
                 Data = kingdoms.Select(m => m.Lords).ToList(),
