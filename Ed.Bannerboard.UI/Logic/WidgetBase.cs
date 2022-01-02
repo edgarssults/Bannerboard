@@ -1,7 +1,5 @@
 ﻿using Blazorise.Charts;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Logic
 {
@@ -19,6 +17,12 @@ namespace Ed.Bannerboard.UI.Logic
             Legend = new Legend
             {
                 Display = false,
+                // Has to be set, otherwise there's a JS error
+                Labels = new LegendLabels
+                {
+                    FontSize = 12,
+                    FontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                }
             },
             Scales = new
             {
@@ -51,7 +55,7 @@ namespace Ed.Bannerboard.UI.Logic
         /// </summary>
         /// <param name="model">JSON model received from the server.</param>
         /// <param name="version">Mod version the model was received from.</param>
-        public virtual bool CanUpdate(string model, Version version)
+        public virtual bool CanUpdate(string model, Version? version)
         {
             // Should be overridden
             return false;
@@ -62,7 +66,7 @@ namespace Ed.Bannerboard.UI.Logic
         /// </summary>
         /// <param name="version">The mod version.</param>
         /// <param name="minimumSupportedVersion">Minimum supported version by the widget.</param>
-        public bool IsCompatible(Version version, Version minimumSupportedVersion)
+        public bool IsCompatible(Version? version, Version minimumSupportedVersion)
         {
             // If we don't know the current mod version yet, don't process the update
             if (version == null)

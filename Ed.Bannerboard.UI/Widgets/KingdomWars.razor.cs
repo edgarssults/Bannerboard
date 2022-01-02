@@ -3,11 +3,7 @@ using Ed.Bannerboard.Models.Widgets;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Widgets
 {
@@ -16,14 +12,14 @@ namespace Ed.Bannerboard.UI.Widgets
         private const string VisibleKingdomsKey = "wars-widget-visible-kingdoms";
         private const string ShowMinorFactionsKey = "wars-widget-show-minor-factions";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
-        private KingdomWarsModel warsModel;
+        private KingdomWarsModel? warsModel;
         private bool showMinorFactions;
-        private List<string> visibleKingdoms;
+        private List<string>? visibleKingdoms;
 
         [Inject]
-        private ILocalStorageService LocalStorage { get; set; }
+        private ILocalStorageService? LocalStorage { get; set; }
 
-        public override bool CanUpdate(string model, Version version)
+        public override bool CanUpdate(string model, Version? version)
         {
             return Regex.IsMatch(model, $"\"Type\":.*\"{nameof(KingdomWarsModel)}\"")
                 && IsCompatible(version, _minimumSupportedVersion);
@@ -48,19 +44,24 @@ namespace Ed.Bannerboard.UI.Widgets
 
         protected override async Task OnInitializedAsync()
         {
-            showMinorFactions = await LocalStorage.GetItemAsync<bool>(ShowMinorFactionsKey);
-            visibleKingdoms = await LocalStorage.GetItemAsync<List<string>>(VisibleKingdomsKey);
+            showMinorFactions = await LocalStorage!.GetItemAsync<bool>(ShowMinorFactionsKey);
+            visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
         private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
         {
-            showMinorFactions = (bool)e.Value;
-            await LocalStorage.SetItemAsync(ShowMinorFactionsKey, showMinorFactions);
+            showMinorFactions = (bool)(e.Value ?? true);
+            await LocalStorage!.SetItemAsync(ShowMinorFactionsKey, showMinorFactions);
         }
 
         private async Task KingdomFilterClickedAsync(KingdomWarsItem kingdom)
         {
+            if (visibleKingdoms == null)
+            {
+                return;
+            }
+
             if (visibleKingdoms.Contains(kingdom.Name))
             {
                 visibleKingdoms.Remove(kingdom.Name);
@@ -70,7 +71,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
+            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
         }
     }
 }

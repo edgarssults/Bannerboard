@@ -4,11 +4,7 @@ using Ed.Bannerboard.Models.Widgets;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Widgets
 {
@@ -16,14 +12,15 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string VisibleKingdomsKey = "lords-widget-visible-kingdoms";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
-        private BarChart<int> barChart;
-        private KingdomLordsModel lordsModel;
-        private List<string> visibleKingdoms;
+        private BarChart<int>? barChart;
+        private KingdomLordsModel? lordsModel;
+        private List<string>? visibleKingdoms;
+        private bool isFirstDraw = true;
 
         [Inject]
-        private ILocalStorageService LocalStorage { get; set; }
+        private ILocalStorageService? LocalStorage { get; set; }
 
-        public override bool CanUpdate(string model, Version version)
+        public override bool CanUpdate(string model, Version? version)
         {
             return Regex.IsMatch(model, $"\"Type\":.*\"{nameof(KingdomLordsModel)}\"")
                 && IsCompatible(version, _minimumSupportedVersion);
@@ -43,24 +40,42 @@ namespace Ed.Bannerboard.UI.Widgets
             }
 
             StateHasChanged();
+
+            // Have to delay the first draw for a bit to let JS initialize
+            if (isFirstDraw)
+            {
+                await Task.Delay(200);
+                isFirstDraw = false;
+            }
+
             await HandleRedraw(lordsModel);
         }
 
         protected override async Task OnInitializedAsync()
         {
-            visibleKingdoms = await LocalStorage.GetItemAsync<List<string>>(VisibleKingdomsKey);
+            visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
-        private async Task HandleRedraw(KingdomLordsModel model)
+        private async Task HandleRedraw(KingdomLordsModel? model)
         {
-            await barChart.Clear();
+            if (visibleKingdoms == null || model == null)
+            {
+                return;
+            }
+
+            await barChart!.Clear();
             var filteredKingdoms = model.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name)).ToList();
             await barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
         }
 
         private async Task KingdomFilterClickedAsync(KingdomLordsItem kingdom)
         {
+            if (visibleKingdoms == null)
+            {
+                return;
+            }
+
             if (visibleKingdoms.Contains(kingdom.Name))
             {
                 visibleKingdoms.Remove(kingdom.Name);
@@ -70,7 +85,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
+            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
             await HandleRedraw(lordsModel);
         }
 

@@ -22,7 +22,7 @@
                             @foreach (var kingdom in warsModel.Kingdoms)
                             {
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" id="wars-widget-@kingdom.Name" checked="@visibleKingdoms.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
+                                    <input class="form-check-input" type="checkbox" id="wars-widget-@kingdom.Name" checked="@visibleKingdoms?.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
                                     <label class="form-check-label d-block" for="wars-widget-@kingdom.Name">@kingdom.Name</label>
                                 </div>
                             }
@@ -37,7 +37,7 @@
         {
             <table class="table table-sm table-wars">
                 <tbody>
-                    @foreach (var kingdom in warsModel.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name)))
+                    @foreach (var kingdom in warsModel.Kingdoms.Where(k => visibleKingdoms?.Contains(k.Name) ?? false))
                     {
                         <tr style="background-color: @kingdom.PrimaryColor;">
                             <td class="text-center">@kingdom.Name</td>

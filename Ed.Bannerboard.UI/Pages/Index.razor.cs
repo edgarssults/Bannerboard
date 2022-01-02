@@ -2,16 +2,11 @@
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
 using Microsoft.AspNetCore.Components;
-using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Net.WebSockets;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Ed.Bannerboard.UI.Pages
 {
@@ -21,16 +16,15 @@ namespace Ed.Bannerboard.UI.Pages
         private readonly ClientWebSocket _webSocket = new();
 
         // TODO: Dynamically render and update the widgets from a list when Blazor supports it
-        private KingdomStrength kingdomStrength;
-        private KingdomLords kingdomLords;
-        private KingdomWars kingdomWars;
-        private Stats stats;
-        private StatsModel statsModel;
-        private DashboardSettings settings;
+        private KingdomStrength? kingdomStrength;
+        private KingdomLords? kingdomLords;
+        private KingdomWars? kingdomWars;
+        private Stats? stats;
+        private StatsModel? statsModel;
 
         protected override async Task OnInitializedAsync()
         {
-            settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
+            var settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
             {
                 DashboardVersion = new Version(settings.Version)
@@ -65,7 +59,7 @@ namespace Ed.Bannerboard.UI.Pages
                         // Read it into the stream via the buffer when one is received
                         Debug.WriteLine("Receiving...");
                         result = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
-                        stream.Write(buffer.Array, buffer.Offset, result.Count);
+                        stream.Write(buffer.Array!, buffer.Offset, result.Count);
                         Debug.WriteLine("Received, deserializing...");
                     } while (!result.EndOfMessage);
 
@@ -76,8 +70,8 @@ namespace Ed.Bannerboard.UI.Pages
                         break;
                     }
 
-                    statsModel.LastMessageBytes = stream.Length;
-                    statsModel.ReceivedMessageCount++;
+                    statsModel!.LastMessageBytes = stream.Length;
+                    statsModel!.ReceivedMessageCount++;
 
                     // Read the stream as a string
                     // Expecting JSON messages only
@@ -90,10 +84,10 @@ namespace Ed.Bannerboard.UI.Pages
                 if (Regex.IsMatch(message, "\"Type\":.*\"HandshakeModel\""))
                 {
                     var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
-                    statsModel.ModVersion = model.Version;
+                    statsModel!.ModVersion = model?.Version;
                 }
 
-                await stats.Update(statsModel);
+                await stats!.Update(statsModel);
                 await UpdateWidgets(message);
             } while (!_disposalTokenSource.IsCancellationRequested);
         }
@@ -102,20 +96,20 @@ namespace Ed.Bannerboard.UI.Pages
         {
             // Send model to widgets
             // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
-            
-            if (kingdomStrength.CanUpdate(message, statsModel.ModVersion))
+
+            if (kingdomStrength!.CanUpdate(message, statsModel?.ModVersion))
             {
                 await kingdomStrength.Update(message);
                 return;
             }
 
-            if (kingdomLords.CanUpdate(message, statsModel.ModVersion))
+            if (kingdomLords!.CanUpdate(message, statsModel?.ModVersion))
             {
                 await kingdomLords.Update(message);
                 return;
             }
 
-            if (kingdomWars.CanUpdate(message, statsModel.ModVersion))
+            if (kingdomWars!.CanUpdate(message, statsModel?.ModVersion))
             {
                 await kingdomWars.Update(message);
                 return;
