@@ -117,16 +117,18 @@ namespace Ed.Bannerboard.UI.Pages
         {
             foreach (var widget in _widgets)
             {
-                if (widget.Component?.Instance is not IWidget widgetComponent)
+                if (widget.Component?.Instance is not IWidget widgetInstance)
                 {
                     continue;
                 }
 
-                if (widgetComponent.CanUpdate(message, statsModel?.ModVersion))
+                if (!widgetInstance.CanUpdate(message, statsModel?.ModVersion))
                 {
-                    await widgetComponent.Update(message);
-                    return;
+                    continue;
                 }
+
+                await widgetInstance.Update(message);
+                return;
             }
         }
 
