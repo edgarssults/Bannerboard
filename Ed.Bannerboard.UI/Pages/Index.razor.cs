@@ -1,4 +1,5 @@
 ﻿using Ed.Bannerboard.Models;
+using Ed.Bannerboard.UI.Logic;
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
 using Microsoft.AspNetCore.Components;
@@ -14,13 +15,16 @@ namespace Ed.Bannerboard.UI.Pages
     {
         private readonly CancellationTokenSource _disposalTokenSource = new();
         private readonly ClientWebSocket _webSocket = new();
+        private readonly List<WidgetComponent> _widgets = new()
+        {
+            new WidgetComponent(typeof(KingdomStrength)),
+            new WidgetComponent(typeof(KingdomLords)),
+            new WidgetComponent(typeof(KingdomWars)),
+            new WidgetComponent(typeof(Stats))
+        };
 
-        // TODO: Dynamically render and update the widgets from a list when Blazor supports it
-        private KingdomStrength? kingdomStrength;
-        private KingdomLords? kingdomLords;
-        private KingdomWars? kingdomWars;
-        private Stats? stats;
         private StatsModel? statsModel;
+        private bool modVersionDetermined;
 
         protected override async Task OnInitializedAsync()
         {
@@ -81,38 +85,48 @@ namespace Ed.Bannerboard.UI.Pages
                     Debug.WriteLine("Message: " + message);
                 }
 
-                if (Regex.IsMatch(message, "\"Type\":.*\"HandshakeModel\""))
-                {
-                    var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
-                    statsModel!.ModVersion = model?.Version;
-                }
+                // Handshake message is sent once
+                GetModVersionFromHandshake(message);
 
-                await stats!.Update(statsModel);
+                // Stats always updated
+                await UpdateWidgets(JsonConvert.SerializeObject(statsModel));
+
+                // Update the relevant widget
                 await UpdateWidgets(message);
             } while (!_disposalTokenSource.IsCancellationRequested);
         }
 
+        private void GetModVersionFromHandshake(string message)
+        {
+            if (modVersionDetermined)
+            {
+                return;
+            }
+
+            if (!Regex.IsMatch(message, "\"Type\":.*\"HandshakeModel\""))
+            {
+                return;
+            }
+
+            var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
+            statsModel!.ModVersion = model?.Version;
+            modVersionDetermined = true;
+        }
+
         private async Task UpdateWidgets(string message)
         {
-            // Send model to widgets
-            // TODO: Send to the widget that cares, need an array and dynamic rendering to do this
-
-            if (kingdomStrength!.CanUpdate(message, statsModel?.ModVersion))
+            foreach (var widget in _widgets)
             {
-                await kingdomStrength.Update(message);
-                return;
-            }
+                if (widget.Component?.Instance is not IWidget widgetComponent)
+                {
+                    continue;
+                }
 
-            if (kingdomLords!.CanUpdate(message, statsModel?.ModVersion))
-            {
-                await kingdomLords.Update(message);
-                return;
-            }
-
-            if (kingdomWars!.CanUpdate(message, statsModel?.ModVersion))
-            {
-                await kingdomWars.Update(message);
-                return;
+                if (widgetComponent.CanUpdate(message, statsModel?.ModVersion))
+                {
+                    await widgetComponent.Update(message);
+                    return;
+                }
             }
         }
 

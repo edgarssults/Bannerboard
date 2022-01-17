@@ -17,20 +17,12 @@
 {
     <div class="container-fluid">
         <div class="row">
-            <div class="col-sm-6 col-xs-12 mt-4">
-                <KingdomStrength @ref="kingdomStrength" />
-            </div>
-            <div class="col-sm-6 col-xs-12 mt-4">
-                <KingdomLords @ref="kingdomLords" />
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-sm-6 col-xs-12 mt-4">
-                <KingdomWars @ref="kingdomWars" />
-            </div>
-            <div class="col-sm-6 col-xs-12 mt-4">
-                <Stats @ref="stats" />
-            </div>
+            @foreach (var widget in _widgets)
+            {
+                <div class="col-sm-6 col-xs-12 mt-4">
+                    <DynamicComponent Type="widget.Type" @ref="widget.Component" />
+                </div>
+            }
         </div>
     </div>
 }

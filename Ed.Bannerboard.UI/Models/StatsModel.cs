@@ -23,5 +23,10 @@ namespace Ed.Bannerboard.UI.Models
         /// Dashboard UI version.
         /// </summary>
         public Version? DashboardVersion { get; set; }
+
+        /// <summary>
+        /// Model type.
+        /// </summary>
+        public string Type => nameof(StatsModel);
     }
 }

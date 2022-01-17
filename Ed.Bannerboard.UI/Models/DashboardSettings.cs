@@ -2,14 +2,11 @@
 
 namespace Ed.Bannerboard.UI.Models
 {
-    /// <summary>
-    /// Dashboard settings model.
-    /// </summary>
     public class DashboardSettings
     {
         /// <summary>
         /// Dashboard UI version.
         /// </summary>
-        public string Version { get; set; }
+        public string Version { get; set; } = "0.1.0";
     }
 }
