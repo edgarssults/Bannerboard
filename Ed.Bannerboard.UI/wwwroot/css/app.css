@@ -70,3 +70,35 @@ img.img-war {
 table.table-wars {
     margin-bottom: 0;
 }
+
+/* Cards should take up all available tile space */
+.eg-elc .card {
+    width: 100%;
+    height: 100%;
+}
+
+/* Dashboard should take up all available height */
+html, body, #app, .dashboard {
+    height: 100%;
+}
+
+.dashboard {
+    padding: 1.5rem 0 1.5rem 1.5rem;
+}
+
+/* Dashboard element title should be elsewhere, but still usable for moving the element */
+.eg-el > div:first-child {
+    position: absolute;
+    z-index: 1;
+    border-bottom: 0 !important;
+    top: 0;
+    left: 0;
+    right: 5rem;
+    height: 4rem;
+    user-select: none;
+}
+
+/* Dashboard element title should be hidden, cards have their own title */
+.eg-el > div:first-child h2 {
+    visibility: hidden;
+}

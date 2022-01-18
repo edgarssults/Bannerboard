@@ -15,16 +15,32 @@
 
 @if (_webSocket.State == WebSocketState.Open)
 {
-    <div class="container-fluid">
-        <div class="row">
-            @foreach (var widget in _widgets)
-            {
-                <div class="col-sm-12 col-md-6 mt-4">
-                    <DynamicComponent Type="widget.Type" @ref="widget.Component" />
-                </div>
-            }
-        </div>
-    </div>
+    <Grid
+        AspectRatio="1"
+        ColumnGap="1.5rem"
+        RowGap="1.5rem"
+        AllowResize="true"
+        AllowMove="true"
+        PreventOverlaps="true"
+        AutoRows="true"
+        OnResize="OnResize"
+        OnMove="OnMove"
+        class="dashboard">
+        <Columns Count="4" Width="1fr" />
+
+        @foreach (var widget in _widgets)
+        {
+            <Element
+                @key="widget"
+                @bind-Row="widget.Row"
+                @bind-Column="widget.Column"
+                @bind-RowSpan="widget.RowSpan"
+                @bind-ColumnSpan="widget.ColumnSpan"
+                Title="@(widget.Type.Name)">
+                <DynamicComponent Type="widget.Type" @ref="widget.Component" />
+            </Element>
+        }
+    </Grid>
 }
 
 @if (_webSocket.State == WebSocketState.Aborted

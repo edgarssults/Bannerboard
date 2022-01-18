@@ -37,7 +37,9 @@ namespace Ed.Bannerboard.UI.Logic
                         }
                     }
                 }
-            }
+            },
+            Responsive = true, // Default
+            MaintainAspectRatio = false // So that widgets fill the allocated space
         };
 
         public virtual Task Update(string model)

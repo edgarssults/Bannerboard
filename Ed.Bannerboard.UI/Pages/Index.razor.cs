@@ -2,6 +2,7 @@
 using Ed.Bannerboard.UI.Logic;
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
+using Excubo.Blazor.Grids;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -17,10 +18,10 @@ namespace Ed.Bannerboard.UI.Pages
         private readonly ClientWebSocket _webSocket = new();
         private readonly List<WidgetComponent> _widgets = new()
         {
-            new WidgetComponent(typeof(KingdomStrength)),
-            new WidgetComponent(typeof(KingdomLords)),
-            new WidgetComponent(typeof(KingdomWars)),
-            new WidgetComponent(typeof(Stats))
+            new WidgetComponent(typeof(KingdomStrength), 0, 0, 1, 2),
+            new WidgetComponent(typeof(KingdomLords), 0, 2, 1, 2),
+            new WidgetComponent(typeof(KingdomWars), 1, 0, 1, 2),
+            new WidgetComponent(typeof(Stats), 1, 2, 1, 1)
         };
 
         private StatsModel? statsModel;
@@ -130,6 +131,16 @@ namespace Ed.Bannerboard.UI.Pages
                 await widgetInstance.Update(message);
                 return;
             }
+        }
+
+        private void OnResize(ElementResizeArgs args)
+        {
+            // TODO: Save
+        }
+
+        private void OnMove(ElementMoveArgs args)
+        {
+            // TODO: Save
         }
 
         public void Dispose()
