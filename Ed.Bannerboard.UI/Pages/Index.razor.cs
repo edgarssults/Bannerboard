@@ -1,4 +1,5 @@
-﻿using Ed.Bannerboard.Models;
+﻿using Blazored.LocalStorage;
+using Ed.Bannerboard.Models;
 using Ed.Bannerboard.UI.Logic;
 using Ed.Bannerboard.UI.Models;
 using Ed.Bannerboard.UI.Widgets;
@@ -14,6 +15,7 @@ namespace Ed.Bannerboard.UI.Pages
 {
     public partial class Index : ComponentBase
     {
+        private const string BannerboardLayoutKey = "bannerboard-layout";
         private readonly CancellationTokenSource _disposalTokenSource = new();
         private readonly ClientWebSocket _webSocket = new();
         private readonly List<WidgetComponent> _widgets = new()
@@ -27,8 +29,29 @@ namespace Ed.Bannerboard.UI.Pages
         private StatsModel? statsModel;
         private bool modVersionDetermined;
 
+        [Inject]
+        private ILocalStorageService? LocalStorage { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
+            var layout = await LocalStorage!.GetItemAsync<List<WidgetLayout>>(BannerboardLayoutKey);
+            if (layout != null)
+            {
+                _widgets.ForEach(w =>
+                {
+                    var storedLayout = layout.FirstOrDefault(l => l.Type == w.Type.Name);
+                    if (storedLayout == null)
+                    {
+                        return;
+                    }
+
+                    w.Column = storedLayout.Column;
+                    w.Row = storedLayout.Row;
+                    w.ColumnSpan = storedLayout.ColumnSpan;
+                    w.RowSpan = storedLayout.RowSpan;
+                });
+            }
+
             var settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
             {
@@ -133,14 +156,14 @@ namespace Ed.Bannerboard.UI.Pages
             }
         }
 
-        private void OnResize(ElementResizeArgs args)
+        private async void OnResize(ElementResizeArgs args)
         {
-            // TODO: Save
+            await LocalStorage!.SetItemAsync(BannerboardLayoutKey, _widgets.ToWidgetLayout());
         }
 
-        private void OnMove(ElementMoveArgs args)
+        private async void OnMove(ElementMoveArgs args)
         {
-            // TODO: Save
+            await LocalStorage!.SetItemAsync(BannerboardLayoutKey, _widgets.ToWidgetLayout());
         }
 
         public void Dispose()
