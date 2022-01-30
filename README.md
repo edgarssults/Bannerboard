@@ -11,7 +11,7 @@ No data is sent outside your system, the browser downloads the client code and r
 
 ![Dashboard](screenshots/dashboard.png)
 
-The dashboard started out with two widgets for kingdom strength and kingdom lord count. First kingdom is the player (if you have established one), rest are NPCs. The charts update every in-game hour.
+The dashboard started out with two widgets for kingdom strength and kingdom lord count. The charts update every in-game hour.
 
 More widgets are being added.
 
