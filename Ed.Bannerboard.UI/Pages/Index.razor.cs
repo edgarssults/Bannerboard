@@ -20,10 +20,10 @@ namespace Ed.Bannerboard.UI.Pages
         private readonly ClientWebSocket _webSocket = new();
         private readonly List<WidgetComponent> _widgets = new()
         {
-            new WidgetComponent(typeof(KingdomStrength), 0, 0, 1, 2),
-            new WidgetComponent(typeof(KingdomLords), 0, 2, 1, 2),
-            new WidgetComponent(typeof(KingdomWars), 1, 0, 1, 2),
-            new WidgetComponent(typeof(Stats), 1, 2, 1, 1)
+            new WidgetComponent(typeof(KingdomStrength), 0, 0, 5, 6),
+            new WidgetComponent(typeof(KingdomLords), 0, 6, 5, 6),
+            new WidgetComponent(typeof(KingdomWars), 5, 0, 5, 6),
+            new WidgetComponent(typeof(Stats), 5, 6, 3, 6)
         };
 
         private StatsModel? statsModel;

@@ -22,11 +22,11 @@
         AllowResize="true"
         AllowMove="true"
         PreventOverlaps="true"
-        AutoRows="true"
         OnResize="OnResize"
         OnMove="OnMove"
         class="dashboard">
-        <Columns Count="4" Width="1fr" />
+        <Columns Count="32" Width="4rem" />
+        <Rows Count="32" Height="4rem" />
 
         @foreach (var widget in _widgets)
         {
