@@ -1,20 +1,25 @@
 <Module>
-    <Name value="Bannerboard"/>
-    <Id value="Bannerboard"/>
-    <Version value="v0.3.1"/>
-    <SingleplayerModule value="true"/>
-    <MultiplayerModule value="false"/>
-    <Official value="false"/>
-    <DependedModules/>
-    <SubModules>
-        <SubModule>
-            <Name value="Bannerboard"/>
-            <DLLName value="Ed.Bannerboard.dll"/>
-            <SubModuleClassType value="Ed.Bannerboard.Init"/>
-            <Tags>
-                <Tag key="DedicatedServerType" value="none" />
-                <Tag key="IsNoRenderModeElement" value="false" />
-            </Tags>
-        </SubModule>
-    </SubModules>
+	<Name value="Bannerboard"/>
+	<Id value="Bannerboard"/>
+	<Version value="v0.3.1"/>
+	<SingleplayerModule value="true"/>
+	<MultiplayerModule value="false"/>
+	<Official value="false"/>
+	<DependedModules>
+		<DependedModule Id="Native"/>
+		<DependedModule Id="SandBoxCore"/>
+		<DependedModule Id="Sandbox"/>
+		<DependedModule Id="StoryMode" />
+	</DependedModules>
+	<SubModules>
+		<SubModule>
+			<Name value="Bannerboard"/>
+			<DLLName value="Ed.Bannerboard.dll"/>
+			<SubModuleClassType value="Ed.Bannerboard.Init"/>
+			<Tags>
+				<Tag key="DedicatedServerType" value="none" />
+				<Tag key="IsNoRenderModeElement" value="false" />
+			</Tags>
+		</SubModule>
+	</SubModules>
 </Module>
