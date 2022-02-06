@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Blazored.Toast.Services;
 using Ed.Bannerboard.Models;
 using Ed.Bannerboard.UI.Logic;
 using Ed.Bannerboard.UI.Models;
@@ -33,25 +34,12 @@ namespace Ed.Bannerboard.UI.Pages
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
 
+        [Inject]
+        private IToastService? ToastService { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
-            var layout = await LocalStorage!.GetItemAsync<List<WidgetLayout>>(BannerboardLayoutKey);
-            if (layout != null)
-            {
-                _widgets.ForEach(w =>
-                {
-                    var storedLayout = layout.FirstOrDefault(l => l.Type == w.Type.Name);
-                    if (storedLayout == null)
-                    {
-                        return;
-                    }
-
-                    w.Column = storedLayout.Column;
-                    w.Row = storedLayout.Row;
-                    w.ColumnSpan = storedLayout.ColumnSpan;
-                    w.RowSpan = storedLayout.RowSpan;
-                });
-            }
+            await LoadLayoutFromStorage();
 
             var settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
@@ -155,6 +143,39 @@ namespace Ed.Bannerboard.UI.Pages
                 await widgetInstance.Update(message);
                 return;
             }
+        }
+
+        private async Task LoadLayoutFromStorage()
+        {
+            var layout = await LocalStorage!.GetItemAsync<List<WidgetLayout>>(BannerboardLayoutKey);
+            if (layout == null)
+            {
+                // No layout stored, defaults will be used
+                return;
+            }
+
+            if (!_widgets.All(w => layout.Any(l => l.Type == w.Type.Name)))
+            {
+                // Stored widgets are different than available widgets, should reset layout
+                await LocalStorage!.RemoveItemAsync(BannerboardLayoutKey);
+                ToastService?.ShowInfo("Stored layout has been reset due to widget changes.");
+                return;
+            }
+
+            _widgets.ForEach(w =>
+            {
+                var storedLayout = layout.FirstOrDefault(l => l.Type == w.Type.Name);
+                if (storedLayout == null)
+                {
+                    // Widget doesn't have a layout stored, this shouldn't really happen
+                    return;
+                }
+
+                w.Column = storedLayout.Column;
+                w.Row = storedLayout.Row;
+                w.ColumnSpan = storedLayout.ColumnSpan;
+                w.RowSpan = storedLayout.RowSpan;
+            });
         }
 
         private async void OnResize(ElementResizeArgs args)
