@@ -23,4 +23,7 @@ Connect to your game: https://bannerboard.azurewebsites.net/
 
 # Credits
 
-Icons made by [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
+Icons made by:
+
+- [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
+- [Game-icons.net](https://game-icons.net/)

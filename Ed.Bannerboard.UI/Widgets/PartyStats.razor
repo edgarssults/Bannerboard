@@ -1,0 +1,49 @@
+﻿@inherits WidgetBase
+
+<div class="card">
+    <div class="card-header">
+        Party Stats
+    </div>
+    <div class="card-body">
+        @if (partyModel != null)
+        {
+            <table class="table table-sm table-wars">
+                <thead>
+                    <tr>
+                        <th>Units</th>
+                        <th>@(partyModel.Members.TotalHeroes + partyModel.Members.TotalRegulars) / @partyModel.Members.MaxCount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var member in partyModel.Members.Items)
+                    {
+                        <tr>
+                            <td><img src="img/@(GetMemberIcon(member)).png" class="img-war" /> @member.Description</td>
+                            <td>@(member.WoundedCount > 0 ? $"{member.Count} ({member.WoundedCount}w)" : member.Count)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <table class="table table-sm table-wars mt-4">
+                <thead>
+                    <tr>
+                        <th colspan="2">Food</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var food in partyModel.Food.Items)
+                    {
+                        <tr>
+                            <td>@food.Name</td>
+                            <td>@food.Count</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <span>No data or incompatible mod version.</span>
+        }
+    </div>
+</div>

@@ -70,7 +70,10 @@ namespace Ed.Bannerboard.Logic.Widgets
                     TotalRegulars = Campaign.Current.MainParty.MemberRoster.TotalRegulars,
                     WoundedHeroes = Campaign.Current.MainParty.MemberRoster.TotalWoundedHeroes,
                     WoundedRegulars = Campaign.Current.MainParty.MemberRoster.TotalWoundedRegulars,
-                    Members = new List<MemberStatsItem>
+                    TotalCount = Campaign.Current.MainParty.MemberRoster.TotalManCount,
+                    TotalWounded = Campaign.Current.MainParty.MemberRoster.TotalWounded,
+                    MaxCount = Campaign.Current.MainParty.LimitedPartySize,
+                    Items = new List<MemberStatsItem>
                     {
                         new MemberStatsItem
                         {
@@ -82,8 +85,6 @@ namespace Ed.Bannerboard.Logic.Widgets
                                 .Where(t => t.Character.IsInfantry && !t.Character.IsRanged && !t.Character.IsMounted)
                                 .Sum(t => t.WoundedNumber),
                             IsInfantry = true,
-                            IsRanged = false,
-                            IsCavalry = false
                         },
                         new MemberStatsItem
                         {
@@ -94,9 +95,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                             WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
                                 .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && !t.Character.IsMounted)
                                 .Sum(t => t.WoundedNumber),
-                            IsInfantry = true,
-                            IsRanged = true,
-                            IsCavalry = false
+                            IsArcher = true,
                         },
                         new MemberStatsItem
                         {
@@ -107,9 +106,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                             WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
                                 .Where(t => !t.Character.IsInfantry && !t.Character.IsRanged && t.Character.IsMounted)
                                 .Sum(t => t.WoundedNumber),
-                            IsInfantry = false,
-                            IsRanged = false,
-                            IsCavalry = true
+                            IsCavalry = true,
                         },
                         new MemberStatsItem
                         {
@@ -120,9 +117,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                             WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
                                 .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && t.Character.IsMounted)
                                 .Sum(t => t.WoundedNumber),
-                            IsInfantry = false,
-                            IsRanged = true,
-                            IsCavalry = true
+                            IsMountedArcher = true,
                         },
                     },
                 },

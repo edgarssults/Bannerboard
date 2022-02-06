@@ -86,9 +86,24 @@ namespace Ed.Bannerboard.Models.Widgets
         public int WoundedRegulars { get; set; }
 
         /// <summary>
+        /// Total party size.
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
+        /// Total number of wounded units in the party.
+        /// </summary>
+        public int TotalWounded { get; set; }
+
+        /// <summary>
+        /// Maximum party size.
+        /// </summary>
+        public int MaxCount { get; set; }
+
+        /// <summary>
         /// List of party members.
         /// </summary>
-        public List<MemberStatsItem> Members { get; set; }
+        public List<MemberStatsItem> Items { get; set; }
     }
 
     /// <summary>
@@ -100,6 +115,9 @@ namespace Ed.Bannerboard.Models.Widgets
         /// <summary>
         /// Member description.
         /// </summary>
+        /// <remarks>
+        /// Should not be used in UI because it's not translated.
+        /// </remarks>
         public string Description { get; set; }
 
         /// <summary>
@@ -123,8 +141,13 @@ namespace Ed.Bannerboard.Models.Widgets
         public bool IsCavalry { get; set; }
 
         /// <summary>
-        /// Indicates whether the member is ranged (both infantry and cavalry can be ranged).
+        /// Indicates whether the member is an archer (ranged infantry).
         /// </summary>
-        public bool IsRanged { get; set; }
+        public bool IsArcher { get; set; }
+
+        /// <summary>
+        /// Indicates whether the member is a mounted archer (ranged cavalry).
+        /// </summary>
+        public bool IsMountedArcher { get; set; }
     }
 }
