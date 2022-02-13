@@ -37,9 +37,13 @@ namespace Ed.Bannerboard.UI.Pages
         [Inject]
         private IToastService? ToastService { get; set; }
 
+        [Inject]
+        private AppState? AppState { get; set; }
+
         protected override async Task OnInitializedAsync()
         {
             await LoadLayoutFromStorage();
+            AppState!.OnResetLayout += OnResetLayout;
 
             var settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
@@ -188,8 +192,24 @@ namespace Ed.Bannerboard.UI.Pages
             await LocalStorage!.SetItemAsync(BannerboardLayoutKey, _widgets.ToWidgetLayout());
         }
 
+        private async void OnResetLayout()
+        {
+            await LocalStorage!.RemoveItemAsync(BannerboardLayoutKey);
+
+            _widgets.ForEach(w =>
+            {
+                w.Column = w.DefaultColumn;
+                w.Row = w.DefaultRow;
+                w.ColumnSpan = w.DefaultColumnSpan;
+                w.RowSpan = w.DefaultRowSpan;
+            });
+
+            StateHasChanged();
+        }
+
         public void Dispose()
         {
+            AppState!.OnResetLayout -= OnResetLayout;
             _disposalTokenSource.Cancel();
             _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bannerboard client stopped", CancellationToken.None);
         }

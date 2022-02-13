@@ -4,6 +4,7 @@ using Blazorise;
 using Blazorise.Bootstrap;
 using Blazorise.Icons.FontAwesome;
 using Ed.Bannerboard.UI;
+using Ed.Bannerboard.UI.Logic;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 
@@ -13,6 +14,7 @@ builder.RootComponents.Add<HeadOutlet>("head::after");
 
 builder.Services
     .AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) })
+    .AddSingleton(sp => new AppState())
     .AddBlazorise(options =>
     {
         options.ChangeTextOnKeyPress = true;

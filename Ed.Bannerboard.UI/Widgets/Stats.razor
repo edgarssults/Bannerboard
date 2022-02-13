@@ -2,7 +2,12 @@
 
 <div class="card">
     <div class="card-header">
-        Stats
+        <div class="d-flex">
+            <div class="align-self-center">Stats</div>
+            <button class="btn btn-secondary ml-auto" type="button" title="Reset dashboard layout" @onclick="ResetLayoutClicked">
+                <i class="fas fa-redo"></i>
+            </button>
+        </div>
     </div>
     <div class="card-body">
         @if (statsModel != null)

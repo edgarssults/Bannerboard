@@ -10,10 +10,10 @@ namespace Ed.Bannerboard.UI.Models
         public WidgetComponent(Type type, int row, int column, int rowSpan = 1, int columnSpan = 1)
         {
             Type = type;
-            Row = row;
-            Column = column;
-            RowSpan = rowSpan;
-            ColumnSpan = columnSpan;
+            Row = DefaultRow = row;
+            Column = DefaultColumn = column;
+            RowSpan = DefaultRowSpan = rowSpan;
+            ColumnSpan = DefaultColumnSpan = columnSpan;
         }
         
         /// <summary>
@@ -48,5 +48,25 @@ namespace Ed.Bannerboard.UI.Models
         /// Number of columns the widget spans.
         /// </summary>
         public int ColumnSpan { get; set; }
+
+        /// <summary>
+        /// Default widget row starting with 0.
+        /// </summary>
+        public int DefaultRow { get; set; }
+
+        /// <summary>
+        /// Default widget column starting with 0.
+        /// </summary>
+        public int DefaultColumn { get; set; }
+
+        /// <summary>
+        /// Default number of rows the widget spans.
+        /// </summary>
+        public int DefaultRowSpan { get; set; }
+
+        /// <summary>
+        /// Default number of columns the widget spans.
+        /// </summary>
+        public int DefaultColumnSpan { get; set; }
     }
 }
