@@ -42,6 +42,8 @@ namespace Ed.Bannerboard.UI.Logic
             MaintainAspectRatio = false // So that widgets fill the allocated space
         };
 
+        public event EventHandler<string>? MessageSent;
+
         public virtual Task Update(string model)
         {
             // Should be overridden
@@ -54,8 +56,22 @@ namespace Ed.Bannerboard.UI.Logic
             return false;
         }
 
+        public virtual void SendInitialMessage()
+        {
+            // Should be overridden if necessary
+        }
+
         /// <summary>
-        /// Determines whether the mod version is compatible with the minimum supported version by the vidget.
+        /// Invokes the message sent event with the specified message.
+        /// </summary>
+        /// <param name="message">Message to send.</param>
+        protected virtual void OnMessageSent(string message)
+        {
+            MessageSent?.Invoke(this, message);
+        }
+
+        /// <summary>
+        /// Determines whether the mod version is compatible with the minimum supported version by the widget.
         /// </summary>
         /// <param name="version">The mod version.</param>
         /// <param name="minimumSupportedVersion">Minimum supported version by the widget.</param>

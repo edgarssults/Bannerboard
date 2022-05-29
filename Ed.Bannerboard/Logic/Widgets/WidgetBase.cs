@@ -37,6 +37,19 @@ namespace Ed.Bannerboard.Logic.Widgets
         public abstract void Init(WebSocketSession session);
 
         /// <summary>
+        /// Determines whether the widget can handle a received message.
+        /// </summary>
+        /// <param name="message">The message that was sent.</param>
+        public abstract bool CanHandleMessage(string message);
+
+        /// <summary>
+        /// Handles a received message.
+        /// </summary>
+        /// <param name="session">The session that the message was sent from.</param>
+        /// <param name="message">The message that was sent.</param>
+        public abstract void HandleMessage(WebSocketSession session, string message);
+
+        /// <summary>
         /// Syncs widget save data.
         /// </summary>
         /// <param name="dataStore">Data store.</param>

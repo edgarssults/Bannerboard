@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Diagnostics;
 using System.Net.WebSockets;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Ed.Bannerboard.UI.Pages
@@ -36,6 +37,9 @@ namespace Ed.Bannerboard.UI.Pages
         private ILocalStorageService? LocalStorage { get; set; }
 
         [Inject]
+        private IConfiguration? Configuration { get; set; }
+
+        [Inject]
         private IToastService? ToastService { get; set; }
 
         [Inject]
@@ -46,7 +50,7 @@ namespace Ed.Bannerboard.UI.Pages
             await LoadLayoutFromStorage();
             AppState!.OnResetLayout += OnResetLayout;
 
-            var settings = _configuration.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
+            var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
             {
                 DashboardVersion = new Version(settings.Version)
@@ -104,7 +108,7 @@ namespace Ed.Bannerboard.UI.Pages
                 }
 
                 // Handshake message is sent once
-                GetModVersionFromHandshake(message);
+                HandleHandhsakeMessage(message);
 
                 // Stats always updated
                 await UpdateWidgets(JsonConvert.SerializeObject(statsModel));
@@ -114,7 +118,7 @@ namespace Ed.Bannerboard.UI.Pages
             } while (!_disposalTokenSource.IsCancellationRequested);
         }
 
-        private void GetModVersionFromHandshake(string message)
+        private void HandleHandhsakeMessage(string message)
         {
             if (modVersionDetermined)
             {
@@ -129,6 +133,11 @@ namespace Ed.Bannerboard.UI.Pages
             var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
             statsModel!.ModVersion = model?.Version;
             modVersionDetermined = true;
+
+            // Widgets are now rendered and instances are available
+            // Because they are only rendered once the WS connection is open
+            // Widgets can now start sending messages to the server
+            SubscribeToWidgetMessageSent();
         }
 
         private async Task UpdateWidgets(string message)
@@ -147,6 +156,26 @@ namespace Ed.Bannerboard.UI.Pages
 
                 await widgetInstance.Update(message);
                 return;
+            }
+        }
+
+        private void SubscribeToWidgetMessageSent()
+        {
+            foreach (var widget in _widgets)
+            {
+                if (widget.Component?.Instance is not IWidget widgetInstance)
+                {
+                    continue;
+                }
+
+                widgetInstance.MessageSent += async (sender, message) =>
+                {
+                    var encoded = Encoding.UTF8.GetBytes(message);
+                    var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+                    await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
+                };
+
+                widgetInstance.SendInitialMessage();
             }
         }
 

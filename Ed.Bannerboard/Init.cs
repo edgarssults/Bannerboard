@@ -76,6 +76,7 @@ namespace Ed.Bannerboard
 
             _server.NewSessionConnected += new SessionHandler<WebSocketSession>(NewSessionConnected);
             _server.SessionClosed += new SessionHandler<WebSocketSession, CloseReason>(SessionClosed);
+            _server.NewMessageReceived += new SessionHandler<WebSocketSession, string>(MessageReceived);
 
             if (!_server.Start())
             {
@@ -134,6 +135,24 @@ namespace Ed.Bannerboard
         private void SessionClosed(WebSocketSession session, CloseReason reason)
         {
             InformationManager.DisplayMessage(new InformationMessage("Bannerboard client disconnected"));
+        }
+
+        private void MessageReceived(WebSocketSession session, string message)
+        {
+            _widgets.ForEach(w =>
+            {
+                try
+                {
+                    if (w.CanHandleMessage(message))
+                    {
+                        w.HandleMessage(session, message);
+                    }
+                }
+                catch
+                {
+                    InformationManager.DisplayMessage(new InformationMessage($"Error while handling a message by {w.GetType().Name}!"));
+                }
+            });
         }
     }
 }

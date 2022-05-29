@@ -1,7 +1,10 @@
 ﻿using Ed.Bannerboard.Models.Widgets;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using SuperSocket.WebSocket;
 using System;
 using System.Linq;
+using System.Text.RegularExpressions;
 using TaleWorlds.CampaignSystem;
 using TaleWorlds.Library;
 
@@ -12,6 +15,8 @@ namespace Ed.Bannerboard.Logic.Widgets
     /// </summary>
     public class TownProsperity : WidgetBase
     {
+        private int _townCount = 10;
+
         /// <summary>
         /// A widget for displaying town prosperity on the dashboard.
         /// </summary>
@@ -36,12 +41,29 @@ namespace Ed.Bannerboard.Logic.Widgets
             }));
         }
 
-        /// <summary>
-        /// Initializes a widget.
-        /// </summary>
-        /// <param name="session">The session to initialize the widget for.</param>
         public override void Init(WebSocketSession session)
         {
+            // Not sending anything because the client will request how many towns to show
+        }
+
+        public override bool CanHandleMessage(string message)
+        {
+            // Note: Version is not checked yet
+            return Regex.IsMatch(message, $"\"Type\":.*\"{nameof(TownProsperityFilterModel)}\"");
+        }
+
+        public override void HandleMessage(WebSocketSession session, string message)
+        {
+            var model = JsonConvert.DeserializeObject<TownProsperityFilterModel>(message, new VersionConverter());
+            if (model == null)
+            {
+                return;
+            }
+
+            // Number of towns to return has changed
+            _townCount = model.TownCount;
+
+            // Send the new list
             SendUpdate(session);
         }
 
@@ -56,7 +78,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                 Towns = Campaign.Current.Settlements
                     .Where(s => s.IsTown)
                     .OrderByDescending(s => s.Prosperity)
-                    .Take(10)
+                    .Take(_townCount)
                     .Select(s => new TownProsperityItem
                     {
                         Name = s.Name.ToString(),

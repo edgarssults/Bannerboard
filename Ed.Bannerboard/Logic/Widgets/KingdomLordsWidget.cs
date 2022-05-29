@@ -47,6 +47,16 @@ namespace Ed.Bannerboard.Logic.Widgets
             SendUpdate(session);
         }
 
+        public override bool CanHandleMessage(string message)
+        {
+            return false;
+        }
+
+        public override void HandleMessage(WebSocketSession session, string message)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         /// Sends a dashboard update to a WebSocket session.
         /// </summary>
