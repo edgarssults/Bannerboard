@@ -37,9 +37,24 @@ namespace Ed.Bannerboard.Models.Widgets
         public string Name { get; set; }
 
         /// <summary>
-        /// Town prosperity.
+        /// Town prosperity amount.
         /// </summary>
         public float Prosperity { get; set; }
+
+        /// <summary>
+        /// Town militia strength.
+        /// </summary>
+        public float Militia { get; set; }
+
+        /// <summary>
+        /// Town garrison strength.
+        /// </summary>
+        public float Garrison { get; set; }
+
+        /// <summary>
+        /// Name of the faction that owns the town.
+        /// </summary>
+        public string FactionName { get; set; }
 
         /// <summary>
         /// Primary town owner color as a hex string (including #).

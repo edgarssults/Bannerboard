@@ -61,6 +61,9 @@ namespace Ed.Bannerboard.Logic.Widgets
                     {
                         Name = s.Name.ToString(),
                         Prosperity = s.Prosperity,
+                        Militia = s.Militia,
+                        Garrison = s.Parties.Where(p => p.IsGarrison).Sum(p => p.Party.MemberRoster.TotalManCount),
+                        FactionName = s.MapFaction.Name.ToString(),
                         PrimaryColor = Color.FromUint(s.MapFaction.Color).ToString(),
                         SecondaryColor = Color.FromUint(s.MapFaction.Color2).ToString()
                     })

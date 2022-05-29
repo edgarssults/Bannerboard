@@ -3,7 +3,7 @@
 <div class="card">
     <div class="card-header">
         <div class="d-flex">
-            <div class="align-self-center">Prosperity TOP 10</div>
+            <div class="align-self-center">TOP 10 Towns</div>
         </div>
     </div>
     <div class="card-body">
@@ -14,8 +14,10 @@
                     @foreach (var town in prosperityModel.Towns)
                     {
                         <tr style="background-color: @town.PrimaryColor;">
-                            <td>@town.Name</td>
-                            <td>@string.Format("{0:0}", town.Prosperity)</td>
+                            <td title="Owned by @town.FactionName">@town.Name</td>
+                            <td title="Prosperity"><img src="img/ingots.png" class="img-war" /> @string.Format("{0:0}", town.Prosperity)</td>
+                            <td title="Militia"><img src="img/militia.png" class="img-war" /> @string.Format("{0:0}", town.Militia)</td>
+                            <td title="Garrison"><img src="img/garrison.png" class="img-war" /> @string.Format("{0:0}", town.Garrison)</td>
                         </tr>
                     }
                 </tbody>
