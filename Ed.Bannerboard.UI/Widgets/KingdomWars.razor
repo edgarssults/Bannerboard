@@ -41,7 +41,7 @@
                     {
                         <tr style="background-color: @kingdom.PrimaryColor;">
                             <td class="text-center">@kingdom.Name</td>
-                            <td><img src="img/swords.png" alt="Kingdom is at war with" class="img-war" /></td>
+                            <td><img src="img/swords.png" title="Kingdom is at war with" class="img-war" /></td>
                             <td>
                                 @if (kingdom.Wars.Any(w => w.IsKingdomFaction || w.IsMinorFaction && showMinorFactions))
                                 {
