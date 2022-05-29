@@ -1,0 +1,29 @@
+﻿@inherits WidgetBase
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex">
+            <div class="align-self-center">Prosperity TOP 10</div>
+        </div>
+    </div>
+    <div class="card-body">
+        @if (prosperityModel != null)
+        {
+            <table class="table table-sm table-prosperity">
+                <tbody>
+                    @foreach (var town in prosperityModel.Towns)
+                    {
+                        <tr style="background-color: @town.PrimaryColor;">
+                            <td>@town.Name</td>
+                            <td>@string.Format("{0:0}", town.Prosperity)</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <span>No data or incompatible mod version.</span>
+        }
+    </div>
+</div>
