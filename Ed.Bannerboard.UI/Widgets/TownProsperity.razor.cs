@@ -11,7 +11,7 @@ namespace Ed.Bannerboard.UI.Widgets
     public partial class TownProsperity
     {
         private const string TownCountKey = "prosperity-widget-town-count";
-        private readonly Version _minimumSupportedVersion = new("0.3.2");
+        private readonly Version _minimumSupportedVersion = new("0.3.3");
         private TownProsperityModel? prosperityModel;
         private int townCount = 10;
 
