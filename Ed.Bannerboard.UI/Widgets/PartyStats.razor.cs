@@ -1,4 +1,6 @@
-﻿using Ed.Bannerboard.Models.Widgets;
+﻿using Blazored.LocalStorage;
+using Ed.Bannerboard.Models.Widgets;
+using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System.Text.RegularExpressions;
@@ -7,8 +9,15 @@ namespace Ed.Bannerboard.UI.Widgets
 {
     public partial class PartyStats
     {
+        private const string ShowUnitsKey = "party-widget-showunits";
+        private const string ShowFoodKey = "party-widget-showfood";
         private readonly Version _minimumSupportedVersion = new("0.3.1");
         private PartyStatsModel? partyModel;
+        private bool showUnits = true;
+        private bool showFood = true;
+
+        [Inject]
+        private ILocalStorageService? LocalStorage { get; set; }
 
         public override bool CanUpdate(string model, Version? version)
         {
@@ -26,6 +35,35 @@ namespace Ed.Bannerboard.UI.Widgets
 
             StateHasChanged();
             return Task.CompletedTask;
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            var storedShowUnits = await LocalStorage!.GetItemAsync<bool?>(ShowUnitsKey);
+            if (storedShowUnits != null)
+            {
+                showUnits = storedShowUnits.Value;
+            }
+
+            var storedShowFood = await LocalStorage!.GetItemAsync<bool?>(ShowFoodKey);
+            if (storedShowFood != null)
+            {
+                showFood = storedShowFood.Value;
+            }
+
+            await base.OnInitializedAsync();
+        }
+
+        private async Task ShowUnitsChanged(bool newShowUnits)
+        {
+            showUnits = newShowUnits;
+            await LocalStorage!.SetItemAsync(ShowUnitsKey, showUnits);
+        }
+
+        private async Task ShowFoodChanged(bool newShowFood)
+        {
+            showFood = newShowFood;
+            await LocalStorage!.SetItemAsync(ShowFoodKey, showFood);
         }
 
         private static string GetMemberIcon(MemberStatsItem member)
