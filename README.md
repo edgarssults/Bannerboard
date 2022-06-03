@@ -3,7 +3,7 @@
 This is a mod for Mount &amp; Blade II: Bannerlord that lets you view game data in real time on a dashboard in a browser.
 
 When the mod is loaded it sets up a local WebSocket server and pushes updates to connected clients.
-The client is a Blazor WebAssemmbly app that runs in a browser and connects to the local WebSocket server and listens for updates.
+The client is a Blazor WebAssembly app that runs in a browser and connects to the local WebSocket server and listens for updates.
 
 No data is sent outside your system, the browser downloads the client code and runs it locally.
 
@@ -11,9 +11,7 @@ No data is sent outside your system, the browser downloads the client code and r
 
 ![Dashboard](screenshots/dashboard.png)
 
-The dashboard started out with two widgets for kingdom strength and kingdom lord count. The charts update every in-game hour.
-
-More widgets are being added.
+The charts update every in-game hour. More widgets are being added.
 
 # Links
 
