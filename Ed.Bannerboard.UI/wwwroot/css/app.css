@@ -112,3 +112,15 @@ html, body, #app, .dashboard {
 .eg-el > div:first-child h2 {
     visibility: hidden;
 }
+
+.custom-radio {
+    cursor: pointer;
+}
+
+    .custom-radio label {
+        cursor: pointer;
+    }
+
+    .custom-radio input {
+        cursor: pointer;
+    }

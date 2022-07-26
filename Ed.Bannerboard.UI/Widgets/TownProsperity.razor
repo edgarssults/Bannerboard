@@ -6,7 +6,22 @@
             <div class="align-self-center">Prosperity</div>
             @if (prosperityModel != null)
             {
-                <div class="dropdown ml-auto">
+                <div class="ml-auto align-self-center">
+                    <div class="custom-control custom-radio custom-control-inline" title="Table view" @onclick="async e => await ProsperityViewChangedAsync(ProsperityView.Table)">
+                        <input type="radio" id="view-table" name="view-group" class="custom-control-input" checked="@(view == ProsperityView.Table)">
+                        <label class="custom-control-label" for="view-table">
+                            <i class="fas fa-table"></i>
+                        </label>
+                    </div>
+                    <div class="custom-control custom-radio custom-control-inline" title="Chart view" @onclick="async e => await ProsperityViewChangedAsync(ProsperityView.Chart)">
+                        <input type="radio" id="view-chart" name="view-group" class="custom-control-input" checked="@(view == ProsperityView.Chart)">
+                        <label class="custom-control-label" for="view-chart">
+                            <i class="fas fa-chart-bar"></i>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="filterMenu" data-toggle="dropdown" data-display="static" aria-expanded="false" title="Filters">
                         <i class="fas fa-filter"></i>
                     </button>
@@ -37,19 +52,26 @@
     <div class="card-body">
         @if (prosperityModel != null)
         {
-            <table class="table table-sm table-prosperity">
-                <tbody>
-                    @foreach (var town in prosperityModel.Towns)
-                    {
-                        <tr style="background-color: @town.PrimaryColor;">
-                            <td title="Owned by @town.FactionName">@town.Name</td>
-                            <td title="Prosperity"><img src="img/ingots.png" class="img-war" /> @string.Format("{0:0}", town.Prosperity)</td>
-                            <td title="Militia"><img src="img/militia.png" class="img-war" /> @string.Format("{0:0}", town.Militia)</td>
-                            <td title="Garrison"><img src="img/garrison.png" class="img-war" /> @string.Format("{0:0}", town.Garrison)</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            if (view == ProsperityView.Table)
+            {
+                <table class="table table-sm table-prosperity">
+                    <tbody>
+                        @foreach (var town in prosperityModel.Towns)
+                        {
+                            <tr style="background-color: @town.PrimaryColor;">
+                                <td title="Owned by @town.FactionName">@town.Name</td>
+                                <td title="Prosperity"><img src="img/ingots.png" class="img-war" /> @string.Format("{0:0}", town.Prosperity)</td>
+                                <td title="Militia"><img src="img/militia.png" class="img-war" /> @string.Format("{0:0}", town.Militia)</td>
+                                <td title="Garrison"><img src="img/garrison.png" class="img-war" /> @string.Format("{0:0}", town.Garrison)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else if (view == ProsperityView.Chart)
+            {
+                <BarChart @ref="barChart" TItem="float" OptionsObject="BaseBarChartOptions" />
+            }
         }
         else
         {
