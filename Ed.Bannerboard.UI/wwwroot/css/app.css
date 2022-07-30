@@ -71,6 +71,10 @@ img.img-war {
     margin-bottom: 0;
 }
 
+.table thead th {
+    border-top: 0;
+}
+
 /* Cards should take up all available tile space */
 .eg-elc .card {
     width: 100%;
