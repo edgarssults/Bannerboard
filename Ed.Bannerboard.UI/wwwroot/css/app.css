@@ -109,7 +109,7 @@ html, body, #app, .dashboard {
     visibility: hidden;
 }
 
-.dropdown-item .custom-radio label {
+.dropdown-item .custom-control-label {
     display: block;
 }
 
@@ -117,10 +117,22 @@ html, body, #app, .dashboard {
     cursor: pointer;
 }
 
-    .custom-radio label {
+    .custom-radio .custom-control-label {
         cursor: pointer;
     }
 
-    .custom-radio input {
+    .custom-radio .custom-control-input {
+        cursor: pointer;
+    }
+
+.custom-checkbox {
+    cursor: pointer;
+}
+
+    .custom-checkbox .custom-control-label {
+        cursor: pointer;
+    }
+
+    .custom-checkbox .custom-control-input {
         cursor: pointer;
     }
