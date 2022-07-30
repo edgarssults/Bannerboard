@@ -67,12 +67,8 @@ img.img-war {
     width: 1rem;
 }
 
-table.table-wars {
+.table {
     margin-bottom: 0;
-}
-
-table.table-wars thead th {
-    border-top: 0;
 }
 
 /* Cards should take up all available tile space */
@@ -111,6 +107,10 @@ html, body, #app, .dashboard {
 /* Dashboard element title should be hidden, cards have their own title */
 .eg-el > div:first-child h2 {
     visibility: hidden;
+}
+
+.dropdown-item .custom-radio label {
+    display: block;
 }
 
 .custom-radio {

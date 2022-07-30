@@ -77,16 +77,16 @@ namespace Ed.Bannerboard.UI.Widgets
             await base.OnInitializedAsync();
         }
 
-        private async Task ProsperityFilterClickedAsync(int count)
+        private async Task ProsperityFilterClickedAsync(int value)
         {
-            townCount = count;
+            townCount = value;
             await LocalStorage!.SetItemAsync(TownCountKey, townCount);
             SendFilterMessage();
         }
 
-        private async Task ProsperityViewChangedAsync(ProsperityView newView)
+        private async Task ProsperityViewChangedAsync(ProsperityView value)
         {
-            view = newView;
+            view = value;
             await LocalStorage!.SetItemAsync(ViewKey, view);
 
             if (view == ProsperityView.Chart)
