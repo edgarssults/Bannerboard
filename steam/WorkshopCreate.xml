@@ -1,0 +1,20 @@
+<Tasks>
+	<CreateItem/>
+	<UpdateItem>
+		<ModuleFolder Value="C:\Users\edgar\Downloads\Bannerboard v0.3.4\Bannerboard" />
+		<ItemDescription Value="Bannerboard" />
+		<Tags>
+			<!-- You can use the following tags: -->
+			<!-- Type: Graphical Enhancement, Map Pack, Partial Conversion, Sound, Total Conversion, Troops, UI, Utility, Weapons and Armour -->
+			<!-- Setting: Native, Antiquity, Dark Ages, Medieval, Musket Era, Modern, Sci-Fi, Fantasy, Oriental, Apocalypse, Other -->
+			<!-- Game Mode: Singleplayer, Multiplayer -->
+			<!-- Compatible Version: e1.9.0, v1.0.0,... The currently available versions can be found at the Steam Workshop "Browse by Tag" section -->
+			<Tag Value="Utility" />
+			<Tag Value="Other" />
+			<Tag Value="Singleplayer" />
+			<Tag Value="e1.8.1" />
+		</Tags>
+		<Image Value="C:\Code\Bannerboard\steam\workshop-image.png" />
+		<Visibility Value="Private" />
+	</UpdateItem>
+</Tasks>

@@ -15,13 +15,19 @@ The charts update every in-game hour. More widgets are being added.
 
 # Links
 
-Download the mod from Nexus: https://www.nexusmods.com/mountandblade2bannerlord/mods/3386
+Download from Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails/?id=2876851738
 
-Connect to your game: https://bannerboard.azurewebsites.net/
+Download from Nexus: https://www.nexusmods.com/mountandblade2bannerlord/mods/3386
+
+Connect to your game: https://bannerboard.azurewebsites.net
+
+# Developer links
+
+Instructions for publishing the mod on Steam Workshop: https://moddocs.bannerlord.com/steam-workshop/uploading_updating_mod
 
 # Credits
 
 Icons made by:
 
-- [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com/).
-- [Game-icons.net](https://game-icons.net/)
+- [Freepik](https://www.flaticon.com/authors/freepik) from [Flaticon](https://www.flaticon.com).
+- [Game-icons.net](https://game-icons.net)
