@@ -26,9 +26,9 @@ namespace Ed.Bannerboard.UI.Pages
             new WidgetComponent(typeof(KingdomLords), 0, 6, 5, 6),
             new WidgetComponent(typeof(KingdomWars), 5, 0, 5, 6),
             new WidgetComponent(typeof(PartyStats), 5, 6, 5, 6),
-            new WidgetComponent(typeof(Stats), 10, 6, 3, 6),
+            new WidgetComponent(typeof(HeroTracker), 10, 6, 6, 6),
             new WidgetComponent(typeof(TownProsperity), 10, 0, 6, 6),
-            new WidgetComponent(typeof(HeroTracker), 16, 0, 6, 6)
+            new WidgetComponent(typeof(Stats), 16, 0, 3, 6)
         };
 
         private StatsModel? statsModel;

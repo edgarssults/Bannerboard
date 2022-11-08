@@ -8,14 +8,14 @@
             {
                 <div class="ml-auto align-self-center">
                     <RadioGroup TValue="ProsperityView" Name="prosperity-widget-view" CheckedValue="view" CheckedValueChanged="ProsperityViewChangedAsync">
-                        <Radio Value="ProsperityView.Table" title="Table view"><i class="fas fa-table"></i></Radio>
-                        <Radio Value="ProsperityView.Chart" title="Chart view"><i class="fas fa-chart-bar"></i></Radio>
+                        <Radio Value="ProsperityView.Table" title="Table view"><i class="fa fa-table"></i></Radio>
+                        <Radio Value="ProsperityView.Chart" title="Chart view"><i class="fa fa-chart-bar"></i></Radio>
                     </RadioGroup>
                 </div>
 
                 <Dropdown Direction="Direction.Start">
                     <DropdownToggle title="Filters" Class="btn-secondary">
-                        <i class="fas fa-filter"></i>
+                        <i class="fa fa-filter"></i>
                     </DropdownToggle>
                     <DropdownMenu>
                         <RadioGroup TValue="int" Name="prosperity-widget-towns" CheckedValue="townCount" CheckedValueChanged="ProsperityFilterClickedAsync" Orientation="Orientation.Vertical">

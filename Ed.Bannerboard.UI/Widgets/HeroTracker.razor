@@ -15,16 +15,25 @@
                     <tr>
                         <th>Name</th>
                         <th>Last seen</th>
-                        <th><i class="fas fa-clock"></i></th>
+                        <th>When</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody>
                     @foreach (var hero in heroModel.Heroes)
                     {
                         <tr>
-                            <td>@hero.Name</td>
-                            <td>@hero.Location</td>
-                            <td>@hero.DaysAgo.ToDaysString()</td>
+                            <td class="align-middle">@hero.Name</td>
+                            <td class="align-middle">@hero.Location</td>
+                            <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
+                            <td class="align-middle text-right">
+                                <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="e => TrackingStatusChanged(hero)">
+                                    <i class="fa @(hero.IsShownOnMap ? "fa-check-circle" : "fa-circle") fa-fw"></i>
+                                </button>
+                                <button class="btn btn-secondary" type="button" title="Remove" @onclick="e => RemoveHero(hero)">
+                                    <i class="fa fa-times fa-fw"></i>
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>

@@ -43,10 +43,37 @@ namespace Ed.Bannerboard.UI.Widgets
             var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             var model = new HeroTrackerFilterModel
             {
-                TrackedHeroes = new List<HeroTrackerFilterItem>(), // TODO: Search
+                // TODO: Search
+                // TODO: Filter from storage
+                TrackedHeroes = heroModel != null
+                    ? heroModel.Heroes
+                        .Select(h => new HeroTrackerFilterItem
+                        {
+                            Id = h.Id,
+                            IsShownOnMap = h.IsShownOnMap,
+                        })
+                        .ToList()
+                    : new List<HeroTrackerFilterItem>(),
                 Version = new Version(settings.Version)
             };
             OnMessageSent(JsonConvert.SerializeObject(model));
+        }
+
+        private void TrackingStatusChanged(HeroTrackerItem hero)
+        {
+            hero.IsShownOnMap = !hero.IsShownOnMap;
+            SendFilterMessage();
+        }
+
+        private void RemoveHero(HeroTrackerItem hero)
+        {
+            if (heroModel == null)
+            {
+                return;
+            }
+
+            heroModel.Heroes.Remove(hero);
+            SendFilterMessage();
         }
     }
 }

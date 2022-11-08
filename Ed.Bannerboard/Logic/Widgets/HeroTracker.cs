@@ -115,7 +115,8 @@ namespace Ed.Bannerboard.Logic.Widgets
                         Location = h.LastSeenPlace.Name.ToString(),
                         DaysAgo = h.LastSeenTime.ElapsedDaysUntilNow,
                         IsDead = h.IsDead,
-                        IsDisabled = h.IsDisabled
+                        IsDisabled = h.IsDisabled,
+                        IsShownOnMap = _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap
                     })
                     .ToList(),
                 Version = Version,

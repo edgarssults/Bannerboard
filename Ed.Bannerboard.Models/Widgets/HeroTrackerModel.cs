@@ -60,5 +60,10 @@ namespace Ed.Bannerboard.Models.Widgets
         /// Indicates whether the hero is diabled.
         /// </summary>
         public bool IsDisabled { get; set; }
+
+        /// <summary>
+        /// Indicates whether the last known hero location is marked on the map.
+        /// </summary>
+        public bool IsShownOnMap { get; set; }
     }
 }
