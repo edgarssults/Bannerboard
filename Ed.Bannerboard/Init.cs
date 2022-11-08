@@ -15,7 +15,7 @@ namespace Ed.Bannerboard
     public class Init : MBSubModuleBase
     {
         // This version should be in sync with the version in SubModule.xml
-        private readonly Version _version = new Version("0.3.4");
+        private readonly Version _version = new Version("0.4.0");
 
         private WebSocketServer _server;
         private List<WidgetBase> _widgets;
@@ -39,6 +39,7 @@ namespace Ed.Bannerboard
                     new KingdomWarsWidget(_server, _version),
                     new PartyStatsWidget(_server, _version),
                     new TownProsperity(_server, _version),
+                    new HeroTracker(_server, _version),
                 };
 
                 // Register widget behaviors in the game

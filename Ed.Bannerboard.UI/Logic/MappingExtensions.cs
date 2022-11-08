@@ -17,5 +17,14 @@ namespace Ed.Bannerboard.UI.Logic
                 })
                 .ToList();
         }
+
+        public static string ToDaysString(this float days)
+        {
+            return days switch
+            {
+                < 1 => "Today",
+                _ => days.ToString("F0") + " days ago"
+            };
+        }
     }
 }

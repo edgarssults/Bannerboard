@@ -1,0 +1,38 @@
+﻿@inherits WidgetBase
+
+<div class="card">
+    <div class="card-header">
+        <div class="d-flex">
+            <div class="align-self-center">Heroes</div>
+            <!-- TODO: Search -->
+        </div>
+    </div>
+    <div class="card-body">
+        @if (heroModel != null)
+        {
+            <table class="table table-sm">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Last seen</th>
+                        <th><i class="fas fa-clock"></i></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var hero in heroModel.Heroes)
+                    {
+                        <tr>
+                            <td>@hero.Name</td>
+                            <td>@hero.Location</td>
+                            <td>@hero.DaysAgo.ToDaysString()</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <span>No data or incompatible mod version.</span>
+        }
+    </div>
+</div>
