@@ -35,7 +35,7 @@
     <div class="card-body">
         @if (warsModel != null)
         {
-            <table class="table table-sm table-wars">
+            <table class="table table-sm">
                 <tbody>
                     @foreach (var kingdom in warsModel.Kingdoms.Where(k => visibleKingdoms?.Contains(k.Name) ?? false))
                     {
