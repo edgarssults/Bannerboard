@@ -53,7 +53,7 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         public override void Init(WebSocketSession session)
         {
-            // Send the list of trackable heroes for search box
+            // Send the list of alive heroes for search box
             var model = new HeroTrackerReturnDataModel
             {
                 Heroes = Campaign.Current.AliveHeroes
@@ -98,6 +98,7 @@ namespace Ed.Bannerboard.Logic.Widgets
             }
 
             // Start tracking new locations
+            // Previously alive, but now dead heroes will still be tracked
             var trackableHeroes = Campaign.Current.AliveHeroes
                 .Union(Campaign.Current.DeadOrDisabledHeroes)
                 .Where(h => _trackedHeroes.Any(t => t.Id == h.StringId))
