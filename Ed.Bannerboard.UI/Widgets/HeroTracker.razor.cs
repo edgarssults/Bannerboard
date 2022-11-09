@@ -17,6 +17,7 @@ namespace Ed.Bannerboard.UI.Widgets
         private Autocomplete<HeroTrackerReturnDataItem, string>? heroSearch;
         private List<HeroTrackerReturnDataItem>? allHeroes;
         private List<HeroTrackerFilterItem>? trackedHeroes;
+        private bool isSearchBoxVisible;
 
         private string? SelectedText { get; set; }
 
@@ -119,6 +120,7 @@ namespace Ed.Bannerboard.UI.Widgets
             if (trackedHeroes.Any(h => h.Id == id))
             {
                 // Hero is already being tracked
+                SelectedText = null;
                 return;
             }
 
@@ -132,6 +134,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
             // Clear the text
             SelectedText = null;
+            isSearchBoxVisible = false;
 
             // Request new data
             SendFilterMessage();
@@ -153,6 +156,13 @@ namespace Ed.Bannerboard.UI.Widgets
 
             // Request new data
             SendFilterMessage();
+        }
+
+        private async Task ShowSearchBox()
+        {
+            isSearchBoxVisible = true;
+            await Task.Delay(200); // Wait, otherwise focus doesn't work
+            heroSearch?.Focus();
         }
     }
 }

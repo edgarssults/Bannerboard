@@ -7,20 +7,29 @@
             @if (allHeroes != null)
             {
                 <div class="ml-auto">
-                    <Autocomplete
-                        @ref="heroSearch"
-                        SelectedText="@SelectedText"
-                        TItem="HeroTrackerReturnDataItem"
-                        TValue="string"
-                        Data="@allHeroes"
-                        TextField="@(item => item.Name)"
-                        ValueField="@(item => item.Id)"
-                        Placeholder="Search..."
-                        SelectedValueChanged="async e => await SelectedHeroChangedAsync(e)"
-                        Filter="AutocompleteFilter.Contains"
-                        FreeTyping>
-                        <NotFoundContent>Hero not found...</NotFoundContent>
-                    </Autocomplete>
+                    @if (isSearchBoxVisible)
+                    {
+                        <Autocomplete
+                            @ref="heroSearch"
+                            SelectedText="@SelectedText"
+                            TItem="HeroTrackerReturnDataItem"
+                            TValue="string"
+                            Data="@allHeroes"
+                            TextField="@(item => item.Name)"
+                            ValueField="@(item => item.Id)"
+                            Placeholder="Search..."
+                            SelectedValueChanged="async e => await SelectedHeroChangedAsync(e)"
+                            Filter="AutocompleteFilter.Contains"
+                            FreeTyping>
+                            <NotFoundContent>Hero not found...</NotFoundContent>
+                        </Autocomplete>
+                    }
+                    else
+                    {
+                        <button class="btn btn-secondary" type="button" title="Search" @onclick="async e => await ShowSearchBox()">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    }
                 </div>
             }
         </div>
