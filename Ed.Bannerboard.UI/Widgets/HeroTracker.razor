@@ -50,7 +50,7 @@
                     @foreach (var hero in heroModel.Heroes)
                     {
                         <tr>
-                            <td class="align-middle">@hero.Name</td>
+                            <td class="align-middle @((hero.IsDead || hero.IsDisabled) ? "text-decoration-line-through" : string.Empty)">@hero.Name</td>
                             <td class="align-middle">@hero.Location</td>
                             <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
                             <td class="align-middle text-right">

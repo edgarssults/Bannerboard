@@ -148,3 +148,7 @@ html, body, #app, .dashboard {
     .custom-checkbox .custom-control-input {
         cursor: pointer;
     }
+
+.text-decoration-line-through {
+    text-decoration: line-through;
+}
