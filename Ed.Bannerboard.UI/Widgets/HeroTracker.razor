@@ -4,21 +4,25 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Heroes</div>
-            <div class="ml-auto">
-                <Autocomplete
-                    @ref="heroSearch"
-                    SelectedText="@SelectedText"
-                    TItem="HeroTrackerReturnDataItem"
-                    TValue="string"
-                    Data="@allHeroes"
-                    TextField="@(item => item.Name)"
-                    ValueField="@(item => item.Id)"
-                    Placeholder="Search..."
-                    SelectedValueChanged="@SelectedHeroChanged"
-                    FreeTyping>
-                    <NotFoundContent>Hero not found...</NotFoundContent>
-                </Autocomplete>
-            </div>
+            @if (allHeroes != null)
+            {
+                <div class="ml-auto">
+                    <Autocomplete
+                        @ref="heroSearch"
+                        SelectedText="@SelectedText"
+                        TItem="HeroTrackerReturnDataItem"
+                        TValue="string"
+                        Data="@allHeroes"
+                        TextField="@(item => item.Name)"
+                        ValueField="@(item => item.Id)"
+                        Placeholder="Search..."
+                        SelectedValueChanged="async e => await SelectedHeroChangedAsync(e)"
+                        Filter="AutocompleteFilter.Contains"
+                        FreeTyping>
+                        <NotFoundContent>Hero not found...</NotFoundContent>
+                    </Autocomplete>
+                </div>
+            }
         </div>
     </div>
     <div class="card-body">
@@ -41,10 +45,10 @@
                             <td class="align-middle">@hero.Location</td>
                             <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
                             <td class="align-middle text-right">
-                                <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="e => TrackingStatusChanged(hero)">
+                                <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="async e => await TrackingStatusChangedAsync(hero)">
                                     <i class="fa @(hero.IsShownOnMap ? "fa-check-circle" : "fa-circle") fa-fw"></i>
                                 </button>
-                                <button class="btn btn-secondary" type="button" title="Remove" @onclick="e => RemoveHero(hero)">
+                                <button class="btn btn-secondary" type="button" title="Remove" @onclick="async e => await RemoveHeroAsync(hero)">
                                     <i class="fa fa-times fa-fw"></i>
                                 </button>
                             </td>

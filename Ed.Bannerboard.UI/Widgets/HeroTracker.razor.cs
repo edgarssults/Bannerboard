@@ -11,11 +11,12 @@ namespace Ed.Bannerboard.UI.Widgets
 {
     public partial class HeroTracker
     {
+        private const string TrackedHeroesKey = "heroes-widget-tracked-heroes";
         private readonly Version _minimumSupportedVersion = new("0.4.0");
         private HeroTrackerModel? heroModel;
         private Autocomplete<HeroTrackerReturnDataItem, string>? heroSearch;
-        private List<HeroTrackerReturnDataItem> allHeroes = new();
-        private List<HeroTrackerFilterItem> trackedHeroes = new();
+        private List<HeroTrackerReturnDataItem>? allHeroes;
+        private List<HeroTrackerFilterItem>? trackedHeroes;
 
         private string? SelectedText { get; set; }
 
@@ -32,7 +33,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 && IsCompatible(version, _minimumSupportedVersion);
         }
 
-        public override async Task Update(string model)
+        public override Task Update(string model)
         {
             if (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerModel)}\""))
             {
@@ -40,7 +41,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 heroModel = JsonConvert.DeserializeObject<HeroTrackerModel>(model, new VersionConverter());
                 if (heroModel == null)
                 {
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 StateHasChanged();
@@ -51,17 +52,26 @@ namespace Ed.Bannerboard.UI.Widgets
                 var data = JsonConvert.DeserializeObject<HeroTrackerReturnDataModel>(model, new VersionConverter());
                 if (data == null)
                 {
-                    return;
+                    return Task.CompletedTask;
                 }
 
                 allHeroes = data.Heroes;
+
+                StateHasChanged();
             }
+
+            return Task.CompletedTask;
+        }
+
+        protected override async Task OnInitializedAsync()
+        {
+            trackedHeroes = await LocalStorage!.GetItemAsync<List<HeroTrackerFilterItem>>(TrackedHeroesKey) ?? new List<HeroTrackerFilterItem>();
+            await base.OnInitializedAsync();
         }
 
         public override void SendInitialMessage()
         {
             // Widget is now initialized and message event is subscribed to, request data from the server
-            // TODO: Load previous filters from storage
             SendFilterMessage();
         }
 
@@ -76,23 +86,33 @@ namespace Ed.Bannerboard.UI.Widgets
             OnMessageSent(JsonConvert.SerializeObject(model));
         }
 
-        private void TrackingStatusChanged(HeroTrackerItem hero)
+        private async Task TrackingStatusChangedAsync(HeroTrackerItem hero)
         {
+            if (trackedHeroes == null)
+            {
+                return;
+            }
+
             // Updated view model
             hero.IsShownOnMap = !hero.IsShownOnMap;
 
             // Update tracking model
             trackedHeroes.First(h => h.Id == hero.Id).IsShownOnMap = hero.IsShownOnMap;
+            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
 
             // Request new data
             SendFilterMessage();
         }
 
-        private void SelectedHeroChanged(string id)
+        private async Task SelectedHeroChangedAsync(string id)
         {
+            if (trackedHeroes == null)
+            {
+                return;
+            }
+
             if (string.IsNullOrEmpty(id))
             {
-                // Should not happen
                 return;
             }
 
@@ -108,6 +128,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 Id = id,
                 IsShownOnMap = true
             });
+            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
 
             // Clear the text
             SelectedText = null;
@@ -116,13 +137,19 @@ namespace Ed.Bannerboard.UI.Widgets
             SendFilterMessage();
         }
 
-        private void RemoveHero(HeroTrackerItem hero)
+        private async Task RemoveHeroAsync(HeroTrackerItem hero)
         {
+            if (trackedHeroes == null)
+            {
+                return;
+            }
+
             // Updated view model
             heroModel?.Heroes.Remove(hero);
 
             // Update tracking model
             trackedHeroes.RemoveAll(h => h.Id == hero.Id);
+            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
 
             // Request new data
             SendFilterMessage();
