@@ -32,11 +32,21 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         public override void RegisterEvents()
         {
+            // Update known locations every hour
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(() =>
             {
                 foreach (var session in Server.GetAllSessions())
                 {
                     SendUpdate(session);
+                }
+            }));
+
+            // Update available heroes every day
+            CampaignEvents.DailyTickEvent.AddNonSerializedListener(this, new Action(() =>
+            {
+                foreach (var session in Server.GetAllSessions())
+                {
+                    Init(session);
                 }
             }));
         }
