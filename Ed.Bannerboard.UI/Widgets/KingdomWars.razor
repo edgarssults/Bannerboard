@@ -13,17 +13,21 @@
                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterMenu">
                         <form>
                             <div class="form-check dropdown-item">
-                                <input class="form-check-input" type="checkbox" id="factionFilterCheck" checked="@showMinorFactions" @onchange="async e => await MinorFactionFilterClickedAsync(e)">
+                                <input class="d-none" type="checkbox" id="factionFilterCheck" checked="@showMinorFactions" @onchange="async e => await MinorFactionFilterClickedAsync(e)">
                                 <label class="form-check-label d-block" for="factionFilterCheck">
-                                    Show minor factions
+                                    <i class="form-check-input fa @(showMinorFactions ? "fa-check-square": "fa-square")"></i>
+                                    <span> Show minor factions</span>
                                 </label>
                             </div>
                             <div class="dropdown-divider"></div>
                             @foreach (var kingdom in warsModel.Kingdoms)
                             {
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" id="wars-widget-@kingdom.Name" checked="@visibleKingdoms?.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
-                                    <label class="form-check-label d-block" for="wars-widget-@kingdom.Name">@kingdom.Name</label>
+                                    <input class="d-none" type="checkbox" id="wars-widget-@kingdom.Name" checked="@visibleKingdoms?.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
+                                    <label class="form-check-label d-block" for="wars-widget-@kingdom.Name">
+                                        <i class="form-check-input fa @(@visibleKingdoms?.Contains(kingdom.Name) == true ? "fa-check-square": "fa-square")"></i>
+                                        <span> @kingdom.Name</span>
+                                    </label>
                                 </div>
                             }
                         </form>

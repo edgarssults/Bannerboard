@@ -15,8 +15,11 @@
                             @foreach (var kingdom in strengthModel.Kingdoms)
                             {
                                 <div class="form-check dropdown-item">
-                                    <input class="form-check-input" type="checkbox" id="strength-widget-@kingdom.Name" checked="@visibleKingdoms?.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
-                                    <label class="form-check-label d-block" for="strength-widget-@kingdom.Name">@kingdom.Name</label>
+                                    <input class="d-none" type="checkbox" id="strength-widget-@kingdom.Name" checked="@visibleKingdoms?.Contains(kingdom.Name)" @onchange="async e => await KingdomFilterClickedAsync(kingdom)">
+                                    <label class="form-check-label d-block" for="strength-widget-@kingdom.Name">
+                                        <i class="form-check-input fa @(visibleKingdoms?.Contains(kingdom.Name) == true ? "fa-check-square": "fa-square")"></i>
+                                        <span> @kingdom.Name</span>
+                                    </label>
                                 </div>
                             }
                         </form>

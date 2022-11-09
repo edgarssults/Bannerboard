@@ -11,12 +11,18 @@
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="filterMenu">
                     <form>
                         <div class="form-check dropdown-item">
-                            <input class="form-check-input" type="checkbox" id="party-widget-units" checked="@showUnits" @onchange="async e => await ShowUnitsChanged(!showUnits)">
-                            <label class="form-check-label d-block" for="party-widget-units">Units</label>
+                            <input class="d-none" type="checkbox" id="party-widget-units" checked="@showUnits" @onchange="async e => await ShowUnitsChanged(!showUnits)">
+                            <label class="form-check-label d-block" for="party-widget-units">
+                                <i class="form-check-input fa @(showUnits ? "fa-check-square": "fa-square")"></i>
+                                <span> Units</span>
+                            </label>
                         </div>
                         <div class="form-check dropdown-item">
-                            <input class="form-check-input" type="checkbox" id="party-widget-food" checked="@showFood" @onchange="async e => await ShowFoodChanged(!showFood)">
-                            <label class="form-check-label d-block" for="party-widget-food">Food</label>
+                            <input class="d-none" type="checkbox" id="party-widget-food" checked="@showFood" @onchange="async e => await ShowFoodChanged(!showFood)">
+                            <label class="form-check-label d-block" for="party-widget-food">
+                                <i class="form-check-input fa @(showFood ? "fa-check-square": "fa-square")"></i>
+                                <span> Food</span>
+                            </label>
                         </div>
                     </form>
                 </div>
