@@ -33,7 +33,8 @@
                 @bind-Column="widget.Column"
                 @bind-RowSpan="widget.RowSpan"
                 @bind-ColumnSpan="widget.ColumnSpan"
-                Title="@(widget.Type.Name)">
+                Title="@(widget.Type.Name)"
+                id="@(widget.Type.Name)">
                 <DynamicComponent Type="widget.Type" @ref="widget.Component" />
             </Element>
         }

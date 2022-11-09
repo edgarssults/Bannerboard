@@ -108,6 +108,14 @@ html, body, #app, .dashboard {
     user-select: none;
 }
 
+#TownProsperity .eg-el > div:first-child {
+    right: 12rem;
+}
+
+#HeroTracker .eg-el > div:first-child {
+    right: 15rem;
+}
+
 /* Dashboard element title should be hidden, cards have their own title */
 .eg-el > div:first-child h2 {
     visibility: hidden;

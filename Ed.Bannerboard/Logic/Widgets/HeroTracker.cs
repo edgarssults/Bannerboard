@@ -43,7 +43,19 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         public override void Init(WebSocketSession session)
         {
-            // Not sending anything because the client will request which heroes to track
+            // Send the list of trackable heroes for search box
+            var model = new HeroTrackerReturnDataModel
+            {
+                Heroes = Campaign.Current.AliveHeroes
+                    .Select(h => new HeroTrackerReturnDataItem
+                    {
+                        Id = h.StringId,
+                        Name = h.Name.ToString()
+                    })
+                    .ToList(),
+                Version = Version
+            };
+            session.Send(model.ToJsonArraySegment());
         }
 
         public override bool CanHandleMessage(string message)
@@ -62,19 +74,6 @@ namespace Ed.Bannerboard.Logic.Widgets
 
             // List of heroes to track has changed
             _trackedHeroes = model.TrackedHeroes;
-
-            // TODO: Search instead
-            if (!_trackedHeroes.Any())
-            {
-                // Add faction leaders to the list except the player
-                _trackedHeroes.AddRange(Campaign.Current.Kingdoms
-                    .Where(k => !k.Leader.IsHumanPlayerCharacter)
-                    .Select(k => new HeroTrackerFilterItem
-                    {
-                        Id = k.Leader.StringId,
-                        IsShownOnMap = true
-                    }));
-            }
 
             // Send the new list
             SendUpdate(session);
@@ -119,7 +118,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                         IsShownOnMap = _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap
                     })
                     .ToList(),
-                Version = Version,
+                Version = Version
             };
 
             session.Send(model.ToJsonArraySegment());
