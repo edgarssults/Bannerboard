@@ -17,7 +17,7 @@
                             Data="@allHeroes"
                             TextField="@(item => item.Name)"
                             ValueField="@(item => item.Id)"
-                            Placeholder="Search..."
+                            Placeholder="Hero name..."
                             SelectedValueChanged="async e => await SelectedHeroChangedAsync(e)"
                             Filter="AutocompleteFilter.Contains"
                             FreeTyping>
@@ -37,34 +37,41 @@
     <div class="card-body">
         @if (heroModel != null)
         {
-            <table class="table table-sm">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Last seen</th>
-                        <th>When</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var hero in heroModel.Heroes)
-                    {
+            if (heroModel.Heroes.Any())
+            {
+                <table class="table table-sm">
+                    <thead>
                         <tr>
-                            <td class="align-middle @((hero.IsDead || hero.IsDisabled) ? "text-decoration-line-through" : string.Empty)">@hero.Name</td>
-                            <td class="align-middle">@hero.Location</td>
-                            <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
-                            <td class="align-middle text-right">
-                                <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="async e => await TrackingStatusChangedAsync(hero)">
-                                    <i class="fa @(hero.IsShownOnMap ? "fa-check-circle" : "fa-circle") fa-fw"></i>
-                                </button>
-                                <button class="btn btn-secondary" type="button" title="Remove" @onclick="async e => await RemoveHeroAsync(hero)">
-                                    <i class="fa fa-times fa-fw"></i>
-                                </button>
-                            </td>
+                            <th>Name</th>
+                            <th>Last seen</th>
+                            <th>When</th>
+                            <th></th>
                         </tr>
-                    }
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        @foreach (var hero in heroModel.Heroes)
+                        {
+                            <tr>
+                                <td class="align-middle @((hero.IsDead || hero.IsDisabled) ? "text-decoration-line-through" : string.Empty)">@hero.Name</td>
+                                <td class="align-middle">@hero.Location</td>
+                                <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
+                                <td class="align-middle text-right">
+                                    <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="async e => await TrackingStatusChangedAsync(hero)">
+                                        <i class="fa @(hero.IsShownOnMap ? "fa-check-circle" : "fa-circle") fa-fw"></i>
+                                    </button>
+                                    <button class="btn btn-secondary" type="button" title="Remove" @onclick="async e => await RemoveHeroAsync(hero)">
+                                        <i class="fa fa-times fa-fw"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <span>Select a hero to track by clicking the search button above...</span>
+            }
         }
         else
         {
