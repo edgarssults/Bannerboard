@@ -11,14 +11,14 @@ using TaleWorlds.Library;
 namespace Ed.Bannerboard.Logic.Widgets
 {
     /// <summary>
-    /// A widget for displaying town prosperity on the dashboard.
+    /// A widget for displaying town prosperity.
     /// </summary>
     public class TownProsperity : WidgetBase
     {
         private int _townCount = 10;
 
         /// <summary>
-        /// A widget for displaying town prosperity on the dashboard.
+        /// A widget for displaying town prosperity.
         /// </summary>
         /// <param name="server">WebSocket server to send data to.</param>
         /// <param name="version">Mod version.</param>
@@ -27,9 +27,6 @@ namespace Ed.Bannerboard.Logic.Widgets
         {
         }
 
-        /// <summary>
-        /// Registers widget events.
-        /// </summary>
         public override void RegisterEvents()
         {
             CampaignEvents.HourlyTickEvent.AddNonSerializedListener(this, new Action(() =>
@@ -67,32 +64,36 @@ namespace Ed.Bannerboard.Logic.Widgets
             SendUpdate(session);
         }
 
-        /// <summary>
-        /// Sends a dashboard update to a WebSocket session.
-        /// </summary>
-        /// <param name="session">The session to send the update to.</param>
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new TownProsperityModel
+            try
             {
-                Towns = Campaign.Current.Settlements
-                    .Where(s => s.IsTown)
-                    .OrderByDescending(s => s.Prosperity)
-                    .Take(_townCount)
-                    .Select(s => new TownProsperityItem
-                    {
-                        Name = s.Name.ToString(),
-                        Prosperity = s.Prosperity,
-                        Militia = s.Militia,
-                        Garrison = s.Parties.Where(p => p.IsGarrison).Sum(p => p.Party.MemberRoster.TotalManCount),
-                        FactionName = s.MapFaction.Name.ToString(),
-                        PrimaryColor = Color.FromUint(s.MapFaction.Color).ToString(),
-                        SecondaryColor = Color.FromUint(s.MapFaction.Color2).ToString()
-                    })
-                    .ToList(),
-                Version = Version,
-            };
-            session.Send(model.ToJsonArraySegment());
+                var model = new TownProsperityModel
+                {
+                    Towns = Campaign.Current.Settlements
+                        .Where(s => s.IsTown)
+                        .OrderByDescending(s => s.Prosperity)
+                        .Take(_townCount)
+                        .Select(s => new TownProsperityItem
+                        {
+                            Name = s.Name.ToString(),
+                            Prosperity = s.Prosperity,
+                            Militia = s.Militia,
+                            Garrison = s.Parties.Where(p => p.IsGarrison).Sum(p => p.Party.MemberRoster.TotalManCount),
+                            FactionName = s.MapFaction.Name.ToString(),
+                            PrimaryColor = Color.FromUint(s.MapFaction.Color).ToString(),
+                            SecondaryColor = Color.FromUint(s.MapFaction.Color2).ToString()
+                        })
+                        .ToList(),
+                    Version = Version,
+                };
+
+                session.Send(model.ToJsonArraySegment());
+            }
+            catch
+            {
+                // Ignore
+            }
         }
     }
 }

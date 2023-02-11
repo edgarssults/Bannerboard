@@ -82,7 +82,7 @@ namespace Ed.Bannerboard.Logic.Widgets
             }
 
             // List of heroes to track has changed
-            _trackedHeroes = model.TrackedHeroes;
+            _trackedHeroes = model.TrackedHeroes ?? new List<HeroTrackerFilterItem>();
 
             // Send the new list
             SendUpdate(session);
@@ -90,48 +90,55 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         private void SendUpdate(WebSocketSession session)
         {
-            // Stop tracking old locations
-            foreach (var l in _oldLocations)
+            try
             {
-                Campaign.Current.VisualTrackerManager.RemoveTrackedObject(l);
+                // Stop tracking old locations
+                foreach (var l in _oldLocations)
+                {
+                    Campaign.Current.VisualTrackerManager.RemoveTrackedObject(l);
+                }
+
+                // Start tracking new locations
+                // Previously alive, but now dead heroes will still be tracked
+                var trackableHeroes = Campaign.Current.AliveHeroes
+                    .Union(Campaign.Current.DeadOrDisabledHeroes)
+                    .Where(h => _trackedHeroes.Any(t => t.Id == h.StringId))
+                    .ToList();
+                var newLocations = trackableHeroes
+                    .Where(h => _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap)
+                    .Select(h => h.LastSeenPlace)
+                    .ToList();
+                foreach (var l in newLocations)
+                {
+                    Campaign.Current.VisualTrackerManager.RegisterObject(l);
+                }
+
+                // Store for next update
+                _oldLocations = newLocations.ToList();
+
+                var model = new HeroTrackerModel
+                {
+                    Heroes = trackableHeroes
+                        .Select(h => new HeroTrackerItem
+                        {
+                            Id = h.StringId,
+                            Name = h.Name.ToString(),
+                            Location = h.LastSeenPlace.Name.ToString(),
+                            DaysAgo = h.LastSeenTime.ElapsedDaysUntilNow,
+                            IsDead = h.IsDead,
+                            IsDisabled = h.IsDisabled,
+                            IsShownOnMap = _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap
+                        })
+                        .ToList(),
+                    Version = Version
+                };
+
+                session.Send(model.ToJsonArraySegment());
             }
-
-            // Start tracking new locations
-            // Previously alive, but now dead heroes will still be tracked
-            var trackableHeroes = Campaign.Current.AliveHeroes
-                .Union(Campaign.Current.DeadOrDisabledHeroes)
-                .Where(h => _trackedHeroes.Any(t => t.Id == h.StringId))
-                .ToList();
-            var newLocations = trackableHeroes
-                .Where(h => _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap)
-                .Select(h => h.LastSeenPlace)
-                .ToList();
-            foreach (var l in newLocations)
+            catch
             {
-                Campaign.Current.VisualTrackerManager.RegisterObject(l);
+                // Ignore
             }
-
-            // Store for next update
-            _oldLocations = newLocations.ToList();
-
-            var model = new HeroTrackerModel
-            {
-                Heroes = trackableHeroes
-                    .Select(h => new HeroTrackerItem
-                    {
-                        Id = h.StringId,
-                        Name = h.Name.ToString(),
-                        Location = h.LastSeenPlace.Name.ToString(),
-                        DaysAgo = h.LastSeenTime.ElapsedDaysUntilNow,
-                        IsDead = h.IsDead,
-                        IsDisabled = h.IsDisabled,
-                        IsShownOnMap = _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap
-                    })
-                    .ToList(),
-                Version = Version
-            };
-
-            session.Send(model.ToJsonArraySegment());
         }
     }
 }
