@@ -4,7 +4,6 @@
     <OutputType>Library</OutputType>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <!-- TODO: Update -->
     <OutDir>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerboard\bin\Win64_Shipping_Client\</OutDir>
   </PropertyGroup>
   <ItemGroup>
