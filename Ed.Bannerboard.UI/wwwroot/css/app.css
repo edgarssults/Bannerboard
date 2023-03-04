@@ -152,3 +152,7 @@ html, body, #app, .dashboard {
 .text-decoration-line-through {
     text-decoration: line-through;
 }
+
+.form-check-label {
+    margin-left: 1rem;
+}
