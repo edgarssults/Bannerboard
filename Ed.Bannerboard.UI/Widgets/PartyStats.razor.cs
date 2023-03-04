@@ -11,7 +11,7 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string ShowUnitsKey = "party-widget-showunits";
         private const string ShowFoodKey = "party-widget-showfood";
-        private readonly Version _minimumSupportedVersion = new("0.3.1");
+        private readonly Version _minimumSupportedVersion = new("0.4.2");
         private PartyStatsModel? partyModel;
         private bool showUnits = true;
         private bool showFood = true;
