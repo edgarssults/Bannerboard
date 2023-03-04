@@ -47,11 +47,6 @@ namespace Ed.Bannerboard.Models.Widgets
         public string Location { get; set; }
 
         /// <summary>
-        /// How many days old is the information.
-        /// </summary>
-        public float DaysAgo { get; set; }
-
-        /// <summary>
         /// Indicates whether the hero is dead and can be removed from the tracker.
         /// </summary>
         public bool IsDead { get; set; }

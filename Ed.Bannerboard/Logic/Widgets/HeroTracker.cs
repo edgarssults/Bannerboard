@@ -105,8 +105,8 @@ namespace Ed.Bannerboard.Logic.Widgets
                     .Where(h => _trackedHeroes.Any(t => t.Id == h.StringId))
                     .ToList();
                 var newLocations = trackableHeroes
-                    .Where(h => _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap)
-                    .Select(h => h.LastSeenPlace)
+                    .Where(h => _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap && h.LastKnownClosestSettlement != null)
+                    .Select(h => h.LastKnownClosestSettlement)
                     .ToList();
                 foreach (var l in newLocations)
                 {
@@ -123,8 +123,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                         {
                             Id = h.StringId,
                             Name = h.Name.ToString(),
-                            Location = h.LastSeenPlace.Name.ToString(),
-                            DaysAgo = h.LastSeenTime.ElapsedDaysUntilNow,
+                            Location = h.LastKnownClosestSettlement?.Name.ToString() ?? "-",
                             IsDead = h.IsDead,
                             IsDisabled = h.IsDisabled,
                             IsShownOnMap = _trackedHeroes.First(t => t.Id == h.StringId).IsShownOnMap

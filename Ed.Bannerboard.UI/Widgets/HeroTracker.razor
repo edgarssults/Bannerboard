@@ -44,7 +44,6 @@
                         <tr>
                             <th>Name</th>
                             <th>Last seen</th>
-                            <th>When</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -54,7 +53,6 @@
                             <tr>
                                 <td class="align-middle @((hero.IsDead || hero.IsDisabled) ? "text-decoration-line-through" : string.Empty)">@hero.Name</td>
                                 <td class="align-middle">@hero.Location</td>
-                                <td class="align-middle">@hero.DaysAgo.ToDaysString()</td>
                                 <td class="align-middle text-right">
                                     <button class="btn btn-secondary" type="button" title="Toggle map tracking" @onclick="async e => await TrackingStatusChangedAsync(hero)">
                                         <i class="fa @(hero.IsShownOnMap ? "fa-check-circle" : "fa-circle") fa-fw"></i>
