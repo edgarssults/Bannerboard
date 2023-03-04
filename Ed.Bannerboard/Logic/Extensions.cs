@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Converters;
 using System;
 using System.Text;
+using TaleWorlds.CampaignSystem;
 
 namespace Ed.Bannerboard.Logic
 {
@@ -41,6 +42,57 @@ namespace Ed.Bannerboard.Logic
         public static ArraySegment<byte> ToJsonArraySegment(this object source)
         {
             return source.ToJson().ToByteArray().ToArraySegment();
+        }
+
+        /// <summary>
+        /// Determines whether a character is infantry.
+        /// </summary>
+        /// <param name="source">The character to check.</param>
+        public static bool IsInfantry(this CharacterObject source)
+        {
+            return source.IsInfantry
+                || 
+                (
+                    source.IsHero // Game always considers companions as infantry
+                    && !source.IsPlayerCharacter
+                );
+        }
+
+        /// <summary>
+        /// Determines whether a character is an archer.
+        /// </summary>
+        /// <param name="source">The character to check.</param>
+        public static bool IsArcher(this CharacterObject source)
+        {
+            return !source.IsHero
+                && source.IsRanged
+                && !source.IsMounted;
+        }
+
+        /// <summary>
+        /// Determines whether a character is cavalry.
+        /// </summary>
+        /// <param name="source">The character to check.</param>
+        public static bool IsCavalry(this CharacterObject source)
+        {
+            return source.IsPlayerCharacter // Game always considers player character as cavalry
+                ||
+                (
+                    !source.IsHero
+                    && !source.IsRanged
+                    && source.IsMounted
+                );
+        }
+
+        /// <summary>
+        /// Determines whether a character is a mounted archer.
+        /// </summary>
+        /// <param name="source">The character to check.</param>
+        public static bool IsMountedArcher(this CharacterObject source)
+        {
+            return !source.IsHero
+                && source.IsRanged
+                && source.IsMounted;
         }
     }
 }

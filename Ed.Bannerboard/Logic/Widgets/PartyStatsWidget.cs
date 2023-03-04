@@ -50,80 +50,88 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new PartyStatsModel
+            try
             {
-                Food = new FoodStats
+                var roster = Campaign.Current.MainParty.MemberRoster.GetTroopRoster();
+                var model = new PartyStatsModel
                 {
-                    Items = Campaign.Current.MainParty.ItemRoster
-                        .Where(i => i.EquipmentElement.Item.IsFood)
-                        .Select(i => new FoodStatsItem
-                        {
-                            Name = i.EquipmentElement.Item.Name.ToString(),
-                            Count = i.Amount
-                        })
-                        .ToList(),
-                },
-                Members = new MemberStats
-                {
-                    TotalHeroes = Campaign.Current.MainParty.MemberRoster.TotalHeroes,
-                    TotalRegulars = Campaign.Current.MainParty.MemberRoster.TotalRegulars,
-                    WoundedHeroes = Campaign.Current.MainParty.MemberRoster.TotalWoundedHeroes,
-                    WoundedRegulars = Campaign.Current.MainParty.MemberRoster.TotalWoundedRegulars,
-                    TotalCount = Campaign.Current.MainParty.MemberRoster.TotalManCount,
-                    TotalWounded = Campaign.Current.MainParty.MemberRoster.TotalWounded,
-                    MaxCount = Campaign.Current.MainParty.LimitedPartySize,
-                    Items = new List<MemberStatsItem>
+                    Food = new FoodStats
                     {
-                        new MemberStatsItem
+                        Items = Campaign.Current.MainParty.ItemRoster
+                            .Where(i => i.EquipmentElement.Item.IsFood)
+                            .Select(i => new FoodStatsItem
+                            {
+                                Name = i.EquipmentElement.Item.Name.ToString(),
+                                Count = i.Amount
+                            })
+                            .ToList(),
+                    },
+                    Members = new MemberStats
+                    {
+                        TotalHeroes = Campaign.Current.MainParty.MemberRoster.TotalHeroes,
+                        TotalRegulars = Campaign.Current.MainParty.MemberRoster.TotalRegulars,
+                        WoundedHeroes = Campaign.Current.MainParty.MemberRoster.TotalWoundedHeroes,
+                        WoundedRegulars = Campaign.Current.MainParty.MemberRoster.TotalWoundedRegulars,
+                        TotalCount = Campaign.Current.MainParty.MemberRoster.TotalManCount,
+                        TotalWounded = Campaign.Current.MainParty.MemberRoster.TotalWounded,
+                        MaxCount = Campaign.Current.MainParty.LimitedPartySize,
+                        Items = new List<MemberStatsItem>
                         {
-                            Description = "Infantry",
-                            Count = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => t.Character.IsInfantry && !t.Character.IsRanged && !t.Character.IsMounted)
-                                .Sum(t => t.Number),
-                            WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => t.Character.IsInfantry && !t.Character.IsRanged && !t.Character.IsMounted)
-                                .Sum(t => t.WoundedNumber),
-                            IsInfantry = true,
-                        },
-                        new MemberStatsItem
-                        {
-                            Description = "Archers",
-                            Count = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && !t.Character.IsMounted)
-                                .Sum(t => t.Number),
-                            WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && !t.Character.IsMounted)
-                                .Sum(t => t.WoundedNumber),
-                            IsArcher = true,
-                        },
-                        new MemberStatsItem
-                        {
-                            Description = "Cavalry",
-                            Count = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && !t.Character.IsRanged && t.Character.IsMounted)
-                                .Sum(t => t.Number),
-                            WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && !t.Character.IsRanged && t.Character.IsMounted)
-                                .Sum(t => t.WoundedNumber),
-                            IsCavalry = true,
-                        },
-                        new MemberStatsItem
-                        {
-                            Description = "Mounted Archers",
-                            Count = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && t.Character.IsMounted)
-                                .Sum(t => t.Number),
-                            WoundedCount = Campaign.Current.MainParty.MemberRoster.GetTroopRoster()
-                                .Where(t => !t.Character.IsInfantry && t.Character.IsRanged && t.Character.IsMounted)
-                                .Sum(t => t.WoundedNumber),
-                            IsMountedArcher = true,
+                            new MemberStatsItem
+                            {
+                                Description = "Infantry",
+                                Count = roster
+                                    .Where(t => t.Character.IsInfantry())
+                                    .Sum(t => t.Number),
+                                WoundedCount = roster
+                                    .Where(t => t.Character.IsInfantry())
+                                    .Sum(t => t.WoundedNumber),
+                                IsInfantry = true,
+                            },
+                            new MemberStatsItem
+                            {
+                                Description = "Archers",
+                                Count = roster
+                                    .Where(t => t.Character.IsArcher())
+                                    .Sum(t => t.Number),
+                                WoundedCount = roster
+                                    .Where(t => t.Character.IsArcher())
+                                    .Sum(t => t.WoundedNumber),
+                                IsArcher = true,
+                            },
+                            new MemberStatsItem
+                            {
+                                Description = "Cavalry",
+                                Count = roster
+                                    .Where(t => t.Character.IsCavalry())
+                                    .Sum(t => t.Number),
+                                WoundedCount = roster
+                                    .Where(t => t.Character.IsCavalry())
+                                    .Sum(t => t.WoundedNumber),
+                                IsCavalry = true,
+                            },
+                            new MemberStatsItem
+                            {
+                                Description = "Mounted Archers",
+                                Count = roster
+                                    .Where(t => t.Character.IsMountedArcher())
+                                    .Sum(t => t.Number),
+                                WoundedCount = roster
+                                    .Where(t => t.Character.IsMountedArcher())
+                                    .Sum(t => t.WoundedNumber),
+                                IsMountedArcher = true,
+                            },
                         },
                     },
-                },
-                Version = Version,
-            };
+                    Version = Version,
+                };
 
-            session.Send(model.ToJsonArraySegment());
+                session.Send(model.ToJsonArraySegment());
+            }
+            catch
+            {
+                // Ignore
+            }
         }
     }
 }
