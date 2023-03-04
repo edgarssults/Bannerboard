@@ -15,7 +15,7 @@ namespace Ed.Bannerboard
     public class Init : MBSubModuleBase
     {
         // This version should be in sync with the version in SubModule.xml
-        private readonly Version _version = new Version("0.4.1");
+        private readonly Version _version = new Version("0.4.2");
 
         private WebSocketServer _server;
         private List<WidgetBase> _widgets;
@@ -122,9 +122,9 @@ namespace Ed.Bannerboard
                 {
                     w.Init(session);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Error while initializing {w.GetType().Name}!"));
+                    InformationManager.DisplayMessage(new InformationMessage($"Error while initializing {w.GetType().Name}: {ex.Message}", Colors.Red));
                 }
             });
         }
@@ -150,9 +150,9 @@ namespace Ed.Bannerboard
                         w.HandleMessage(session, message);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    InformationManager.DisplayMessage(new InformationMessage($"Error while handling a message by {w.GetType().Name}!"));
+                    InformationManager.DisplayMessage(new InformationMessage($"Error while handling a message by {w.GetType().Name}: {ex.Message}", Colors.Red));
                 }
             });
         }
