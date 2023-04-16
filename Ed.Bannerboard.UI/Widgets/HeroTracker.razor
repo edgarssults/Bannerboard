@@ -20,6 +20,7 @@
                             Placeholder="Hero name..."
                             SelectedValueChanged="async e => await SelectedHeroChangedAsync(e)"
                             Filter="AutocompleteFilter.Contains"
+                            MinLength="2"
                             FreeTyping>
                             <NotFoundContent>Hero not found...</NotFoundContent>
                         </Autocomplete>

@@ -8,38 +8,29 @@ namespace Ed.Bannerboard.UI.Logic
         /// <summary>
         /// Default bar chart options.
         /// </summary>
-        protected object BaseBarChartOptions = new
+        protected BarChartOptions BaseBarChartOptions = new()
         {
-            Animation = new Animation
+            Animation = new()
             {
-                Duration = 0,
+                Duration = 0, // So that updates are immediate
             },
-            Legend = new Legend
+            Plugins = new()
             {
-                Display = false,
-                // Has to be set, otherwise there's a JS error
-                Labels = new LegendLabels
+                Legend = new()
                 {
-                    FontSize = 12,
-                    FontFamily = "'Helvetica Neue', 'Helvetica', 'Arial', sans-serif"
+                    Display = false // Legend doesn't work when each bar has its own color
                 }
             },
-            Scales = new
+            Scales = new()
             {
-                YAxes = new[]
+                Y = new()
                 {
-                    new
-                    {
-                        Ticks = new
-                        {
-                            BeginAtZero = true,
-                            Min = 0
-                        }
-                    }
+                    BeginAtZero = true, // So that data looks consistent
+                    Min = 0 // So that data looks consistent
                 }
             },
-            Responsive = true, // Default
-            MaintainAspectRatio = false // So that widgets fill the allocated space
+            Responsive = true, // Default, so that canvas resizes together with the container
+            MaintainAspectRatio = false // So that canvas fills the whole container
         };
 
         public event EventHandler<string>? MessageSent;

@@ -17,7 +17,7 @@ builder.Services
     .AddSingleton(sp => new AppState())
     .AddBlazorise(options =>
     {
-        options.ChangeTextOnKeyPress = true;
+        options.Immediate = true;
     })
     .AddBootstrapProviders()
     .AddFontAwesomeIcons()
