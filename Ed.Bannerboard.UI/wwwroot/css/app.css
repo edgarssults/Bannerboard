@@ -35,7 +35,7 @@ a, .btn-link {
 }
 
 #blazor-error-ui {
-    background: lightyellow;
+    background: darkred;
     bottom: 0;
     box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
     display: none;
@@ -108,12 +108,19 @@ html, body, #app, .dashboard {
     user-select: none;
 }
 
+/* Card header should be narrower so it doesn't overlap buttons */
 #TownProsperity .eg-el > div:first-child {
     right: 12rem;
 }
 
+/* Card header should be narrower so it doesn't overlap buttons */
 #HeroTracker .eg-el > div:first-child {
     right: 15rem;
+}
+
+/* Card header should be narrower so it doesn't overlap buttons */
+#Stats .eg-el > div:first-child {
+    right: 7rem;
 }
 
 /* Dashboard element title should be hidden, cards have their own title */
