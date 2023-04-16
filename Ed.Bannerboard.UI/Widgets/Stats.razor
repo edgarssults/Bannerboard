@@ -4,9 +4,17 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Stats</div>
-            <button class="btn btn-secondary ml-auto" type="button" title="Reset dashboard layout" @onclick="ResetLayoutClicked">
-                <i class="fa fa-redo"></i>
-            </button>
+            <div class="ml-auto">
+                @if (IsDevelopmentEnvironment())
+                {
+                    <button class="btn btn-secondary" type="button" title="Show toast message" @onclick="OnShowToast">
+                        <i class="fa fa-info"></i>
+                    </button>
+                }
+                <button class="btn btn-secondary" type="button" title="Reset dashboard layout" @onclick="OnResetLayout">
+                    <i class="fa fa-redo"></i>
+                </button>
+            </div>
         </div>
     </div>
     <div class="card-body">
