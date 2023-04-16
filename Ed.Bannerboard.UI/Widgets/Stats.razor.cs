@@ -47,7 +47,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private void OnShowToast()
         {
-            ToastService?.ShowInfo("This is a toast message...");
+            ToastService?.ShowInfo("This is a toast message...", settings => settings.DisableTimeout = true);
         }
     }
 }
