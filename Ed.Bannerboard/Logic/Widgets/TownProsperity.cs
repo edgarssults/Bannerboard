@@ -72,12 +72,12 @@ namespace Ed.Bannerboard.Logic.Widgets
                 {
                     Towns = Campaign.Current.Settlements
                         .Where(s => s.IsTown)
-                        .OrderByDescending(s => s.Prosperity)
+                        .OrderByDescending(s => s.Town.Prosperity)
                         .Take(_townCount)
                         .Select(s => new TownProsperityItem
                         {
                             Name = s.Name.ToString(),
-                            Prosperity = s.Prosperity,
+                            Prosperity = s.Town.Prosperity,
                             Militia = s.Militia,
                             Garrison = s.Parties.Where(p => p.IsGarrison).Sum(p => p.Party.MemberRoster.TotalManCount),
                             FactionName = s.MapFaction.Name.ToString(),
