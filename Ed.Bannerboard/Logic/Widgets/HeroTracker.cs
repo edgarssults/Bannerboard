@@ -61,7 +61,8 @@ namespace Ed.Bannerboard.Logic.Widgets
                         Id = h.StringId,
                         Name = h.Name.ToString()
                     })
-                    .ToList(),
+					.OrderBy(h => h.Name)
+					.ToList(),
                 Version = Version
             };
             session.Send(model.ToJsonArraySegment());
