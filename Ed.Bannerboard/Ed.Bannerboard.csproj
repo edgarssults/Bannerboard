@@ -1,19 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
     <OutputType>Library</OutputType>
   </PropertyGroup>
+	
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <OutDir>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\Modules\Bannerboard\bin\Win64_Shipping_Client\</OutDir>
   </PropertyGroup>
+	
   <ItemGroup>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="SuperSocket.Engine" Version="1.6.6.1" />
     <PackageReference Include="SuperSocket.WebSocket" Version="1.6.6.1" />
   </ItemGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\Ed.Bannerboard.Models\Ed.Bannerboard.Models.csproj" />
   </ItemGroup>
+	
   <ItemGroup>
     <Reference Include="TaleWorlds.CampaignSystem">
       <HintPath>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.CampaignSystem.dll</HintPath>
@@ -34,4 +39,5 @@
       <HintPath>C:\Steam\steamapps\common\Mount &amp; Blade II Bannerlord\bin\Win64_Shipping_Client\TaleWorlds.ObjectSystem.dll</HintPath>
     </Reference>
   </ItemGroup>
+	
 </Project>
