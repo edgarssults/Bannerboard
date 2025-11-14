@@ -94,7 +94,11 @@ namespace Ed.Bannerboard
         /// </summary>
         private void StopServer()
         {
-            _server.Stop();
+			_server.NewSessionConnected -= new SessionHandler<WebSocketSession>(NewSessionConnected);
+			_server.SessionClosed -= new SessionHandler<WebSocketSession, CloseReason>(SessionClosed);
+			_server.NewMessageReceived -= new SessionHandler<WebSocketSession, string>(MessageReceived);
+
+			_server.Stop();
             _server = null;
 
             InformationManager.DisplayMessage(new InformationMessage("Bannerboard server stopped"));

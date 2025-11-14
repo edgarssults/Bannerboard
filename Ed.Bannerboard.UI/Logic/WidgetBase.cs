@@ -77,5 +77,10 @@ namespace Ed.Bannerboard.UI.Logic
             // Current mod version should be the same or bigger than the minimum supported version
             return version.CompareTo(minimumSupportedVersion) >= 0;
         }
-    }
+
+		public virtual async Task ResetAsync()
+		{
+			// Nothing to reset
+		}
+	}
 }

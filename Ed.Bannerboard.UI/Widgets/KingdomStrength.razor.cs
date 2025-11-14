@@ -49,9 +49,18 @@ namespace Ed.Bannerboard.UI.Widgets
             }
 
             await HandleRedraw(strengthModel);
-        }
+		}
 
-        protected override async Task OnInitializedAsync()
+		public override async Task ResetAsync()
+		{
+			visibleKingdoms = null;
+			await LocalStorage!.RemoveItemAsync(VisibleKingdomsKey);
+			strengthModel = null;
+
+			StateHasChanged();
+		}
+
+		protected override async Task OnInitializedAsync()
         {
             visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();

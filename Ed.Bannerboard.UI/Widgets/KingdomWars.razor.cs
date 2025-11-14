@@ -40,9 +40,20 @@ namespace Ed.Bannerboard.UI.Widgets
 
             StateHasChanged();
             return Task.CompletedTask;
-        }
+		}
 
-        protected override async Task OnInitializedAsync()
+		public override async Task ResetAsync()
+		{
+			visibleKingdoms = null;
+			await LocalStorage!.RemoveItemAsync(VisibleKingdomsKey);
+			showMinorFactions = false;
+			await LocalStorage!.RemoveItemAsync(ShowMinorFactionsKey);
+			warsModel = null;
+
+			StateHasChanged();
+		}
+
+		protected override async Task OnInitializedAsync()
         {
             showMinorFactions = await LocalStorage!.GetItemAsync<bool>(ShowMinorFactionsKey);
             visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);

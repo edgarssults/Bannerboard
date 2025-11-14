@@ -62,11 +62,16 @@ namespace Ed.Bannerboard.UI.Widgets
             }
 
             return Task.CompletedTask;
-        }
+		}
 
-        protected override async Task OnInitializedAsync()
+		public override async Task ResetAsync()
+		{
+			// TODO: Reset properly
+		}
+
+		protected override async Task OnInitializedAsync()
         {
-            trackedHeroes = await LocalStorage!.GetItemAsync<List<HeroTrackerFilterItem>>(TrackedHeroesKey) ?? new List<HeroTrackerFilterItem>();
+            trackedHeroes = await LocalStorage!.GetItemAsync<List<HeroTrackerFilterItem>>(TrackedHeroesKey) ?? [];
             await base.OnInitializedAsync();
         }
 
@@ -78,7 +83,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private void SendFilterMessage()
         {
-            var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
+            var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>()!;
             var model = new HeroTrackerFilterModel
             {
                 TrackedHeroes = trackedHeroes,
@@ -97,9 +102,13 @@ namespace Ed.Bannerboard.UI.Widgets
             // Updated view model
             hero.IsShownOnMap = !hero.IsShownOnMap;
 
-            // Update tracking model
-            trackedHeroes.First(h => h.Id == hero.Id).IsShownOnMap = hero.IsShownOnMap;
-            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
+			// Update tracking model
+			var trackedHero = trackedHeroes.FirstOrDefault(h => h.Id == hero.Id);
+			if (trackedHero != null)
+			{
+				trackedHero.IsShownOnMap = hero.IsShownOnMap;
+				await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
+			}
 
             // Request new data
             SendFilterMessage();

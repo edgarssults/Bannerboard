@@ -24,5 +24,10 @@
         /// Sends the initial widget message to the server if necessary.
         /// </summary>
         void SendInitialMessage();
+
+		/// <summary>
+		/// Resets the widget's state.
+		/// </summary>
+		Task ResetAsync();
     }
 }

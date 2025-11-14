@@ -169,13 +169,7 @@ namespace Ed.Bannerboard.UI.Pages
                     continue;
                 }
 
-                widgetInstance.MessageSent += async (sender, message) =>
-                {
-                    var encoded = Encoding.UTF8.GetBytes(message);
-                    var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
-                    await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
-                };
-
+                widgetInstance.MessageSent += OnMessageSent;
                 widgetInstance.SendInitialMessage();
             }
         }
@@ -227,21 +221,43 @@ namespace Ed.Bannerboard.UI.Pages
         {
             await LocalStorage!.RemoveItemAsync(BannerboardLayoutKey);
 
-            _widgets.ForEach(w =>
+			_widgets.ForEach(w =>
             {
                 w.Column = w.DefaultColumn;
                 w.Row = w.DefaultRow;
                 w.ColumnSpan = w.DefaultColumnSpan;
                 w.RowSpan = w.DefaultRowSpan;
-            });
+
+				if (w.Component?.Instance is IWidget widgetInstance)
+				{
+					widgetInstance.ResetAsync();
+				}
+			});
 
             StateHasChanged();
         }
 
+		private async void OnMessageSent(object? sender, string message)
+		{
+			var encoded = Encoding.UTF8.GetBytes(message);
+			var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+			await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
+		}
+
         public void Dispose()
         {
             AppState!.OnResetLayout -= OnResetLayout;
-            _disposalTokenSource.Cancel();
+
+			foreach (var widget in _widgets)
+			{
+				if (widget.Component?.Instance is IWidget widgetInstance)
+				{
+					widgetInstance.MessageSent -= OnMessageSent;
+				}
+			}
+
+			_disposalTokenSource.Cancel();
+
             _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bannerboard client stopped", CancellationToken.None);
         }
     }

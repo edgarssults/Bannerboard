@@ -35,9 +35,20 @@ namespace Ed.Bannerboard.UI.Widgets
 
             StateHasChanged();
             return Task.CompletedTask;
-        }
+		}
 
-        protected override async Task OnInitializedAsync()
+		public override async Task ResetAsync()
+		{
+			showUnits = true;
+			await LocalStorage!.RemoveItemAsync(ShowUnitsKey);
+			showFood = true;
+			await LocalStorage!.RemoveItemAsync(ShowFoodKey);
+			partyModel = null;
+
+			StateHasChanged();
+		}
+
+		protected override async Task OnInitializedAsync()
         {
             var storedShowUnits = await LocalStorage!.GetItemAsync<bool?>(ShowUnitsKey);
             if (storedShowUnits != null)

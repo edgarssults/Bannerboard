@@ -58,9 +58,20 @@ namespace Ed.Bannerboard.UI.Widgets
         {
             // Widget is now initialized and message event is subscribed to, request data from the server
             SendFilterMessage();
-        }
+		}
 
-        protected override async Task OnInitializedAsync()
+		public override async Task ResetAsync()
+		{
+			townCount = 10;
+			await LocalStorage!.RemoveItemAsync(TownCountKey);
+			view = ProsperityView.Table;
+			await LocalStorage!.RemoveItemAsync(ViewKey);
+			prosperityModel = null;
+
+			StateHasChanged();
+		}
+
+		protected override async Task OnInitializedAsync()
         {
             var storedTownCount = await LocalStorage!.GetItemAsync<int?>(TownCountKey);
             if (storedTownCount != null)
