@@ -52,8 +52,10 @@ namespace Ed.Bannerboard.Logic.Widgets
         {
             try
             {
-                var roster = Campaign.Current.MainParty.MemberRoster.GetTroopRoster();
-                var model = new PartyStatsModel
+                var troopRoster = Campaign.Current.MainParty.MemberRoster.GetTroopRoster();
+				var prisonRoster = Campaign.Current.MainParty.PrisonRoster;
+
+				var model = new PartyStatsModel
                 {
                     Food = new FoodStats
                     {
@@ -80,10 +82,10 @@ namespace Ed.Bannerboard.Logic.Widgets
                             new MemberStatsItem
                             {
                                 Description = "Infantry",
-                                Count = roster
+                                Count = troopRoster
                                     .Where(t => t.Character.IsInfantry())
                                     .Sum(t => t.Number),
-                                WoundedCount = roster
+                                WoundedCount = troopRoster
                                     .Where(t => t.Character.IsInfantry())
                                     .Sum(t => t.WoundedNumber),
                                 IsInfantry = true,
@@ -91,10 +93,10 @@ namespace Ed.Bannerboard.Logic.Widgets
                             new MemberStatsItem
                             {
                                 Description = "Archers",
-                                Count = roster
+                                Count = troopRoster
                                     .Where(t => t.Character.IsArcher())
                                     .Sum(t => t.Number),
-                                WoundedCount = roster
+                                WoundedCount = troopRoster
                                     .Where(t => t.Character.IsArcher())
                                     .Sum(t => t.WoundedNumber),
                                 IsArcher = true,
@@ -102,10 +104,10 @@ namespace Ed.Bannerboard.Logic.Widgets
                             new MemberStatsItem
                             {
                                 Description = "Cavalry",
-                                Count = roster
+                                Count = troopRoster
                                     .Where(t => t.Character.IsCavalry())
                                     .Sum(t => t.Number),
-                                WoundedCount = roster
+                                WoundedCount = troopRoster
                                     .Where(t => t.Character.IsCavalry())
                                     .Sum(t => t.WoundedNumber),
                                 IsCavalry = true,
@@ -113,17 +115,24 @@ namespace Ed.Bannerboard.Logic.Widgets
                             new MemberStatsItem
                             {
                                 Description = "Mounted Archers",
-                                Count = roster
+                                Count = troopRoster
                                     .Where(t => t.Character.IsMountedArcher())
                                     .Sum(t => t.Number),
-                                WoundedCount = roster
+                                WoundedCount = troopRoster
                                     .Where(t => t.Character.IsMountedArcher())
                                     .Sum(t => t.WoundedNumber),
                                 IsMountedArcher = true,
                             },
+							new MemberStatsItem
+							{
+								Description = "Prisoners",
+								Count = prisonRoster.TotalManCount,
+								WoundedCount = prisonRoster.TotalWounded,
+								IsPrisoner = true
+							}
                         },
                     },
-                    Version = Version,
+                    Version = Version
                 };
 
                 session.Send(model.ToJsonArraySegment());

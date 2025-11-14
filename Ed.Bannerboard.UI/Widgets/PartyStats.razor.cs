@@ -74,6 +74,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 { IsArcher: true } => "archer",
                 { IsCavalry: true} => "cavalry",
                 { IsMountedArcher: true } => "mounted-archer",
+				{ IsPrisoner: true } => "prisoner",
                 _ => "infantry"
             };
         }

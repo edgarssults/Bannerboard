@@ -149,5 +149,10 @@ namespace Ed.Bannerboard.Models.Widgets
         /// Indicates whether the member is a mounted archer (ranged cavalry).
         /// </summary>
         public bool IsMountedArcher { get; set; }
-    }
+
+		/// <summary>
+		/// Indicates whether the member is a prisoner.
+		/// </summary>
+		public bool IsPrisoner { get; set; }
+	}
 }
