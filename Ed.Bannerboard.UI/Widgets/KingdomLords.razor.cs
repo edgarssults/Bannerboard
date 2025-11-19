@@ -12,10 +12,10 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string VisibleKingdomsKey = "lords-widget-visible-kingdoms";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
-        private BarChart<int>? barChart;
-        private KingdomLordsModel? lordsModel;
-        private List<string>? visibleKingdoms;
-        private bool isFirstDraw = true;
+        private BarChart<int>? _barChart;
+        private KingdomLordsModel? _lordsModel;
+        private List<string>? _visibleKingdoms;
+        private bool _isFirstDraw = true;
 
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
@@ -28,74 +28,75 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            lordsModel = JsonConvert.DeserializeObject<KingdomLordsModel>(model, new VersionConverter());
-            if (lordsModel == null)
+            _lordsModel = JsonConvert.DeserializeObject<KingdomLordsModel>(model, new VersionConverter());
+            if (_lordsModel == null)
             {
                 return;
             }
 
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
-                visibleKingdoms = lordsModel.Kingdoms.Select(k => k.Name).ToList();
+                _visibleKingdoms = _lordsModel.Kingdoms.Select(k => k.Name).ToList();
             }
 
-            StateHasChanged();
+			// TODO: Check for changes before redrawing
+			StateHasChanged();
 
             // Have to delay the first draw for a bit to let JS initialize
-            if (isFirstDraw)
+            if (_isFirstDraw)
             {
                 await Task.Delay(200);
-                isFirstDraw = false;
+                _isFirstDraw = false;
             }
 
-            await HandleRedraw(lordsModel);
+            await HandleRedraw(_lordsModel);
 		}
 
 		public override async Task ResetAsync()
 		{
-			visibleKingdoms = null;
+			_visibleKingdoms = null;
 			await LocalStorage!.RemoveItemAsync(VisibleKingdomsKey);
-			lordsModel = null;
+			_lordsModel = null;
 
 			StateHasChanged();
 		}
 
 		protected override async Task OnInitializedAsync()
         {
-            visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
+            _visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
         private async Task HandleRedraw(KingdomLordsModel? model)
         {
-            if (visibleKingdoms == null || model == null)
+            if (_visibleKingdoms == null || model == null)
             {
                 return;
             }
 
-            await barChart!.Clear();
-            var filteredKingdoms = model.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name)).ToList();
-            await barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
+            await _barChart!.Clear();
+            var filteredKingdoms = model.Kingdoms.Where(k => _visibleKingdoms.Contains(k.Name)).ToList();
+            await _barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
         }
 
         private async Task KingdomFilterClickedAsync(KingdomLordsItem kingdom)
         {
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
                 return;
             }
 
-            if (visibleKingdoms.Contains(kingdom.Name))
+            if (_visibleKingdoms.Contains(kingdom.Name))
             {
-                visibleKingdoms.Remove(kingdom.Name);
+                _visibleKingdoms.Remove(kingdom.Name);
             }
             else
             {
-                visibleKingdoms.Add(kingdom.Name);
+                _visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
-            await HandleRedraw(lordsModel);
+            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, _visibleKingdoms);
+            await HandleRedraw(_lordsModel);
         }
 
         private static List<string> GetLabels(List<KingdomLordsItem> kingdoms) =>

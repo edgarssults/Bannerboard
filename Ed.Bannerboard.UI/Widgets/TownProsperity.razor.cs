@@ -14,11 +14,11 @@ namespace Ed.Bannerboard.UI.Widgets
         private const string TownCountKey = "prosperity-widget-town-count";
         private const string ViewKey = "prosperity-widget-view";
         private readonly Version _minimumSupportedVersion = new("0.3.3");
-        private TownProsperityModel? prosperityModel;
-        private int townCount = 10;
-        private BarChart<float>? barChart;
-        private ProsperityView view = ProsperityView.Table;
-        private bool isFirstDraw = true;
+        private TownProsperityModel? _prosperityModel;
+        private int _townCount = 10;
+        private BarChart<float>? _barChart;
+        private ProsperityView _view = ProsperityView.Table;
+        private bool _isFirstDraw = true;
 
         private enum ProsperityView
         {
@@ -40,17 +40,18 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            prosperityModel = JsonConvert.DeserializeObject<TownProsperityModel>(model, new VersionConverter());
-            if (prosperityModel == null)
+            _prosperityModel = JsonConvert.DeserializeObject<TownProsperityModel>(model, new VersionConverter());
+            if (_prosperityModel == null)
             {
                 return;
             }
 
-            StateHasChanged();
+			// TODO: Check for changes before redrawing
+			StateHasChanged();
 
-            if (view == ProsperityView.Chart)
+            if (_view == ProsperityView.Chart)
             {
-                await HandleRedraw(prosperityModel, isFirstDraw);
+                await HandleRedraw(_prosperityModel, _isFirstDraw);
             }
         }
 
@@ -62,11 +63,11 @@ namespace Ed.Bannerboard.UI.Widgets
 
 		public override async Task ResetAsync()
 		{
-			townCount = 10;
+			_townCount = 10;
 			await LocalStorage!.RemoveItemAsync(TownCountKey);
-			view = ProsperityView.Table;
+			_view = ProsperityView.Table;
 			await LocalStorage!.RemoveItemAsync(ViewKey);
-			prosperityModel = null;
+			_prosperityModel = null;
 
 			StateHasChanged();
 		}
@@ -76,13 +77,13 @@ namespace Ed.Bannerboard.UI.Widgets
             var storedTownCount = await LocalStorage!.GetItemAsync<int?>(TownCountKey);
             if (storedTownCount != null)
             {
-                townCount = storedTownCount.Value;
+                _townCount = storedTownCount.Value;
             }
 
             var storedView = await LocalStorage!.GetItemAsync<ProsperityView?>(ViewKey);
             if (storedView != null)
             {
-                view = storedView.Value;
+                _view = storedView.Value;
             }
 
             await base.OnInitializedAsync();
@@ -90,19 +91,19 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task ProsperityFilterClickedAsync(int value)
         {
-            townCount = value;
-            await LocalStorage!.SetItemAsync(TownCountKey, townCount);
+            _townCount = value;
+            await LocalStorage!.SetItemAsync(TownCountKey, _townCount);
             SendFilterMessage();
         }
 
         private async Task ProsperityViewChangedAsync(ProsperityView value)
         {
-            view = value;
-            await LocalStorage!.SetItemAsync(ViewKey, view);
+            _view = value;
+            await LocalStorage!.SetItemAsync(ViewKey, _view);
 
-            if (view == ProsperityView.Chart)
+            if (_view == ProsperityView.Chart)
             {
-                await HandleRedraw(prosperityModel, true);
+                await HandleRedraw(_prosperityModel, true);
             }
         }
 
@@ -119,8 +120,8 @@ namespace Ed.Bannerboard.UI.Widgets
                 await Task.Delay(200);
             }
 
-            await barChart!.Clear();
-            await barChart.AddLabelsDatasetsAndUpdate(GetLabels(model.Towns), GetDataset(model.Towns));
+            await _barChart!.Clear();
+            await _barChart.AddLabelsDatasetsAndUpdate(GetLabels(model.Towns), GetDataset(model.Towns));
         }
 
         private void SendFilterMessage()
@@ -128,7 +129,7 @@ namespace Ed.Bannerboard.UI.Widgets
             var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             var model = new TownProsperityFilterModel
             {
-                TownCount = townCount,
+                TownCount = _townCount,
                 Version = new Version(settings.Version)
             };
             OnMessageSent(JsonConvert.SerializeObject(model));

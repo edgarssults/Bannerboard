@@ -12,10 +12,10 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string VisibleKingdomsKey = "strength-widget-visible-kingdoms";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
-        private BarChart<float>? barChart;
-        private KingdomStrengthModel? strengthModel;
-        private List<string>? visibleKingdoms;
-        private bool isFirstDraw = true;
+        private BarChart<float>? _barChart;
+        private KingdomStrengthModel? _strengthModel;
+        private List<string>? _visibleKingdoms;
+        private bool _isFirstDraw = true;
 
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
@@ -28,74 +28,75 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            strengthModel = JsonConvert.DeserializeObject<KingdomStrengthModel>(model, new VersionConverter());
-            if (strengthModel == null)
+            _strengthModel = JsonConvert.DeserializeObject<KingdomStrengthModel>(model, new VersionConverter());
+            if (_strengthModel == null)
             {
                 return;
             }
 
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
-                visibleKingdoms = strengthModel.Kingdoms.Select(k => k.Name).ToList();
+                _visibleKingdoms = _strengthModel.Kingdoms.Select(k => k.Name).ToList();
             }
 
-            StateHasChanged();
+			// TODO: Check for changes before redrawing
+			StateHasChanged();
 
             // Have to delay the first draw for a bit to let JS initialize
-            if (isFirstDraw)
+            if (_isFirstDraw)
             {
                 await Task.Delay(200);
-                isFirstDraw = false;
+                _isFirstDraw = false;
             }
 
-            await HandleRedraw(strengthModel);
+            await HandleRedraw(_strengthModel);
 		}
 
 		public override async Task ResetAsync()
 		{
-			visibleKingdoms = null;
+			_visibleKingdoms = null;
 			await LocalStorage!.RemoveItemAsync(VisibleKingdomsKey);
-			strengthModel = null;
+			_strengthModel = null;
 
 			StateHasChanged();
 		}
 
 		protected override async Task OnInitializedAsync()
         {
-            visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
+            _visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
         private async Task HandleRedraw(KingdomStrengthModel? model)
         {
-            if (visibleKingdoms == null || model == null)
+            if (_visibleKingdoms == null || model == null)
             {
                 return;
             }
 
-            await barChart!.Clear();
-            var filteredKingdoms = model.Kingdoms.Where(k => visibleKingdoms.Contains(k.Name)).ToList();
-            await barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
+            await _barChart!.Clear();
+            var filteredKingdoms = model.Kingdoms.Where(k => _visibleKingdoms.Contains(k.Name)).ToList();
+            await _barChart.AddLabelsDatasetsAndUpdate(GetLabels(filteredKingdoms), GetDataset(filteredKingdoms));
         }
 
         private async Task KingdomFilterClickedAsync(KingdomStrengthItem kingdom)
         {
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
                 return;
             }
 
-            if (visibleKingdoms.Contains(kingdom.Name))
+            if (_visibleKingdoms.Contains(kingdom.Name))
             {
-                visibleKingdoms.Remove(kingdom.Name);
+                _visibleKingdoms.Remove(kingdom.Name);
             }
             else
             {
-                visibleKingdoms.Add(kingdom.Name);
+                _visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
-            await HandleRedraw(strengthModel);
+            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, _visibleKingdoms);
+            await HandleRedraw(_strengthModel);
         }
 
         private static List<string> GetLabels(List<KingdomStrengthItem> kingdoms) =>

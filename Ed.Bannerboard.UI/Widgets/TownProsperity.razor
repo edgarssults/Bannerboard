@@ -5,10 +5,10 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Prosperity</div>
-            @if (prosperityModel != null)
+            @if (_prosperityModel != null)
             {
                 <div class="ml-auto align-self-center">
-                    <RadioGroup TValue="ProsperityView" Name="prosperity-widget-view" CheckedValue="view" CheckedValueChanged="ProsperityViewChangedAsync">
+                    <RadioGroup TValue="ProsperityView" Name="prosperity-widget-view" CheckedValue="_view" CheckedValueChanged="ProsperityViewChangedAsync">
                         <Radio Value="ProsperityView.Table" title="Table view"><i class="fa fa-table"></i></Radio>
                         <Radio Value="ProsperityView.Chart" title="Chart view"><i class="fa fa-chart-bar"></i></Radio>
                     </RadioGroup>
@@ -19,7 +19,7 @@
                         <i class="fa fa-filter"></i>
                     </DropdownToggle>
                     <DropdownMenu>
-                        <RadioGroup TValue="int" Name="prosperity-widget-towns" CheckedValue="townCount" CheckedValueChanged="ProsperityFilterClickedAsync" Orientation="Orientation.Vertical">
+                        <RadioGroup TValue="int" Name="prosperity-widget-towns" CheckedValue="_townCount" CheckedValueChanged="ProsperityFilterClickedAsync" Orientation="Orientation.Vertical">
                             <DropdownItem>
                                 <Radio Value="5">Top 5</Radio>
                             </DropdownItem>
@@ -39,13 +39,13 @@
         </div>
     </div>
     <div class="card-body">
-        @if (prosperityModel != null)
+        @if (_prosperityModel != null)
         {
-            if (view == ProsperityView.Table)
+            if (_view == ProsperityView.Table)
             {
                 <table class="table table-sm">
                     <tbody>
-                        @foreach (var town in prosperityModel.Towns)
+                        @foreach (var town in _prosperityModel.Towns)
                         {
                             <tr style="background-color: @town.PrimaryColor;">
                                 <td title="Owned by @town.FactionName">@town.Name</td>
@@ -57,9 +57,9 @@
                     </tbody>
                 </table>
             }
-            else if (view == ProsperityView.Chart)
+            else if (_view == ProsperityView.Chart)
             {
-                <BarChart @ref="barChart" TItem="float" Options="BaseBarChartOptions" />
+                <BarChart @re_f="barChart" TItem="float" Options="BaseBarChartOptions" />
             }
         }
         else

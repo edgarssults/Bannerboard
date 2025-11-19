@@ -12,9 +12,9 @@ namespace Ed.Bannerboard.UI.Widgets
         private const string VisibleKingdomsKey = "wars-widget-visible-kingdoms";
         private const string ShowMinorFactionsKey = "wars-widget-show-minor-factions";
         private readonly Version _minimumSupportedVersion = new("0.3.0");
-        private KingdomWarsModel? warsModel;
-        private bool showMinorFactions;
-        private List<string>? visibleKingdoms;
+        private KingdomWarsModel? _warsModel;
+        private bool _showMinorFactions;
+        private List<string>? _visibleKingdoms;
 
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
@@ -27,62 +27,63 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override Task Update(string model)
         {
-            warsModel = JsonConvert.DeserializeObject<KingdomWarsModel>(model, new VersionConverter());
-            if (warsModel == null)
+            _warsModel = JsonConvert.DeserializeObject<KingdomWarsModel>(model, new VersionConverter());
+            if (_warsModel == null)
             {
                 return Task.CompletedTask;
             }
 
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
-                visibleKingdoms = warsModel.Kingdoms.Select(k => k.Name).ToList();
+                _visibleKingdoms = _warsModel.Kingdoms.Select(k => k.Name).ToList();
             }
 
-            StateHasChanged();
+			// TODO: Check for changes before redrawing
+			StateHasChanged();
             return Task.CompletedTask;
 		}
 
 		public override async Task ResetAsync()
 		{
-			visibleKingdoms = null;
+			_visibleKingdoms = null;
 			await LocalStorage!.RemoveItemAsync(VisibleKingdomsKey);
-			showMinorFactions = false;
+			_showMinorFactions = false;
 			await LocalStorage!.RemoveItemAsync(ShowMinorFactionsKey);
-			warsModel = null;
+			_warsModel = null;
 
 			StateHasChanged();
 		}
 
 		protected override async Task OnInitializedAsync()
         {
-            showMinorFactions = await LocalStorage!.GetItemAsync<bool>(ShowMinorFactionsKey);
-            visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
+            _showMinorFactions = await LocalStorage!.GetItemAsync<bool>(ShowMinorFactionsKey);
+            _visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
 
         private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
         {
-            showMinorFactions = (bool)(e.Value ?? true);
-            await LocalStorage!.SetItemAsync(ShowMinorFactionsKey, showMinorFactions);
+            _showMinorFactions = (bool)(e.Value ?? true);
+            await LocalStorage!.SetItemAsync(ShowMinorFactionsKey, _showMinorFactions);
         }
 
         private async Task KingdomFilterClickedAsync(KingdomWarsItem kingdom)
         {
-            if (visibleKingdoms == null)
+            if (_visibleKingdoms == null)
             {
                 return;
             }
 
-            if (visibleKingdoms.Contains(kingdom.Name))
+            if (_visibleKingdoms.Contains(kingdom.Name))
             {
-                visibleKingdoms.Remove(kingdom.Name);
+                _visibleKingdoms.Remove(kingdom.Name);
             }
             else
             {
-                visibleKingdoms.Add(kingdom.Name);
+                _visibleKingdoms.Add(kingdom.Name);
             }
 
-            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, visibleKingdoms);
+            await LocalStorage!.SetItemAsync(VisibleKingdomsKey, _visibleKingdoms);
         }
     }
 }

@@ -87,9 +87,12 @@ namespace Ed.Bannerboard.UI.Widgets
 
 		public override async Task ResetAsync()
 		{
-			_trackedHeroes = null;
+			_trackedHeroes = [];
 			await LocalStorage!.RemoveItemAsync(TrackedHeroesKey);
 			_heroModel = null;
+
+			StateHasChanged();
+			SendFilterMessage();
 		}
 
 		protected override async Task OnInitializedAsync()
@@ -126,7 +129,11 @@ namespace Ed.Bannerboard.UI.Widgets
             hero.IsShownOnMap = !hero.IsShownOnMap;
 
 			// Update tracking model
-			var trackedHero = _trackedHeroes.First(h => h.Id == hero.Id).IsShownOnMap = hero.IsShownOnMap;
+			var trackedHero = _trackedHeroes.FirstOrDefault(h => h.Id == hero.Id);
+			if (trackedHero != null)
+			{
+				trackedHero.IsShownOnMap = hero.IsShownOnMap;
+			}
 			await LocalStorage!.SetItemAsync(TrackedHeroesKey, _trackedHeroes);
 
             // Request new data

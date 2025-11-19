@@ -169,8 +169,14 @@ namespace Ed.Bannerboard.UI.Pages
                     continue;
                 }
 
-                widgetInstance.MessageSent += OnMessageSent;
-                widgetInstance.SendInitialMessage();
+				widgetInstance.MessageSent += async (sender, message) =>
+				{
+					var encoded = Encoding.UTF8.GetBytes(message);
+					var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+					await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
+				};
+
+				widgetInstance.SendInitialMessage();
             }
         }
 
@@ -236,13 +242,6 @@ namespace Ed.Bannerboard.UI.Pages
 
             StateHasChanged();
         }
-
-		private async void OnMessageSent(object? sender, string message)
-		{
-			var encoded = Encoding.UTF8.GetBytes(message);
-			var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
-			await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
-		}
 
         public void Dispose()
         {

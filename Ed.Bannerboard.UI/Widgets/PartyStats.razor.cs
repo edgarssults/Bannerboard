@@ -12,9 +12,9 @@ namespace Ed.Bannerboard.UI.Widgets
         private const string ShowUnitsKey = "party-widget-showunits";
         private const string ShowFoodKey = "party-widget-showfood";
         private readonly Version _minimumSupportedVersion = new("0.4.2");
-        private PartyStatsModel? partyModel;
-        private bool showUnits = true;
-        private bool showFood = true;
+        private PartyStatsModel? _partyModel;
+        private bool _showUnits = true;
+        private bool _showFood = true;
 
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
@@ -27,23 +27,24 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override Task Update(string model)
         {
-            partyModel = JsonConvert.DeserializeObject<PartyStatsModel>(model, new VersionConverter());
-            if (partyModel == null)
+            _partyModel = JsonConvert.DeserializeObject<PartyStatsModel>(model, new VersionConverter());
+            if (_partyModel == null)
             {
                 return Task.CompletedTask;
             }
 
-            StateHasChanged();
+			// TODO: Check for changes before redrawing
+			StateHasChanged();
             return Task.CompletedTask;
 		}
 
 		public override async Task ResetAsync()
 		{
-			showUnits = true;
+			_showUnits = true;
 			await LocalStorage!.RemoveItemAsync(ShowUnitsKey);
-			showFood = true;
+			_showFood = true;
 			await LocalStorage!.RemoveItemAsync(ShowFoodKey);
-			partyModel = null;
+			_partyModel = null;
 
 			StateHasChanged();
 		}
@@ -53,13 +54,13 @@ namespace Ed.Bannerboard.UI.Widgets
             var storedShowUnits = await LocalStorage!.GetItemAsync<bool?>(ShowUnitsKey);
             if (storedShowUnits != null)
             {
-                showUnits = storedShowUnits.Value;
+                _showUnits = storedShowUnits.Value;
             }
 
             var storedShowFood = await LocalStorage!.GetItemAsync<bool?>(ShowFoodKey);
             if (storedShowFood != null)
             {
-                showFood = storedShowFood.Value;
+                _showFood = storedShowFood.Value;
             }
 
             await base.OnInitializedAsync();
@@ -67,14 +68,14 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task ShowUnitsChanged(bool newShowUnits)
         {
-            showUnits = newShowUnits;
-            await LocalStorage!.SetItemAsync(ShowUnitsKey, showUnits);
+            _showUnits = newShowUnits;
+            await LocalStorage!.SetItemAsync(ShowUnitsKey, _showUnits);
         }
 
         private async Task ShowFoodChanged(bool newShowFood)
         {
-            showFood = newShowFood;
-            await LocalStorage!.SetItemAsync(ShowFoodKey, showFood);
+            _showFood = newShowFood;
+            await LocalStorage!.SetItemAsync(ShowFoodKey, _showFood);
         }
 
         private static string GetMemberIcon(MemberStatsItem member)
