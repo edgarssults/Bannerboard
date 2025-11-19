@@ -40,5 +40,17 @@ namespace Ed.Bannerboard.Models.Widgets
         /// Hero name.
         /// </summary>
         public string Name { get; set; }
-    }
+
+		public override bool Equals(object obj)
+		{
+			return obj is HeroTrackerReturnDataItem item
+				&& Id == item.Id
+				&& Name == item.Name;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+	}
 }

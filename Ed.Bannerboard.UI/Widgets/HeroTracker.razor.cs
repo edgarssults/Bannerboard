@@ -53,6 +53,7 @@ namespace Ed.Bannerboard.UI.Widgets
 				if (_heroModel != null
 					&& newHeroModel.Heroes.SequenceEqual(_heroModel.Heroes))
 				{
+					// Do not update if nothing has changed
 					return Task.CompletedTask;
 				}
 
@@ -72,6 +73,7 @@ namespace Ed.Bannerboard.UI.Widgets
 				if (_allHeroes != null
 					&& newHeroes.Heroes.SequenceEqual(_allHeroes))
 				{
+					// Do not update if nothing has changed
 					return Task.CompletedTask;
 				}
 
