@@ -4,17 +4,17 @@
     <div class="card-header">
         <div class="d-flex">
             <div class="align-self-center">Heroes</div>
-            @if (allHeroes != null && heroModel != null)
+            @if (_allHeroes != null && _heroModel != null)
             {
                 <div class="ml-auto">
-                    @if (isSearchBoxVisible)
+                    @if (_isSearchBoxVisible)
                     {
                         <Autocomplete
-                            @ref="heroSearch"
+                            @ref="_heroSearch"
                             SelectedText="@SelectedText"
                             TItem="HeroTrackerReturnDataItem"
                             TValue="string"
-                            Data="@allHeroes"
+                            Data="@_allHeroes"
                             TextField="@(item => item.Name)"
                             ValueField="@(item => item.Id)"
                             Placeholder="Hero name..."
@@ -36,9 +36,9 @@
         </div>
     </div>
     <div class="card-body">
-        @if (heroModel != null)
+        @if (_heroModel != null)
         {
-            if (heroModel.Heroes.Any())
+            if (_heroModel.Heroes.Any())
             {
                 <table class="table table-sm">
                     <thead>
@@ -49,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var hero in heroModel.Heroes)
+                        @foreach (var hero in _heroModel.Heroes)
                         {
                             <tr>
                                 <td class="align-middle @((hero.IsDead || hero.IsDisabled) ? "text-decoration-line-through" : string.Empty)">@hero.Name</td>

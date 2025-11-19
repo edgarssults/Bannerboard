@@ -52,7 +52,7 @@ namespace Ed.Bannerboard.Models.Widgets
         public bool IsDead { get; set; }
 
         /// <summary>
-        /// Indicates whether the hero is diabled.
+        /// Indicates whether the hero is disabled.
         /// </summary>
         public bool IsDisabled { get; set; }
 
@@ -60,5 +60,21 @@ namespace Ed.Bannerboard.Models.Widgets
         /// Indicates whether the last known hero location is marked on the map.
         /// </summary>
         public bool IsShownOnMap { get; set; }
-    }
+
+		public override bool Equals(object obj)
+		{
+			return obj is HeroTrackerItem item
+				&& Id == item.Id
+				&& Name == item.Name
+				&& Location == item.Location
+				&& IsDead == item.IsDead
+				&& IsDisabled == item.IsDisabled
+				&& IsShownOnMap == item.IsShownOnMap;
+		}
+
+		public override int GetHashCode()
+		{
+			return base.GetHashCode();
+		}
+	}
 }

@@ -13,11 +13,11 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string TrackedHeroesKey = "heroes-widget-tracked-heroes";
         private readonly Version _minimumSupportedVersion = new("0.4.2");
-        private HeroTrackerModel? heroModel;
-        private Autocomplete<HeroTrackerReturnDataItem, string>? heroSearch;
-        private List<HeroTrackerReturnDataItem>? allHeroes;
-        private List<HeroTrackerFilterItem>? trackedHeroes;
-        private bool isSearchBoxVisible;
+        private HeroTrackerModel? _heroModel;
+        private Autocomplete<HeroTrackerReturnDataItem, string>? _heroSearch;
+        private List<HeroTrackerReturnDataItem>? _allHeroes;
+        private List<HeroTrackerFilterItem>? _trackedHeroes;
+        private bool _isSearchBoxVisible;
 
         private string? SelectedText { get; set; }
 
@@ -29,9 +29,14 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override bool CanUpdate(string model, Version? version)
         {
-            return (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerModel)}\"")
-                || Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerReturnDataModel)}\""))
-                && IsCompatible(version, _minimumSupportedVersion);
+            return
+				(
+					Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerModel)}\"")
+					||
+					Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerReturnDataModel)}\"")
+				)
+                &&
+				IsCompatible(version, _minimumSupportedVersion);
         }
 
         public override Task Update(string model)
@@ -39,24 +44,38 @@ namespace Ed.Bannerboard.UI.Widgets
             if (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerModel)}\""))
             {
                 // Received tracking information
-                heroModel = JsonConvert.DeserializeObject<HeroTrackerModel>(model, new VersionConverter());
-                if (heroModel == null)
+                var newHeroModel = JsonConvert.DeserializeObject<HeroTrackerModel>(model, new VersionConverter());
+                if (newHeroModel == null)
                 {
                     return Task.CompletedTask;
-                }
+				}
+
+				if (_heroModel != null
+					&& newHeroModel.Heroes.SequenceEqual(_heroModel.Heroes))
+				{
+					return Task.CompletedTask;
+				}
+
+				_heroModel = newHeroModel;
 
                 StateHasChanged();
             }
             else if (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerReturnDataModel)}\""))
             {
                 // Received list of trackable heroes
-                var data = JsonConvert.DeserializeObject<HeroTrackerReturnDataModel>(model, new VersionConverter());
-                if (data == null)
+                var newHeroes = JsonConvert.DeserializeObject<HeroTrackerReturnDataModel>(model, new VersionConverter());
+                if (newHeroes == null)
                 {
                     return Task.CompletedTask;
                 }
 
-                allHeroes = data.Heroes;
+				if (_allHeroes != null
+					&& newHeroes.Heroes.SequenceEqual(_allHeroes))
+				{
+					return Task.CompletedTask;
+				}
+
+				_allHeroes = newHeroes.Heroes;
 
                 StateHasChanged();
             }
@@ -66,12 +85,14 @@ namespace Ed.Bannerboard.UI.Widgets
 
 		public override async Task ResetAsync()
 		{
-			// TODO: Reset properly
+			_trackedHeroes = null;
+			await LocalStorage!.RemoveItemAsync(TrackedHeroesKey);
+			_heroModel = null;
 		}
 
 		protected override async Task OnInitializedAsync()
         {
-            trackedHeroes = await LocalStorage!.GetItemAsync<List<HeroTrackerFilterItem>>(TrackedHeroesKey) ?? [];
+            _trackedHeroes = await LocalStorage!.GetItemAsync<List<HeroTrackerFilterItem>>(TrackedHeroesKey) ?? [];
             await base.OnInitializedAsync();
         }
 
@@ -86,7 +107,7 @@ namespace Ed.Bannerboard.UI.Widgets
             var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>()!;
             var model = new HeroTrackerFilterModel
             {
-                TrackedHeroes = trackedHeroes,
+                TrackedHeroes = _trackedHeroes,
                 Version = new Version(settings.Version)
             };
             OnMessageSent(JsonConvert.SerializeObject(model));
@@ -94,7 +115,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task TrackingStatusChangedAsync(HeroTrackerItem hero)
         {
-            if (trackedHeroes == null)
+            if (_trackedHeroes == null)
             {
                 return;
             }
@@ -103,12 +124,8 @@ namespace Ed.Bannerboard.UI.Widgets
             hero.IsShownOnMap = !hero.IsShownOnMap;
 
 			// Update tracking model
-			var trackedHero = trackedHeroes.FirstOrDefault(h => h.Id == hero.Id);
-			if (trackedHero != null)
-			{
-				trackedHero.IsShownOnMap = hero.IsShownOnMap;
-				await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
-			}
+			var trackedHero = _trackedHeroes.First(h => h.Id == hero.Id).IsShownOnMap = hero.IsShownOnMap;
+			await LocalStorage!.SetItemAsync(TrackedHeroesKey, _trackedHeroes);
 
             // Request new data
             SendFilterMessage();
@@ -116,7 +133,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task SelectedHeroChangedAsync(string id)
         {
-            if (trackedHeroes == null)
+            if (_trackedHeroes == null)
             {
                 return;
             }
@@ -126,7 +143,7 @@ namespace Ed.Bannerboard.UI.Widgets
                 return;
             }
 
-            if (trackedHeroes.Any(h => h.Id == id))
+            if (_trackedHeroes.Any(h => h.Id == id))
             {
                 // Hero is already being tracked
                 SelectedText = null;
@@ -134,16 +151,16 @@ namespace Ed.Bannerboard.UI.Widgets
             }
 
             // Update tracking model
-            trackedHeroes.Add(new HeroTrackerFilterItem
+            _trackedHeroes.Add(new HeroTrackerFilterItem
             {
                 Id = id,
                 IsShownOnMap = true
             });
-            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
+            await LocalStorage!.SetItemAsync(TrackedHeroesKey, _trackedHeroes);
 
             // Clear the text
             SelectedText = null;
-            isSearchBoxVisible = false;
+            _isSearchBoxVisible = false;
 
             // Request new data
             SendFilterMessage();
@@ -151,17 +168,17 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task RemoveHeroAsync(HeroTrackerItem hero)
         {
-            if (trackedHeroes == null)
+            if (_trackedHeroes == null)
             {
                 return;
             }
 
             // Updated view model
-            heroModel?.Heroes.Remove(hero);
+            _heroModel?.Heroes.Remove(hero);
 
             // Update tracking model
-            trackedHeroes.RemoveAll(h => h.Id == hero.Id);
-            await LocalStorage!.SetItemAsync(TrackedHeroesKey, trackedHeroes);
+            _trackedHeroes.RemoveAll(h => h.Id == hero.Id);
+            await LocalStorage!.SetItemAsync(TrackedHeroesKey, _trackedHeroes);
 
             // Request new data
             SendFilterMessage();
@@ -169,9 +186,9 @@ namespace Ed.Bannerboard.UI.Widgets
 
         private async Task ShowSearchBox()
         {
-            isSearchBoxVisible = true;
+            _isSearchBoxVisible = true;
             await Task.Delay(200); // Wait, otherwise focus doesn't work
-            heroSearch?.Focus();
+            _heroSearch?.Focus();
         }
     }
 }

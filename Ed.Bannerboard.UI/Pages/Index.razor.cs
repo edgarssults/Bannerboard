@@ -246,18 +246,7 @@ namespace Ed.Bannerboard.UI.Pages
 
         public void Dispose()
         {
-            AppState!.OnResetLayout -= OnResetLayout;
-
-			foreach (var widget in _widgets)
-			{
-				if (widget.Component?.Instance is IWidget widgetInstance)
-				{
-					widgetInstance.MessageSent -= OnMessageSent;
-				}
-			}
-
 			_disposalTokenSource.Cancel();
-
             _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bannerboard client stopped", CancellationToken.None);
         }
     }
