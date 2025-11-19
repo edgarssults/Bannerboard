@@ -70,6 +70,7 @@ namespace Ed.Bannerboard.UI.Widgets
 			_prosperityModel = null;
 
 			StateHasChanged();
+			SendFilterMessage();
 		}
 
 		protected override async Task OnInitializedAsync()
