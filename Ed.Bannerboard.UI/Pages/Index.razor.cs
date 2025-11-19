@@ -65,7 +65,7 @@ namespace Ed.Bannerboard.UI.Pages
             }
             catch
             {
-                // TODO: Retry failed connections
+                // TODO: Retry failed connections and handle server shutdown
             }
         }
 
@@ -88,7 +88,8 @@ namespace Ed.Bannerboard.UI.Pages
                         result = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
                         stream.Write(buffer.Array!, buffer.Offset, result.Count);
                         Debug.WriteLine("Received, deserializing...");
-                    } while (!result.EndOfMessage);
+                    }
+					while (!result.EndOfMessage);
 
                     if (result.MessageType == WebSocketMessageType.Close)
                     {
@@ -109,17 +110,18 @@ namespace Ed.Bannerboard.UI.Pages
                 }
 
                 // Handshake message is sent once
-                HandleHandhsakeMessage(message);
+                HandleHandshakeMessage(message);
 
                 // Stats always updated
                 await UpdateWidgets(JsonConvert.SerializeObject(statsModel));
 
                 // Update the relevant widget
                 await UpdateWidgets(message);
-            } while (!_disposalTokenSource.IsCancellationRequested);
+            }
+			while (!_disposalTokenSource.IsCancellationRequested);
         }
 
-        private void HandleHandhsakeMessage(string message)
+        private void HandleHandshakeMessage(string message)
         {
             if (modVersionDetermined)
             {
