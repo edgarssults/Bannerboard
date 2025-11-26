@@ -58,7 +58,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                     .Select(k => new KingdomLordsItem
                     {
                         Name = k.Name.ToString(),
-                        Lords = k.Lords.Count(),
+                        Lords = k.AliveLords.Count(),
                         PrimaryColor = Color.FromUint(k.Color).ToString(),
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })

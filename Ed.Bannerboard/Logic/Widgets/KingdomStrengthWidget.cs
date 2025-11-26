@@ -58,7 +58,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                     .Select(k => new KingdomStrengthItem
                     {
                         Name = k.Name.ToString(),
-                        Strength = k.TotalStrength,
+                        Strength = k.CurrentTotalStrength,
                         PrimaryColor = Color.FromUint(k.Color).ToString(),
                         SecondaryColor = Color.FromUint(k.Color2).ToString(),
                     })

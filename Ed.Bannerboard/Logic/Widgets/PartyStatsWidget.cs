@@ -76,7 +76,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                         WoundedRegulars = Campaign.Current.MainParty.MemberRoster.TotalWoundedRegulars,
                         TotalCount = Campaign.Current.MainParty.MemberRoster.TotalManCount,
                         TotalWounded = Campaign.Current.MainParty.MemberRoster.TotalWounded,
-                        MaxCount = Campaign.Current.MainParty.LimitedPartySize,
+                        MaxCount = Campaign.Current.MainParty.Party.PartySizeLimit,
                         Items = new List<MemberStatsItem>
                         {
                             new MemberStatsItem
