@@ -3,7 +3,7 @@
     "Ed.Bannerboard": {
       "commandName": "Executable",
       "executablePath": "C:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client\\Bannerlord.exe",
-      "commandLineArgs": "/singleplayer _MODULES_*Native*SandBoxCore*SandBox*Bannerboard*_MODULES_",
+      "commandLineArgs": "/singleplayer _MODULES_*Native*SandBoxCore*SandBox*StoryMode*Bannerboard*_MODULES_",
       "workingDirectory": "C:\\Steam\\steamapps\\common\\Mount & Blade II Bannerlord\\bin\\Win64_Shipping_Client"
     }
   }
