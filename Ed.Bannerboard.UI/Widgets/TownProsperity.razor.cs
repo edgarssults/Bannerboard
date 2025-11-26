@@ -52,7 +52,8 @@ namespace Ed.Bannerboard.UI.Widgets
             if (_view == ProsperityView.Chart)
             {
                 await HandleRedraw(_prosperityModel, _isFirstDraw);
-            }
+				_isFirstDraw = false;
+			}
         }
 
         public override void SendInitialMessage()
@@ -119,10 +120,13 @@ namespace Ed.Bannerboard.UI.Widgets
             if (withDelay)
             {
                 await Task.Delay(200);
-            }
+			}
 
-            await _barChart!.Clear();
-            await _barChart.AddLabelsDatasetsAndUpdate(GetLabels(model.Towns), GetDataset(model.Towns));
+			// Blazorise requires a license for more than 10 data points
+			var topTenTowns = model.Towns.Take(10).ToList();
+
+			await _barChart!.Clear();
+            await _barChart.AddLabelsDatasetsAndUpdate(GetLabels(topTenTowns), GetDataset(topTenTowns));
         }
 
         private void SendFilterMessage()
@@ -131,7 +135,7 @@ namespace Ed.Bannerboard.UI.Widgets
             var model = new TownProsperityFilterModel
             {
                 TownCount = _townCount,
-                Version = new Version(settings.Version)
+                Version = new Version(settings!.Version)
             };
             OnMessageSent(JsonConvert.SerializeObject(model));
         }
