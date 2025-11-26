@@ -50,29 +50,36 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new KingdomWarsModel
-            {
-                Kingdoms = Campaign.Current.Kingdoms
-                    .Select(k => new KingdomWarsItem
-                    {
-                        Name = k.Name.ToString(),
-                        Wars = Campaign.Current.Factions
-                            .Where(f => k.IsAtWarWith(f) && (f.IsKingdomFaction || f.IsMinorFaction))
-                            .Select(f => new KingdomWarsFactionItem
-                            {
-                                Name = f.Name.ToString(),
-                                IsKingdomFaction = f.IsKingdomFaction,
-                                IsMinorFaction = f.IsMinorFaction
-                            })
-                            .ToList(),
-                        PrimaryColor = Color.FromUint(k.Color).ToString(),
-                        SecondaryColor = Color.FromUint(k.Color2).ToString(),
-                    })
-                    .ToList(),
-                Version = Version,
-            };
+			try
+			{
+				var model = new KingdomWarsModel
+				{
+					Kingdoms = Campaign.Current.Kingdoms
+						.Select(k => new KingdomWarsItem
+						{
+							Name = k.Name.ToString(),
+							Wars = Campaign.Current.Factions
+								.Where(f => k.IsAtWarWith(f) && (f.IsKingdomFaction || f.IsMinorFaction))
+								.Select(f => new KingdomWarsFactionItem
+								{
+									Name = f.Name.ToString(),
+									IsKingdomFaction = f.IsKingdomFaction,
+									IsMinorFaction = f.IsMinorFaction
+								})
+								.ToList(),
+							PrimaryColor = Color.FromUint(k.Color).ToString(),
+							SecondaryColor = Color.FromUint(k.Color2).ToString(),
+						})
+						.ToList(),
+					Version = Version,
+				};
 
-            session.Send(model.ToJsonArraySegment());
+				session.Send(model.ToJsonArraySegment());
+			}
+			catch
+			{
+				// Ignore
+			}
         }
     }
 }

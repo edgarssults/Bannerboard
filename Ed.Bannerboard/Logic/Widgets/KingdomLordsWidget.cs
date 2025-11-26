@@ -52,21 +52,28 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         private void SendUpdate(WebSocketSession session)
         {
-            var model = new KingdomLordsModel
-            {
-                Kingdoms = Campaign.Current.Kingdoms
-                    .Select(k => new KingdomLordsItem
-                    {
-                        Name = k.Name.ToString(),
-                        Lords = k.AliveLords.Count(),
-                        PrimaryColor = Color.FromUint(k.Color).ToString(),
-                        SecondaryColor = Color.FromUint(k.Color2).ToString(),
-                    })
-                    .ToList(),
-                Version = Version,
-            };
+			try
+			{
+				var model = new KingdomLordsModel
+				{
+					Kingdoms = Campaign.Current.Kingdoms
+						.Select(k => new KingdomLordsItem
+						{
+							Name = k.Name.ToString(),
+							Lords = k.AliveLords.Count(),
+							PrimaryColor = Color.FromUint(k.Color).ToString(),
+							SecondaryColor = Color.FromUint(k.Color2).ToString(),
+						})
+						.ToList(),
+					Version = Version,
+				};
 
-            session.Send(model.ToJsonArraySegment());
+				session.Send(model.ToJsonArraySegment());
+			}
+			catch
+			{
+				// Ignore
+			}
         }
     }
 }
