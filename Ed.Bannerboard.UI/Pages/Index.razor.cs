@@ -54,7 +54,7 @@ namespace Ed.Bannerboard.UI.Pages
             var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
             statsModel = new StatsModel
             {
-                DashboardVersion = new Version(settings.Version)
+                DashboardVersion = new Version(settings!.Version)
             };
 
             try
