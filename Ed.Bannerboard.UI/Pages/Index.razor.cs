@@ -28,6 +28,7 @@ namespace Ed.Bannerboard.UI.Pages
             new WidgetComponent(typeof(PartyStats), 5, 6, 5, 6),
             new WidgetComponent(typeof(HeroTracker), 10, 6, 6, 6),
             new WidgetComponent(typeof(TownProsperity), 10, 0, 6, 6),
+            new WidgetComponent(typeof(TradePrices), 16, 6, 8, 12),
             new WidgetComponent(typeof(Stats), 16, 0, 3, 6)
         };
 

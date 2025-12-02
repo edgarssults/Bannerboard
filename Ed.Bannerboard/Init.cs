@@ -40,6 +40,7 @@ namespace Ed.Bannerboard
                     new PartyStatsWidget(_server, _version),
                     new TownProsperity(_server, _version),
                     new HeroTracker(_server, _version),
+                    new TradePricesWidget(_server, _version),
                 };
 
                 // Register widget behaviors in the game

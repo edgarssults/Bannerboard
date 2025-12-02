@@ -1,0 +1,93 @@
+@inherits WidgetBase
+@using Blazorise
+
+<div class="card">
+	<div class="card-header">
+		<div class="d-flex">
+			<div class="align-self-center">Trade Prices</div>
+			@if (_availableTowns != null && _availableTowns.Any())
+			{
+				<div class="ml-auto align-self-center">
+					<select class="form-control form-control-sm" @onchange="@(e => TownFilterChanged(e.Value?.ToString()))">
+						<option value="">All Towns</option>
+						@foreach (var town in _availableTowns)
+						{
+							<option value="@town" selected="@(_selectedTown == town)">@town</option>
+						}
+					</select>
+				</div>
+			}
+		</div>
+	</div>
+	<div class="card-body">
+		@if (_tradePricesModel != null && _tradePricesModel.Goods.Any())
+		{
+			<div class="table-responsive">
+				<table class="table table-sm table-hover">
+					<thead>
+						<tr>
+							<th>Good</th>
+							@if (!string.IsNullOrEmpty(_selectedTown))
+							{
+								<th>Action</th>
+							}
+							<th class="text-right">Low Price</th>
+							<th>Buy Location</th>
+							<th class="text-right">High Price</th>
+							<th>Sell Location</th>
+							<th class="text-right">Profit</th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var good in _tradePricesModel.Goods)
+						{
+							<tr>
+								<td>@good.Name</td>
+								@if (!string.IsNullOrEmpty(_selectedTown))
+								{
+									<td>
+										@if (!string.IsNullOrEmpty(GetActionText(good)))
+										{
+											<span class="@GetActionClass(good)">@GetActionText(good)</span>
+										}
+									</td>
+								}
+								<td class="text-right">
+									<span class="badge badge-info">@good.LowestPrice</span>
+								</td>
+								<td>
+									<small class="@(good.LowestPriceTown == _selectedTown ? "font-weight-bold" : "")">@good.LowestPriceTown</small>
+								</td>
+								<td class="text-right">
+									<span class="badge badge-success">@good.HighestPrice</span>
+								</td>
+								<td>
+									<small class="@(good.HighestPriceTown == _selectedTown ? "font-weight-bold" : "")">@good.HighestPriceTown</small>
+								</td>
+								<td class="text-right">
+									<span class="@GetProfitClass(good.ProfitMargin)">+@good.ProfitMargin</span>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+			</div>
+		}
+		else
+		{
+			<div class="d-flex justify-content-center">
+				<p class="text-muted">
+					<i class="fa fa-info-circle"></i>
+					@if (_tradePricesModel == null)
+					{
+						<span>No data or incompatible mod version</span>
+					}
+					else
+					{
+						<span>No trade goods available</span>
+					}
+				</p>
+			</div>
+		}
+	</div>
+</div>
