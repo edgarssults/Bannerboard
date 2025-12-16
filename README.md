@@ -61,7 +61,7 @@ Download from Steam Workshop: https://steamcommunity.com/sharedfiles/filedetails
 
 Download from Nexus: https://www.nexusmods.com/mountandblade2bannerlord/mods/3386
 
-Connect to your game: https://bannerboard.azurewebsites.net
+Connect to your game: https://www.bannerboard.net
 
 # Developer links
 
