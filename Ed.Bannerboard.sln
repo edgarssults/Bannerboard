@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.32014.148
+# Visual Studio Version 18
+VisualStudioVersion = 18.1.11312.151
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard", "Ed.Bannerboard\Ed.Bannerboard.csproj", "{11623B43-EBDF-4A49-B6AB-557F5983CEA4}"
 EndProject
@@ -16,6 +16,27 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.UI.Tests", "Ed.Bannerboard.UI.Tests\Ed.Bannerboard.UI.Tests.csproj", "{1BADEBB9-8DF3-4602-9075-2C7069F8E0ED}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ed.Bannerboard.UI", "Ed.Bannerboard.UI\Ed.Bannerboard.UI.csproj", "{9807512F-B0BF-44D8-93BE-AD812BEC66F1}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Ed.Bannerboard.Redirector", "Ed.Bannerboard.Redirector\", "{42503B9E-427C-36FF-54EF-2513AF7F943D}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv2.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_60501"
+		Debug.AspNetCompiler.PhysicalPath = "Ed.Bannerboard.Redirector\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60501\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_60501"
+		Release.AspNetCompiler.PhysicalPath = "Ed.Bannerboard.Redirector\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_60501\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "60501"
+		SlnRelativePath = "Ed.Bannerboard.Redirector\"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +60,10 @@ Global
 		{9807512F-B0BF-44D8-93BE-AD812BEC66F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9807512F-B0BF-44D8-93BE-AD812BEC66F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9807512F-B0BF-44D8-93BE-AD812BEC66F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Release|Any CPU.Build.0 = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
