@@ -1,4 +1,5 @@
-﻿using SuperSocket.WebSocket;
+﻿using Newtonsoft.Json.Converters;
+using SuperSocket.WebSocket;
 using System;
 using TaleWorlds.CampaignSystem;
 
@@ -20,10 +21,15 @@ namespace Ed.Bannerboard.Logic.Widgets
             Version = version;
         }
 
-        /// <summary>
-        /// WebSocket server to send data to.
-        /// </summary>
-        protected WebSocketServer Server { get; set; }
+		/// <summary>
+		/// Default model version converter.
+		/// </summary>
+		protected static readonly VersionConverter DefaultVersionConverter = new VersionConverter();
+
+		/// <summary>
+		/// WebSocket server to send data to.
+		/// </summary>
+		protected WebSocketServer Server { get; set; }
 
         /// <summary>
         /// Widget version.

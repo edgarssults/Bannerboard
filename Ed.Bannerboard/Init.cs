@@ -1,6 +1,7 @@
 ﻿using Ed.Bannerboard.Logic;
 using Ed.Bannerboard.Logic.Widgets;
 using Ed.Bannerboard.Models;
+using Newtonsoft.Json.Converters;
 using SuperSocket.SocketBase;
 using SuperSocket.WebSocket;
 using System;
@@ -15,7 +16,7 @@ namespace Ed.Bannerboard
     public class Init : MBSubModuleBase
     {
         // This version should be in sync with the version in SubModule.xml
-        private readonly Version _version = new Version("0.5.1");
+        private readonly Version _version = new Version("0.5.2");
 
         private WebSocketServer _server;
         private List<WidgetBase> _widgets;
@@ -113,7 +114,7 @@ namespace Ed.Bannerboard
             {
                 Version = _version,
             };
-            session.Send(model.ToJsonArraySegment());
+            session.Send(model.ToJsonArraySegment(new VersionConverter()));
 
             // Initialize all widgets
             _widgets.ForEach(w =>

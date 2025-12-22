@@ -65,7 +65,7 @@ namespace Ed.Bannerboard.Logic.Widgets
 					.ToList(),
                 Version = Version
             };
-            session.Send(model.ToJsonArraySegment());
+            session.Send(model.ToJsonArraySegment(DefaultVersionConverter));
         }
 
         public override bool CanHandleMessage(string message)
@@ -76,7 +76,7 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         public override void HandleMessage(WebSocketSession session, string message)
         {
-            var model = JsonConvert.DeserializeObject<HeroTrackerFilterModel>(message, new VersionConverter());
+            var model = JsonConvert.DeserializeObject<HeroTrackerFilterModel>(message, DefaultVersionConverter);
             if (model == null)
             {
                 return;
@@ -133,7 +133,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                     Version = Version
                 };
 
-                session.Send(model.ToJsonArraySegment());
+                session.Send(model.ToJsonArraySegment(DefaultVersionConverter));
             }
             catch
             {

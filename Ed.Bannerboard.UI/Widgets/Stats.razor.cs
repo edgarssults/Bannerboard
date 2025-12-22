@@ -29,7 +29,7 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override Task Update(string model)
         {
-            statsModel = JsonConvert.DeserializeObject<StatsModel>(model, new VersionConverter());
+            statsModel = JsonConvert.DeserializeObject<StatsModel>(model, DefaultVersionConverter);
             StateHasChanged();
 
             return Task.CompletedTask;

@@ -27,13 +27,19 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override Task Update(string model)
         {
-            _partyModel = JsonConvert.DeserializeObject<PartyStatsModel>(model, new VersionConverter());
-            if (_partyModel == null)
+            var newModel = JsonConvert.DeserializeObject<PartyStatsModel>(model, DefaultVersionConverter);
+            if (newModel == null)
             {
                 return Task.CompletedTask;
             }
 
-			// TODO: Check for changes before redrawing
+			if (!HasModelChanged(_partyModel, newModel))
+			{
+				return Task.CompletedTask;
+			}
+
+			_partyModel = newModel;
+
 			StateHasChanged();
             return Task.CompletedTask;
 		}
@@ -66,7 +72,64 @@ namespace Ed.Bannerboard.UI.Widgets
             await base.OnInitializedAsync();
         }
 
-        private async Task ShowUnitsChanged(bool newShowUnits)
+		private bool HasModelChanged(PartyStatsModel? oldModel, PartyStatsModel newModel)
+		{
+			if (oldModel == null)
+			{
+				return true;
+			}
+
+			if (oldModel.Food.Items.Count != newModel.Food.Items.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Food.Items.Count; i++)
+			{
+				var oldFood = oldModel.Food.Items[i];
+				var newFood = newModel.Food.Items[i];
+
+				if (oldFood.Name != newFood.Name
+					|| oldFood.Count != newFood.Count)
+				{
+					return true;
+				}
+			}
+
+			if (oldModel.Members.MaxCount != newModel.Members.MaxCount
+				|| oldModel.Members.TotalRegulars != newModel.Members.TotalRegulars
+				|| oldModel.Members.TotalHeroes != newModel.Members.TotalHeroes)
+			{
+				return true;
+			}
+
+			if (oldModel.Members.Items.Count != newModel.Members.Items.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Members.Items.Count; i++)
+			{
+				var oldMember = oldModel.Members.Items[i];
+				var newMember = newModel.Members.Items[i];
+
+				if (oldMember.Count != newMember.Count
+					|| oldMember.WoundedCount != newMember.WoundedCount
+					|| oldMember.IsInfantry != newMember.IsInfantry
+					|| oldMember.IsArcher != newMember.IsArcher
+					|| oldMember.IsCavalry != newMember.IsCavalry
+					|| oldMember.IsMountedArcher != newMember.IsMountedArcher
+					|| oldMember.IsPrisoner != newMember.IsPrisoner)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		private async Task ShowUnitsChanged(bool newShowUnits)
         {
             _showUnits = newShowUnits;
             await LocalStorage!.SetItemAsync(ShowUnitsKey, _showUnits);

@@ -12,9 +12,10 @@ namespace Ed.Bannerboard.Logic
         /// Serializes an object to a JSON string.
         /// </summary>
         /// <param name="source">The object to serialize.</param>
-        public static string ToJson(this object source)
+		/// <param name="versionConverter">Version converter to use.</param>
+        public static string ToJson(this object source, VersionConverter versionConverter)
         {
-            return JsonConvert.SerializeObject(source, new VersionConverter());
+            return JsonConvert.SerializeObject(source, versionConverter);
         }
 
         /// <summary>
@@ -35,13 +36,14 @@ namespace Ed.Bannerboard.Logic
             return new ArraySegment<byte>(source);
         }
 
-        /// <summary>
-        /// Serializes an object to JSON and then converts it to an ArraySegment.
-        /// </summary>
-        /// <param name="source">The object to convert.</param>
-        public static ArraySegment<byte> ToJsonArraySegment(this object source)
+		/// <summary>
+		/// Serializes an object to JSON and then converts it to an ArraySegment.
+		/// </summary>
+		/// <param name="source">The object to convert.</param>
+		/// <param name="versionConverter">Version converter to use.</param>
+		public static ArraySegment<byte> ToJsonArraySegment(this object source, VersionConverter versionConverter)
         {
-            return source.ToJson().ToByteArray().ToArraySegment();
+            return source.ToJson(versionConverter).ToByteArray().ToArraySegment();
         }
 
         /// <summary>

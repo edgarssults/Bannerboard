@@ -28,18 +28,24 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            _strengthModel = JsonConvert.DeserializeObject<KingdomStrengthModel>(model, new VersionConverter());
-            if (_strengthModel == null)
+			var newModel = JsonConvert.DeserializeObject<KingdomStrengthModel>(model, DefaultVersionConverter);
+            if (newModel == null)
             {
                 return;
             }
 
-            if (_visibleKingdoms == null)
+			if (!HasModelChanged(_strengthModel, newModel))
+			{
+				return;
+			}
+
+			_strengthModel = newModel;
+
+			if (_visibleKingdoms == null)
             {
                 _visibleKingdoms = _strengthModel.Kingdoms.Select(k => k.Name).ToList();
             }
 
-			// TODO: Check for changes before redrawing
 			StateHasChanged();
 
             // Have to delay the first draw for a bit to let JS initialize
@@ -67,7 +73,37 @@ namespace Ed.Bannerboard.UI.Widgets
             await base.OnInitializedAsync();
         }
 
-        private async Task HandleRedraw(KingdomStrengthModel? model)
+		private bool HasModelChanged(KingdomStrengthModel? oldModel, KingdomStrengthModel newModel)
+		{
+			if (oldModel == null)
+			{
+				return true;
+			}
+
+			if (oldModel.Kingdoms.Count != newModel.Kingdoms.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Kingdoms.Count; i++)
+			{
+				var oldKingdom = oldModel.Kingdoms[i];
+				var newKingdom = newModel.Kingdoms[i];
+
+				if (oldKingdom.Name != newKingdom.Name
+					|| oldKingdom.Strength != newKingdom.Strength
+					|| oldKingdom.PrimaryColor != newKingdom.PrimaryColor
+					|| oldKingdom.SecondaryColor != newKingdom.SecondaryColor)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		private async Task HandleRedraw(KingdomStrengthModel? model)
         {
             if (_visibleKingdoms == null || model == null)
             {
@@ -105,7 +141,7 @@ namespace Ed.Bannerboard.UI.Widgets
         private static BarChartDataset<float> GetDataset(List<KingdomStrengthItem> kingdoms) =>
             new()
             {
-                Data = kingdoms.Select(m => m.Strength).ToList(),
+                Data = kingdoms.Select(m => (float)Math.Round(m.Strength, 0)).ToList(),
                 BackgroundColor = kingdoms.Select(m => m.PrimaryColor).ToList(),
                 BorderColor = kingdoms.Select(m => m.SecondaryColor).ToList(),
             };

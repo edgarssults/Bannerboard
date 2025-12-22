@@ -51,7 +51,7 @@ namespace Ed.Bannerboard.Logic.Widgets
 
         public override void HandleMessage(WebSocketSession session, string message)
         {
-            var model = JsonConvert.DeserializeObject<TownProsperityFilterModel>(message, new VersionConverter());
+            var model = JsonConvert.DeserializeObject<TownProsperityFilterModel>(message, DefaultVersionConverter);
             if (model == null)
             {
                 return;
@@ -88,7 +88,7 @@ namespace Ed.Bannerboard.Logic.Widgets
                     Version = Version,
                 };
 
-                session.Send(model.ToJsonArraySegment());
+                session.Send(model.ToJsonArraySegment(DefaultVersionConverter));
             }
             catch
             {

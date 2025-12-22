@@ -44,7 +44,7 @@ namespace Ed.Bannerboard.UI.Widgets
             if (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerModel)}\""))
             {
                 // Received tracking information
-                var newHeroModel = JsonConvert.DeserializeObject<HeroTrackerModel>(model, new VersionConverter());
+                var newHeroModel = JsonConvert.DeserializeObject<HeroTrackerModel>(model, DefaultVersionConverter);
                 if (newHeroModel == null)
                 {
                     return Task.CompletedTask;
@@ -64,7 +64,7 @@ namespace Ed.Bannerboard.UI.Widgets
             else if (Regex.IsMatch(model, $"\"Type\":.*\"{nameof(HeroTrackerReturnDataModel)}\""))
             {
                 // Received list of trackable heroes
-                var newHeroes = JsonConvert.DeserializeObject<HeroTrackerReturnDataModel>(model, new VersionConverter());
+                var newHeroes = JsonConvert.DeserializeObject<HeroTrackerReturnDataModel>(model, DefaultVersionConverter);
                 if (newHeroes == null)
                 {
                     return Task.CompletedTask;

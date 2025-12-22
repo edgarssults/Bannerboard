@@ -74,7 +74,7 @@ namespace Ed.Bannerboard.Logic.Widgets
 					Version = Version,
 				};
 
-				session.Send(model.ToJsonArraySegment());
+				session.Send(model.ToJsonArraySegment(DefaultVersionConverter));
 			}
 			catch
 			{

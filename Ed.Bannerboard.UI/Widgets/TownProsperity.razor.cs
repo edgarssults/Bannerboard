@@ -40,13 +40,19 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            _prosperityModel = JsonConvert.DeserializeObject<TownProsperityModel>(model, new VersionConverter());
-            if (_prosperityModel == null)
+            var newModel = JsonConvert.DeserializeObject<TownProsperityModel>(model, DefaultVersionConverter);
+            if (newModel == null)
             {
                 return;
             }
 
-			// TODO: Check for changes before redrawing
+			if (!HasModelChanged(_prosperityModel, newModel))
+			{
+				return;
+			}
+
+			_prosperityModel = newModel;
+
 			StateHasChanged();
 
             if (_view == ProsperityView.Chart)
@@ -91,7 +97,40 @@ namespace Ed.Bannerboard.UI.Widgets
             await base.OnInitializedAsync();
         }
 
-        private async Task ProsperityFilterClickedAsync(int value)
+		private bool HasModelChanged(TownProsperityModel? oldModel, TownProsperityModel newModel)
+		{
+			if (oldModel == null)
+			{
+				return true;
+			}
+
+			if (oldModel.Towns.Count != newModel.Towns.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Towns.Count; i++)
+			{
+				var oldTown = oldModel.Towns[i];
+				var newTown = newModel.Towns[i];
+
+				if (oldTown.Name != newTown.Name
+					|| oldTown.Prosperity != newTown.Prosperity
+					|| oldTown.Garrison != newTown.Garrison
+					|| oldTown.Militia != newTown.Militia
+					|| oldTown.FactionName != newTown.FactionName
+					|| oldTown.PrimaryColor != newTown.PrimaryColor
+					|| oldTown.SecondaryColor != newTown.SecondaryColor)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
+		private async Task ProsperityFilterClickedAsync(int value)
         {
             _townCount = value;
             await LocalStorage!.SetItemAsync(TownCountKey, _townCount);
@@ -146,8 +185,8 @@ namespace Ed.Bannerboard.UI.Widgets
         private static BarChartDataset<float> GetDataset(List<TownProsperityItem> towns) =>
             new()
             {
-                Data = towns.Select(m => m.Prosperity).ToList(),
-                BackgroundColor = towns.Select(m => m.PrimaryColor).ToList(),
+				Data = towns.Select(m => (float)Math.Round(m.Prosperity, 0)).ToList(),
+				BackgroundColor = towns.Select(m => m.PrimaryColor).ToList(),
                 BorderColor = towns.Select(m => m.SecondaryColor).ToList()
             };
     }

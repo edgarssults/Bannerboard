@@ -28,18 +28,24 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override async Task Update(string model)
         {
-            _lordsModel = JsonConvert.DeserializeObject<KingdomLordsModel>(model, new VersionConverter());
-            if (_lordsModel == null)
+            var newModel = JsonConvert.DeserializeObject<KingdomLordsModel>(model, DefaultVersionConverter);
+            if (newModel == null)
             {
                 return;
             }
 
-            if (_visibleKingdoms == null)
-            {
-                _visibleKingdoms = _lordsModel.Kingdoms.Select(k => k.Name).ToList();
-            }
+			if (!HasModelChanged(_lordsModel, newModel))
+			{
+				return;
+			}
 
-			// TODO: Check for changes before redrawing
+			_lordsModel = newModel;
+
+			if (_visibleKingdoms == null)
+			{
+				_visibleKingdoms = _lordsModel.Kingdoms.Select(k => k.Name).ToList();
+			}
+
 			StateHasChanged();
 
             // Have to delay the first draw for a bit to let JS initialize
@@ -66,6 +72,35 @@ namespace Ed.Bannerboard.UI.Widgets
             _visibleKingdoms = await LocalStorage!.GetItemAsync<List<string>>(VisibleKingdomsKey);
             await base.OnInitializedAsync();
         }
+
+		private bool HasModelChanged(KingdomLordsModel? oldModel, KingdomLordsModel newModel)
+		{
+			if (oldModel == null)
+			{
+				return true;
+			}
+
+			if (oldModel.Kingdoms.Count != newModel.Kingdoms.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Kingdoms.Count; i++)
+			{
+				var oldKingdom = oldModel.Kingdoms[i];
+				var newKingdom = newModel.Kingdoms[i];
+
+				if (oldKingdom.Name != newKingdom.Name
+					|| oldKingdom.Lords != newKingdom.Lords
+					|| oldKingdom.PrimaryColor != newKingdom.PrimaryColor
+					|| oldKingdom.SecondaryColor != newKingdom.SecondaryColor)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
 
         private async Task HandleRedraw(KingdomLordsModel? model)
         {

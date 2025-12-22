@@ -27,18 +27,24 @@ namespace Ed.Bannerboard.UI.Widgets
 
         public override Task Update(string model)
         {
-            _warsModel = JsonConvert.DeserializeObject<KingdomWarsModel>(model, new VersionConverter());
-            if (_warsModel == null)
+            var newModel = JsonConvert.DeserializeObject<KingdomWarsModel>(model, DefaultVersionConverter);
+            if (newModel == null)
             {
                 return Task.CompletedTask;
             }
 
-            if (_visibleKingdoms == null)
+			if (!HasModelChanged(_warsModel, newModel))
+			{
+				return Task.CompletedTask;
+			}
+
+			_warsModel = newModel;
+
+			if (_visibleKingdoms == null)
             {
                 _visibleKingdoms = _warsModel.Kingdoms.Select(k => k.Name).ToList();
             }
 
-			// TODO: Check for changes before redrawing
 			StateHasChanged();
             return Task.CompletedTask;
 		}
@@ -61,7 +67,47 @@ namespace Ed.Bannerboard.UI.Widgets
             await base.OnInitializedAsync();
         }
 
-        private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
+		private bool HasModelChanged(KingdomWarsModel? oldModel, KingdomWarsModel newModel)
+		{
+			if (oldModel == null)
+			{
+				return true;
+			}
+
+			if (oldModel.Kingdoms.Count != newModel.Kingdoms.Count)
+			{
+				return true;
+			}
+
+			for (int i = 0; i < oldModel.Kingdoms.Count; i++)
+			{
+				var oldKingdom = oldModel.Kingdoms[i];
+				var newKingdom = newModel.Kingdoms[i];
+
+				if (oldKingdom.Name != newKingdom.Name
+					|| oldKingdom.PrimaryColor != newKingdom.PrimaryColor
+					|| oldKingdom.SecondaryColor != newKingdom.SecondaryColor)
+				{
+					return true;
+				}
+
+				for (int j = 0; j < oldKingdom.Wars.Count; j++)
+				{
+					var oldWar = oldKingdom.Wars[j];
+					var newWar = newKingdom.Wars[j];
+
+					if (oldWar.Name != newWar.Name)
+					{
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
+
+		private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
         {
             _showMinorFactions = (bool)(e.Value ?? true);
             await LocalStorage!.SetItemAsync(ShowMinorFactionsKey, _showMinorFactions);

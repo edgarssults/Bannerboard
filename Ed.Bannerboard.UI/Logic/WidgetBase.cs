@@ -1,5 +1,6 @@
 ﻿using Blazorise.Charts;
 using Microsoft.AspNetCore.Components;
+using Newtonsoft.Json.Converters;
 
 namespace Ed.Bannerboard.UI.Logic
 {
@@ -8,7 +9,7 @@ namespace Ed.Bannerboard.UI.Logic
         /// <summary>
         /// Default bar chart options.
         /// </summary>
-        protected BarChartOptions BaseBarChartOptions = new()
+        protected static readonly BarChartOptions BaseBarChartOptions = new()
         {
             Animation = new()
             {
@@ -33,7 +34,12 @@ namespace Ed.Bannerboard.UI.Logic
             MaintainAspectRatio = false // So that canvas fills the whole container
         };
 
-        public event EventHandler<string>? MessageSent;
+		/// <summary>
+		/// Default model version converter.
+		/// </summary>
+		protected static readonly VersionConverter DefaultVersionConverter = new();
+
+		public event EventHandler<string>? MessageSent;
 
         public virtual Task Update(string model)
         {
