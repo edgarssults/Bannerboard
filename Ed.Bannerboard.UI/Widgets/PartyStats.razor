@@ -61,7 +61,8 @@
                 <table class="table table-sm @(_showUnits ? "mt-4" : "")">
                     <thead>
                         <tr>
-                            <th colspan="2">Food</th>
+                            <th>Food</th>
+                            <th>@_partyModel.Food.Items.Sum(x => x.Count)</th>
                         </tr>
                     </thead>
                     <tbody>
