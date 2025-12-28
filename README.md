@@ -35,7 +35,7 @@ The wars widget shows which kingdoms are at war with each other. This can help y
 
 ![Prosperity](screenshots/widget-prosperity.png)
 
-The prosperity widget shows the top most prosperous cities. The chart view shows prosperity as reported by the game API and the table view also shows the number of militia and garrisoned troops. This data can help you decide which cities would be most profitable to conquer next. The number of top cities shown can be changed.
+The prosperity widget shows the top most prosperous cities. The chart view shows prosperity as reported by the game API and the table view also shows the number of militia and garrisoned troops. This data can help you decide which cities would be most profitable to conquer next. The number of top cities shown can be changed, but the chart is limited to 10 entries.
 
 ## Party
 
