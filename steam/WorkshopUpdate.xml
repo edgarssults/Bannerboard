@@ -3,8 +3,8 @@
 		<ItemId Value="2876851738" />
 	</GetItem>
 	<UpdateItem>
-		<ModuleFolder Value="D:\releases\Bannerboard v0.5.2\Bannerboard" />
-		<ChangeNotes Value="Small fixes and improvements" />
+		<ModuleFolder Value="D:\releases\Bannerboard v0.5.3\Bannerboard" />
+		<ChangeNotes Value="Fixed dependencies" />
 		<Tags>
 			<!-- You can use the following tags: -->
 			<!-- Type: Graphical Enhancement, Map Pack, Partial Conversion, Sound, Total Conversion, Troops, UI, Utility, Weapons and Armour -->
