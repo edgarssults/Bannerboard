@@ -19,7 +19,7 @@ namespace Ed.Bannerboard.Simulator
 	public static class Program
 	{
 		// This version should be in sync with the mod
-		private static readonly Version _version = new Version("0.5.2");
+		private static readonly Version _version = new Version("0.5.3");
 
 		private static readonly VersionConverter _versionConverter = new VersionConverter();
 		private static readonly Faker _faker = new Faker();

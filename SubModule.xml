@@ -1,14 +1,13 @@
 <Module>
 	<Name value="Bannerboard"/>
 	<Id value="Bannerboard"/>
-	<Version value="v0.5.2"/>
+	<Version value="v0.5.3"/>
 	<SingleplayerModule value="true"/>
 	<MultiplayerModule value="false"/>
 	<Official value="false"/>
 	<DependedModules>
-		<DependedModule Id="Native"/>
-		<DependedModule Id="SandBoxCore"/>
-		<DependedModule Id="Sandbox"/>
+		<DependedModule Id="Native" DependentVersion="v1.3.13" Optional="false" />
+		<DependedModule Id="SandBoxCore" DependentVersion="v1.3.13" Optional="false" />
 	</DependedModules>
 	<SubModules>
 		<SubModule>
