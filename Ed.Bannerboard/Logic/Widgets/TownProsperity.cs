@@ -1,6 +1,5 @@
 ﻿using Ed.Bannerboard.Models.Widgets;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using SuperSocket.WebSocket;
 using System;
 using System.Linq;
