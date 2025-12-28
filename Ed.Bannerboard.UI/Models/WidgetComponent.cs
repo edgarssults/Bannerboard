@@ -7,22 +7,35 @@ namespace Ed.Bannerboard.UI.Models
     /// </summary>
     public class WidgetComponent
     {
-        public WidgetComponent(Type type, int row, int column, int rowSpan = 1, int columnSpan = 1)
+        public WidgetComponent(string title, string icon, Type type, int row, int column, int rowSpan = 1, int columnSpan = 1, bool isVisible = true)
         {
-            Type = type;
+			Title = title;
+			Icon = icon;
+			Type = type;
             Row = DefaultRow = row;
             Column = DefaultColumn = column;
             RowSpan = DefaultRowSpan = rowSpan;
             ColumnSpan = DefaultColumnSpan = columnSpan;
+			IsVisible = DefaultIsVisible = isVisible;
         }
-        
-        /// <summary>
-        /// Widget component type.
-        /// </summary>
-        /// <remarks>
-        /// Expecting an implementation of <see cref="IWidget"/>.
-        /// </remarks>
-        public Type Type { get; private set; }
+
+		/// <summary>
+		/// Widget title, displayed in the sidebar.
+		/// </summary>
+		public string Title { get; set; }
+
+		/// <summary>
+		/// Widget icon, displayed in the sidebar.
+		/// </summary>
+		public string Icon { get; set; }
+
+		/// <summary>
+		/// Widget component type.
+		/// </summary>
+		/// <remarks>
+		/// Expecting an implementation of <see cref="IWidget"/>.
+		/// </remarks>
+		public Type Type { get; private set; }
 
         /// <summary>
         /// Widget component instance.
@@ -49,10 +62,15 @@ namespace Ed.Bannerboard.UI.Models
         /// </summary>
         public int ColumnSpan { get; set; }
 
-        /// <summary>
-        /// Default widget row starting with 0.
-        /// </summary>
-        public int DefaultRow { get; set; }
+		/// <summary>
+		/// Indicates whether the widget is visible.
+		/// </summary>
+		public bool IsVisible { get; set; }
+
+		/// <summary>
+		/// Default widget row starting with 0.
+		/// </summary>
+		public int DefaultRow { get; set; }
 
         /// <summary>
         /// Default widget column starting with 0.
@@ -68,5 +86,10 @@ namespace Ed.Bannerboard.UI.Models
         /// Default number of columns the widget spans.
         /// </summary>
         public int DefaultColumnSpan { get; set; }
-    }
+
+		/// <summary>
+		/// Indicates whether the widget is visible by default.
+		/// </summary>
+		public bool DefaultIsVisible { get; set; }
+	}
 }

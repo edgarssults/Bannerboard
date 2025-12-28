@@ -91,11 +91,6 @@ img.img-war {
     max-height: 60px;
 }
 
-/* Dashboard should take up all available height */
-/*html, body, #app, .dashboard {
-    height: 100%;
-}*/
-
 .dashboard {
     padding: 1.5rem 0 1.5rem 1.5rem;
 }
@@ -171,3 +166,18 @@ img.img-war {
 .form-check-label {
     margin-left: 1rem;
 }
+
+.sider-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.5rem;
+}
+
+.b-layout-sider-content {
+    background-color: #303030;
+}
+
+    .b-layout-sider-content .btn {
+        padding: .375rem;
+    }

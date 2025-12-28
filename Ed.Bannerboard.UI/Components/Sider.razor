@@ -1,0 +1,35 @@
+﻿@using Blazored.LocalStorage
+
+<div class="sider-container">
+    @foreach (var widget in Widgets)
+    {
+        <button
+            type="button"
+            title="@widget.Title (@(widget.IsVisible ? "visible" : "hidden"))"
+            class="btn btn-secondary @(widget.IsVisible ? "active" : "")"
+            data-toggle="button"
+            aria-pressed="@widget.IsVisible"
+            autocomplete="off"
+            @onclick="async () => await OnToggle(widget)">
+            <i class="fa @widget.Icon"></i>
+        </button>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public List<WidgetComponent> Widgets { get; set; } = [];
+
+    [Parameter]
+    public EventCallback WidgetsChanged { get; set; }
+
+    [Inject]
+    private ILocalStorageService? LocalStorage { get; set; }
+
+    private async Task OnToggle(WidgetComponent widget)
+    {
+        widget.IsVisible = !widget.IsVisible;
+        await LocalStorage!.SetItemAsync(Pages.Index.BannerboardLayoutKey, Widgets.ToWidgetLayout());
+        await WidgetsChanged.InvokeAsync();
+    }
+}

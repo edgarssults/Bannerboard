@@ -17,18 +17,19 @@ namespace Ed.Bannerboard.UI.Pages
 {
     public partial class Index : ComponentBase
     {
-        private const string BannerboardLayoutKey = "bannerboard-layout";
+        public const string BannerboardLayoutKey = "bannerboard-layout";
+
         private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ClientWebSocket _webSocket = new();
         private readonly List<WidgetComponent> _widgets = new()
         {
-            new WidgetComponent(typeof(KingdomStrength), 0, 0, 5, 6),
-            new WidgetComponent(typeof(KingdomLords), 0, 6, 5, 6),
-            new WidgetComponent(typeof(KingdomWars), 5, 0, 5, 6),
-            new WidgetComponent(typeof(PartyStats), 5, 6, 5, 6),
-            new WidgetComponent(typeof(HeroTracker), 10, 6, 6, 6),
-            new WidgetComponent(typeof(TownProsperity), 10, 0, 6, 6),
-            new WidgetComponent(typeof(Stats), 16, 0, 3, 6)
+            new WidgetComponent("Strength", "fa-balance-scale", typeof(KingdomStrength), 0, 0, 5, 6),
+            new WidgetComponent("Lords", "fa-user-tie", typeof(KingdomLords), 0, 6, 5, 6),
+            new WidgetComponent("Wars", "fa-fire", typeof(KingdomWars), 5, 0, 5, 6),
+            new WidgetComponent("Party", "fa-users", typeof(PartyStats), 5, 6, 5, 6),
+            new WidgetComponent("Heroes", "fa-user-check", typeof(HeroTracker), 10, 6, 6, 6),
+            new WidgetComponent("Prosperity", "fa-money-bill-wave", typeof(TownProsperity), 10, 0, 6, 6),
+            new WidgetComponent("Stats", "fa-info", typeof(Stats), 16, 0, 3, 6, false)
         };
 
         private StatsModel? _statsModel;
@@ -164,7 +165,7 @@ namespace Ed.Bannerboard.UI.Pages
 
         private async Task UpdateWidgets(string message)
         {
-            foreach (var widget in _widgets)
+            foreach (var widget in _widgets.Where(x => x.IsVisible))
             {
                 if (widget.Component?.Instance is not IWidget widgetInstance)
                 {
@@ -200,7 +201,9 @@ namespace Ed.Bannerboard.UI.Pages
 					continue;
 				}
 
+				widgetInstance.MessageSent -= OnMessageSent;
 				widgetInstance.MessageSent += OnMessageSent;
+
 				widgetInstance.SendInitialMessage();
 			}
 
@@ -237,6 +240,7 @@ namespace Ed.Bannerboard.UI.Pages
                 w.Row = storedLayout.Row;
                 w.ColumnSpan = storedLayout.ColumnSpan;
                 w.RowSpan = storedLayout.RowSpan;
+				w.IsVisible = storedLayout.IsVisible;
             });
         }
 
@@ -260,9 +264,13 @@ namespace Ed.Bannerboard.UI.Pages
                 w.Row = w.DefaultRow;
                 w.ColumnSpan = w.DefaultColumnSpan;
                 w.RowSpan = w.DefaultRowSpan;
+				w.IsVisible = w.DefaultIsVisible;
 
 				if (w.Component?.Instance is IWidget widgetInstance)
 				{
+					widgetInstance.MessageSent -= OnMessageSent;
+					widgetInstance.MessageSent += OnMessageSent;
+
 					widgetInstance.ResetAsync();
 				}
 			});

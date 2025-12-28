@@ -399,7 +399,8 @@ namespace Ed.Bannerboard.Simulator
 					{
 						Id = x.Id,
 						Name = _allHeroes.Single(y => y.Id == x.Id).Name,
-						Location = _faker.Random.Bool() ? _faker.Address.City() : "-"
+						Location = _faker.Random.Bool() ? _faker.Address.City() : "-",
+						IsShownOnMap = x.IsShownOnMap
 					})
 					.ToList()
 			};

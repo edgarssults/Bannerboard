@@ -1,6 +1,7 @@
 ﻿@page "/"
 
 @using System.Net.WebSockets
+@using Ed.Bannerboard.UI.Components
 @using Excubo.Blazor.Grids
 @implements IDisposable
 
@@ -13,33 +14,44 @@
 
 @if (_webSocket.State == WebSocketState.Open)
 {
-    <Grid
-        AspectRatio="1"
-        ColumnGap="1.5rem"
-        RowGap="1.5rem"
-        AllowResize="true"
-        AllowMove="true"
-        PreventOverlaps="true"
-        OnResize="OnResize"
-        OnMove="OnMove"
-        class="dashboard">
-        <Columns Count="32" Width="4rem" />
-        <Rows Count="16" Height="4rem" />
+    <Blazorise.Layout Sider>
+        <Blazorise.LayoutSider>
+            <Blazorise.LayoutSiderContent>
+                <Sider Widgets="_widgets" WidgetsChanged="StateHasChanged" />
+            </Blazorise.LayoutSiderContent>
+        </Blazorise.LayoutSider>
+        <Blazorise.Layout>
+            <Blazorise.LayoutContent>
+                <Grid
+                    AspectRatio="1"
+                    ColumnGap="1.5rem"
+                    RowGap="1.5rem"
+                    AllowResize="true"
+                    AllowMove="true"
+                    PreventOverlaps="true"
+                    OnResize="OnResize"
+                    OnMove="OnMove"
+                    class="dashboard">
+                    <Columns Count="32" Width="4rem" />
+                    <Rows Count="16" Height="4rem" />
 
-        @foreach (var widget in _widgets)
-        {
-            <Element
-                @key="widget"
-                @bind-Row="widget.Row"
-                @bind-Column="widget.Column"
-                @bind-RowSpan="widget.RowSpan"
-                @bind-ColumnSpan="widget.ColumnSpan"
-                Title="@(widget.Type.Name)"
-                id="@(widget.Type.Name)">
-                <DynamicComponent Type="widget.Type" @ref="widget.Component" />
-            </Element>
-        }
-    </Grid>
+                    @foreach (var widget in _widgets.Where(x => x.IsVisible))
+                    {
+                        <Element
+                            @key="widget"
+                            @bind-Row="widget.Row"
+                            @bind-Column="widget.Column"
+                            @bind-RowSpan="widget.RowSpan"
+                            @bind-ColumnSpan="widget.ColumnSpan"
+                            Title="@(widget.Type.Name)"
+                            id="@(widget.Type.Name)">
+                            <DynamicComponent Type="widget.Type" @ref="widget.Component" />
+                        </Element>
+                    }
+                </Grid>
+            </Blazorise.LayoutContent>
+        </Blazorise.Layout>
+    </Blazorise.Layout>
 }
 
 @if (_webSocket.State == WebSocketState.Aborted

@@ -26,5 +26,10 @@
         /// Number of columns the widget spans.
         /// </summary>
         public int ColumnSpan { get; set; }
-    }
+
+		/// <summary>
+		/// Indicates whether the widget is visible.
+		/// </summary>
+		public bool IsVisible { get; set; } = true; // True for backwards compatibility
+	}
 }

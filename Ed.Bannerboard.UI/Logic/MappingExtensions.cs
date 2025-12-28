@@ -13,7 +13,8 @@ namespace Ed.Bannerboard.UI.Logic
                     Column = w.Column,
                     Row = w.Row,
                     ColumnSpan = w.ColumnSpan,
-                    RowSpan = w.RowSpan
+                    RowSpan = w.RowSpan,
+					IsVisible = w.IsVisible
                 })
                 .ToList();
         }
