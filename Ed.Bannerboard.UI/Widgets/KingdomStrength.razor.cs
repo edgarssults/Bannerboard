@@ -3,7 +3,6 @@ using Blazorise.Charts;
 using Ed.Bannerboard.Models.Widgets;
 using Microsoft.AspNetCore.Components;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 using System.Text.RegularExpressions;
 
 namespace Ed.Bannerboard.UI.Widgets

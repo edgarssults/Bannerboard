@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Ed.Bannerboard.UI.Models
+﻿namespace Ed.Bannerboard.UI.Models
 {
     public class DashboardSettings
     {

@@ -1,5 +1,4 @@
 ﻿using Blazored.LocalStorage;
-using Blazored.Toast.Configuration;
 using Blazored.Toast.Services;
 using Ed.Bannerboard.Models;
 using Ed.Bannerboard.UI.Logic;
@@ -13,7 +12,6 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Ed.Bannerboard.UI.Pages
 {
