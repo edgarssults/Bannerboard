@@ -12,7 +12,7 @@ namespace Ed.Bannerboard.UI.Widgets
     public partial class HeroTracker
     {
         private const string TrackedHeroesKey = "heroes-widget-tracked-heroes";
-        private readonly Version _minimumSupportedVersion = new("0.4.2");
+        private static readonly Version _minimumSupportedVersion = new("0.4.2");
         private HeroTrackerModel? _heroModel;
         private Autocomplete<HeroTrackerReturnDataItem, string>? _heroSearch;
         private List<HeroTrackerReturnDataItem>? _allHeroes;

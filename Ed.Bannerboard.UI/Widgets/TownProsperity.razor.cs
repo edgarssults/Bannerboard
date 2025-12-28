@@ -13,7 +13,7 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string TownCountKey = "prosperity-widget-town-count";
         private const string ViewKey = "prosperity-widget-view";
-        private readonly Version _minimumSupportedVersion = new("0.3.3");
+		private static readonly Version _minimumSupportedVersion = new("0.3.3");
         private TownProsperityModel? _prosperityModel;
         private int _townCount = 10;
         private BarChart<float>? _barChart;
@@ -128,7 +128,6 @@ namespace Ed.Bannerboard.UI.Widgets
 
 			return false;
 		}
-
 
 		private async Task ProsperityFilterClickedAsync(int value)
         {

@@ -1,4 +1,5 @@
 ﻿using Blazored.LocalStorage;
+using Blazored.Toast.Configuration;
 using Blazored.Toast.Services;
 using Ed.Bannerboard.Models;
 using Ed.Bannerboard.UI.Logic;
@@ -12,13 +13,14 @@ using System.Diagnostics;
 using System.Net.WebSockets;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Ed.Bannerboard.UI.Pages
 {
     public partial class Index : ComponentBase
     {
         private const string BannerboardLayoutKey = "bannerboard-layout";
-        private readonly CancellationTokenSource _disposalTokenSource = new();
+        private readonly CancellationTokenSource _cancellationTokenSource = new();
         private readonly ClientWebSocket _webSocket = new();
         private readonly List<WidgetComponent> _widgets = new()
         {
@@ -31,8 +33,8 @@ namespace Ed.Bannerboard.UI.Pages
             new WidgetComponent(typeof(Stats), 16, 0, 3, 6)
         };
 
-        private StatsModel? statsModel;
-        private bool modVersionDetermined;
+        private StatsModel? _statsModel;
+        private bool _modVersionDetermined;
 
         [Inject]
         private ILocalStorageService? LocalStorage { get; set; }
@@ -52,7 +54,7 @@ namespace Ed.Bannerboard.UI.Pages
             AppState!.OnResetLayout += OnResetLayout;
 
             var settings = Configuration!.GetSection(nameof(DashboardSettings)).Get<DashboardSettings>();
-            statsModel = new StatsModel
+            _statsModel = new StatsModel
             {
                 DashboardVersion = new Version(settings!.Version)
             };
@@ -60,70 +62,87 @@ namespace Ed.Bannerboard.UI.Pages
             try
             {
                 // TODO: Change the port or use an URL?
-                await _webSocket.ConnectAsync(new Uri("ws://localhost:2020"), _disposalTokenSource.Token);
-                _ = ReceiveLoop();
-            }
+                await _webSocket.ConnectAsync(new Uri("ws://localhost:2020"), _cancellationTokenSource.Token);
+				_ = ReceiveLoopAsync();
+			}
             catch
             {
-                // TODO: Retry failed connections and handle server shutdown
-            }
-        }
+				// TODO: Retry failed connections
+				// https://websocket.org/guides/languages/csharp/#reconnecting-websocket-client
+			}
+		}
 
-        private async Task ReceiveLoop()
+        private async Task ReceiveLoopAsync()
         {
-            do
+			var buffer = new ArraySegment<byte>(new byte[1024 * 4]);
+			var messageBuilder = new List<byte>();
+
+			while (!_cancellationTokenSource.Token.IsCancellationRequested)
             {
-                var buffer = new ArraySegment<byte>(new byte[2048]);
-                var message = string.Empty;
+				try
+				{
+					WebSocketReceiveResult result;
 
-                using (var stream = new MemoryStream())
-                {
-                    WebSocketReceiveResult result;
+					do
+					{
+						// Wait for a message from the server and read it fully
+						Debug.WriteLine("Receiving...");
+						result = await _webSocket.ReceiveAsync(buffer, _cancellationTokenSource.Token);
 
-                    do
-                    {
-                        // Wait for a message from the server
-                        // Read it into the stream via the buffer when one is received
-                        Debug.WriteLine("Receiving...");
-                        result = await _webSocket.ReceiveAsync(buffer, _disposalTokenSource.Token);
-                        stream.Write(buffer.Array!, buffer.Offset, result.Count);
-                        Debug.WriteLine("Received, deserializing...");
-                    }
+						if (result.MessageType == WebSocketMessageType.Close)
+						{
+							_webSocket.Abort();
+							StateHasChanged();
+							return;
+						}
+
+						messageBuilder.AddRange(buffer.Array!.Take(result.Count));
+					}
 					while (!result.EndOfMessage);
 
-                    if (result.MessageType == WebSocketMessageType.Close)
-                    {
-                        _webSocket.Abort();
-                        StateHasChanged();
-                        break;
-                    }
+					if (result.MessageType == WebSocketMessageType.Binary)
+					{
+						Debug.WriteLine("Received, processing...");
+						var messageArray = messageBuilder.ToArray();
 
-                    statsModel!.LastMessageBytes = stream.Length;
-                    statsModel!.ReceivedMessageCount++;
+						_statsModel!.LastMessageBytes = messageArray.Length;
+						_statsModel!.ReceivedMessageCount++;
 
-                    // Read the stream as a string
-                    // Expecting JSON messages only
-                    stream.Seek(0, SeekOrigin.Begin);
-                    using var reader = new StreamReader(stream);
-                    message = await reader.ReadToEndAsync();
-                    Debug.WriteLine("Message: " + message);
-                }
+						// Expecting JSON messages only
+						var message = Encoding.UTF8.GetString(messageArray);
+						Debug.WriteLine(message);
 
-                // Handshake message is sent once
-                HandleHandshakeMessage(message);
+						// Handshake message is sent once
+						HandleHandshakeMessage(message);
 
-                // Stats always updated
-                await UpdateWidgets(JsonConvert.SerializeObject(statsModel));
+						// Stats always updated
+						await UpdateWidgets(JsonConvert.SerializeObject(_statsModel));
 
-                // Update the relevant widget
-                await UpdateWidgets(message);
-            }
-			while (!_disposalTokenSource.IsCancellationRequested);
-        }
+						// Update the relevant widget
+						await UpdateWidgets(message);
+					}
+
+					messageBuilder.Clear();
+				}
+				catch (OperationCanceledException)
+				{
+					Debug.WriteLine("Receive loop cancelled");
+					break;
+				}
+				catch (WebSocketException ex)
+				{
+					Debug.WriteLine($"WebSocket error: {ex.Message}");
+					ToastService?.ShowError("Connection to Bannerboard server lost, refresh the page.", settings => settings.DisableTimeout = true);
+					break;
+				}
+			}
+
+			Debug.WriteLine("Receive loop exited");
+		}
 
         private void HandleHandshakeMessage(string message)
         {
-            if (modVersionDetermined)
+            if (_modVersionDetermined)
             {
                 return;
             }
@@ -134,14 +153,16 @@ namespace Ed.Bannerboard.UI.Pages
             }
 
             var model = JsonConvert.DeserializeObject<HandshakeModel>(message, new VersionConverter());
-            statsModel!.ModVersion = model?.Version;
-            modVersionDetermined = true;
+            _statsModel!.ModVersion = model?.Version;
+            _modVersionDetermined = true;
 
             // Widgets are now rendered and instances are available
             // Because they are only rendered once the WS connection is open
             // Widgets can now start sending messages to the server
             SubscribeToWidgetMessageSent();
-        }
+
+			Debug.WriteLine("Handshake processed");
+		}
 
         private async Task UpdateWidgets(string message)
         {
@@ -152,35 +173,41 @@ namespace Ed.Bannerboard.UI.Pages
                     continue;
                 }
 
-                if (!widgetInstance.CanUpdate(message, statsModel?.ModVersion))
+                if (!widgetInstance.CanUpdate(message, _statsModel?.ModVersion))
                 {
                     continue;
                 }
 
-                await widgetInstance.Update(message);
-                return;
+				try
+				{
+					await widgetInstance.Update(message);
+					Debug.WriteLine("Widget updated: " + widgetInstance.GetType().Name);
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine("Error updating widget " + widgetInstance.GetType().Name + ": " + ex.Message);
+				}
+
+				// Widget found and updated, no need to continue
+				return;
             }
-        }
+		}
 
         private void SubscribeToWidgetMessageSent()
         {
-            foreach (var widget in _widgets)
-            {
-                if (widget.Component?.Instance is not IWidget widgetInstance)
-                {
-                    continue;
-                }
-
-				widgetInstance.MessageSent += async (sender, message) =>
+			foreach (var widget in _widgets)
+			{
+				if (widget.Component?.Instance is not IWidget widgetInstance)
 				{
-					var encoded = Encoding.UTF8.GetBytes(message);
-					var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
-					await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _disposalTokenSource.Token);
-				};
+					continue;
+				}
 
+				widgetInstance.MessageSent += OnMessageSent;
 				widgetInstance.SendInitialMessage();
-            }
-        }
+			}
+
+			Debug.WriteLine("Widget message sending enabled");
+		}
 
         private async Task LoadLayoutFromStorage()
         {
@@ -245,9 +272,23 @@ namespace Ed.Bannerboard.UI.Pages
             StateHasChanged();
         }
 
+		private async void OnMessageSent(object? sender, string message)
+		{
+			try
+			{
+				var encoded = Encoding.UTF8.GetBytes(message);
+				var buffer = new ArraySegment<byte>(encoded, 0, encoded.Length);
+				await _webSocket.SendAsync(buffer, WebSocketMessageType.Text, true, _cancellationTokenSource.Token);
+			}
+			catch (OperationCanceledException)
+			{
+				Debug.WriteLine("Message sending interrupted");
+			}
+		}
+
         public void Dispose()
         {
-			_disposalTokenSource.Cancel();
+			_cancellationTokenSource.Cancel();
             _ = _webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Bannerboard client stopped", CancellationToken.None);
         }
     }

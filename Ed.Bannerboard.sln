@@ -38,6 +38,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Ed.Bannerboard.Redirector",
 		SlnRelativePath = "Ed.Bannerboard.Redirector\"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ed.Bannerboard.Simulator", "Ed.Bannerboard.Simulator\Ed.Bannerboard.Simulator.csproj", "{90CD068B-25E0-4FA8-9A3D-7B22EF9A8A9D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 		{42503B9E-427C-36FF-54EF-2513AF7F943D}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{90CD068B-25E0-4FA8-9A3D-7B22EF9A8A9D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90CD068B-25E0-4FA8-9A3D-7B22EF9A8A9D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90CD068B-25E0-4FA8-9A3D-7B22EF9A8A9D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90CD068B-25E0-4FA8-9A3D-7B22EF9A8A9D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

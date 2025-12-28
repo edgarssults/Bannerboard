@@ -11,7 +11,7 @@ namespace Ed.Bannerboard.UI.Widgets
     {
         private const string VisibleKingdomsKey = "wars-widget-visible-kingdoms";
         private const string ShowMinorFactionsKey = "wars-widget-show-minor-factions";
-        private readonly Version _minimumSupportedVersion = new("0.3.0");
+		private static readonly Version _minimumSupportedVersion = new("0.3.0");
         private KingdomWarsModel? _warsModel;
         private bool _showMinorFactions;
         private List<string>? _visibleKingdoms;
@@ -91,6 +91,11 @@ namespace Ed.Bannerboard.UI.Widgets
 					return true;
 				}
 
+				if (oldKingdom.Wars.Count != newKingdom.Wars.Count)
+				{
+					return true;
+				}
+
 				for (int j = 0; j < oldKingdom.Wars.Count; j++)
 				{
 					var oldWar = oldKingdom.Wars[j];
@@ -105,7 +110,6 @@ namespace Ed.Bannerboard.UI.Widgets
 
 			return false;
 		}
-
 
 		private async Task MinorFactionFilterClickedAsync(ChangeEventArgs e)
         {

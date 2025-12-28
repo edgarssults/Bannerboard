@@ -11,7 +11,7 @@ namespace Ed.Bannerboard.UI.Widgets
     public partial class KingdomLords
     {
         private const string VisibleKingdomsKey = "lords-widget-visible-kingdoms";
-        private readonly Version _minimumSupportedVersion = new("0.3.0");
+        private static readonly Version _minimumSupportedVersion = new("0.3.0");
         private BarChart<int>? _barChart;
         private KingdomLordsModel? _lordsModel;
         private List<string>? _visibleKingdoms;

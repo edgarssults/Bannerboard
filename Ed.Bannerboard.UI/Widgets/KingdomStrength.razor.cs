@@ -11,7 +11,7 @@ namespace Ed.Bannerboard.UI.Widgets
     public partial class KingdomStrength
     {
         private const string VisibleKingdomsKey = "strength-widget-visible-kingdoms";
-        private readonly Version _minimumSupportedVersion = new("0.3.0");
+		private static readonly Version _minimumSupportedVersion = new("0.3.0");
         private BarChart<float>? _barChart;
         private KingdomStrengthModel? _strengthModel;
         private List<string>? _visibleKingdoms;
@@ -101,7 +101,6 @@ namespace Ed.Bannerboard.UI.Widgets
 
 			return false;
 		}
-
 
 		private async Task HandleRedraw(KingdomStrengthModel? model)
         {
